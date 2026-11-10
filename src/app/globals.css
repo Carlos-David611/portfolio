@@ -648,6 +648,45 @@ article a {
   }
 }
 
+/* ---------- Passaggio giorno/notte (startViewTransition in BottoneTema.js) ----------
+   Il browser fotografa la pagina vecchia e la mette sopra quella nuova.
+   Di serie le dissolve tutte e due insieme: due strati a tutto schermo da fondere, e sotto
+   restano due immagini in parte ferme, per questo andava a scatti.
+   Qui la pagina nuova resta sotto, viva (lo sfondo continua a muoversi),
+   e solo la foto della vecchia sfuma via sopra */
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  animation: tema-sfuma 0.45s ease-out both;
+}
+
+@keyframes tema-sfuma {
+  to {
+    opacity: 0;
+  }
+}
+
+/* l'interruttore resta fuori dalla foto: il pallino scorre dal vero, senza fantasmi */
+.tema-bottone {
+  view-transition-name: tema-bottone;
+}
+
+::view-transition-old(tema-bottone) {
+  display: none;
+}
+
+::view-transition-new(tema-bottone),
+::view-transition-group(tema-bottone) {
+  animation: none;
+}
+
 /* il pallino che scorre, con dentro l'icona */
 .tema-pallino {
   position: absolute;

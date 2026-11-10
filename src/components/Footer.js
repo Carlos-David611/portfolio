@@ -21,9 +21,6 @@ const PAGINE = [
   { href: "/contatti", nome: "Contatti" },
 ];
 
-
-const ANNO = 2026;
-
 export default function Footer() {
   const email = contatti.find((contatto) => contatto.tipo === "email");
 
@@ -91,7 +88,6 @@ export default function Footer() {
 
       {/* la barra in fondo */}
       <div className={styles.fondo}>
-        <p>© {ANNO} Carlos David. Progettato e sviluppato con Next.js.</p>
         {/* href="#" riporta in cima alla pagina, senza JavaScript */}
         <a href="#" className={styles.suSu}>
           Torna su ↑

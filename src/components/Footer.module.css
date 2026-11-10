@@ -268,8 +268,9 @@
   color: var(--grigio);
 }
 
-.fondo p {
-  margin: 0;
+.fondo {
+  /* resta solo "Torna su": va a destra */
+  justify-content: flex-end;
 }
 
 .suSu {
