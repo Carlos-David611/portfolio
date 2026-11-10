@@ -274,9 +274,11 @@
 }
 
 .suSu {
-  color: inherit;
+  /* più grande e col colore del testo (non grigio), così si nota */
+  color: var(--testo);
+  font-size: 1.1rem;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
   transition: color 0.3s;
 }
 
@@ -288,7 +290,8 @@
 @media (max-width: 768px) {
   .footer {
     width: calc(100% - 1rem);
-    margin-top: 6rem;
+    /* sul telefono basta meno stacco: sopra c'è già il margine della pagina (2rem) */
+    margin-top: 2.5rem;
     border-radius: 28px 28px 18px 18px;
   }
 
@@ -298,12 +301,14 @@
     gap: 2rem;
   }
 
+  /* sul telefono "Torna su" non c'è: la barra in fondo sparisce tutta, linea compresa */
   .fondo {
-    flex-direction: column;
-    align-items: flex-start;
-    padding-right: 0;
-    /* spazio sotto per il pulsante del chatbot */
-    padding-bottom: 4rem;
+    display: none;
+  }
+
+  /* lo spazio sotto resta: il pulsante del chatbot non copre i contatti */
+  .footer {
+    padding-bottom: 5rem;
   }
 }
 

@@ -125,7 +125,10 @@ article a {
   padding-top: 12.375rem;
 }
 
-.home-testo p:last-child {
+.hero-descrizione {
+  /* è un h3, ma deve sembrare un testo normale: niente grassetto dei titoli */
+  font-weight: 400;
+  margin: 1.3rem 0;
   max-width: 600px;
   font-size: 1.3rem;
   line-height: 1.6;
@@ -165,7 +168,7 @@ article a {
   /* qui il badge sta sotto il testo: non serve allinearli.
      padding-top è la distanza tra la navbar e la scritta */
   .home-testo {
-    padding-top: 1.5rem;
+    padding-top: 0.25rem;
   }
 
   .home-badge {
@@ -391,6 +394,21 @@ article a {
   .competenze,
   .competenze:hover {
     transform: perspective(1600px) rotateX(1deg);
+  }
+
+  /* sul telefono le sezioni stanno più vicine: 4rem sopra e sotto erano troppi */
+  .competenze {
+    margin-block: 2.5rem;
+  }
+
+  /* l'ultima sezione non aggiunge spazio prima del footer (ci pensa il footer) */
+  .competenze:last-child {
+    margin-bottom: 0;
+  }
+
+  /* se è la prima cosa della pagina (Contatti) parte subito sotto la navbar, come nelle altre pagine */
+  .competenze:first-child {
+    margin-top: 0;
   }
 }
 

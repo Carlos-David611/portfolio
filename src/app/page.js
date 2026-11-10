@@ -11,10 +11,10 @@ export default function Home() {
           <p className="hero-saluto">Ciao, sono</p>
           <h1 className="hero-nome">Carlos David</h1>
           <p className="hero-ruolo">UX/UI Designer & Web Designer</p>
-          <p>
+          <h3 className="hero-descrizione">
             Progetto e sviluppo interfacce web curate, semplici da usare e belle da vedere.
             Mi piace trasformare idee in prodotti digitali concreti, partendo dal design.
-          </p>
+          </h3>
         </TestoRitardato>
 
         <div className="home-badge">

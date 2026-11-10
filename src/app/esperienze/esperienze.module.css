@@ -5,7 +5,8 @@
 /* niente box: la timeline sta direttamente sullo sfondo della pagina */
 .timeline {
   position: relative;
-  margin: 2rem 0 2rem;
+  /* sotto niente: lo spazio prima del footer lo danno pagina e footer, uguale per tutte le pagine */
+  margin: 2rem 0 0;
   /* due colonne: la linea del tempo a sinistra, il resto a destra.
      auto = larga quanto serve alle date; gap = la distanza tra linea e contenuto */
   display: grid;
