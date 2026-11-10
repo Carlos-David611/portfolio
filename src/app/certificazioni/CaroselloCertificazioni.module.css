@@ -286,6 +286,15 @@
   opacity: 0.75;
 }
 
+/* ---------- Tablet ----------
+   la scena è alta solo quanto le card (più il loro movimento 3D), non quanto lo schermo:
+   sui tablet in verticale, così alti, tra le card e il footer restava un grande vuoto */
+@media (min-width: 769px) and (max-width: 1180px), (min-width: 769px) and (max-width: 1366px) and (hover: none) {
+  .scena {
+    height: calc(var(--altezza) + 12rem);
+  }
+}
+
 /* ---------- Telefono: card più piccole ---------- */
 @media (max-width: 768px) {
   .scena {

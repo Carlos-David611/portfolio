@@ -286,6 +286,14 @@
   color: var(--accento);
 }
 
+/* ---------- Tablet ----------
+   sopra ci sono già i 2rem di margine della pagina: in tutto circa 100px su ogni pagina */
+@media (min-width: 769px) and (max-width: 1180px), (min-width: 769px) and (max-width: 1366px) and (hover: none) {
+  .footer {
+    margin-top: 4rem;
+  }
+}
+
 /* ---------- Telefono ---------- */
 @media (max-width: 768px) {
   .footer {

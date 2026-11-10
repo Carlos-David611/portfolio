@@ -412,6 +412,22 @@ article a {
   }
 }
 
+/* tablet (anche l'iPad grande in orizzontale, che non ha il mouse):
+   sezioni un po' più staccate che sul telefono, ma meno che sul computer */
+@media (min-width: 769px) and (max-width: 1180px), (min-width: 769px) and (max-width: 1366px) and (hover: none) {
+  .competenze {
+    margin-block: 3rem;
+  }
+
+  .competenze:last-child {
+    margin-bottom: 0;
+  }
+
+  .competenze:first-child {
+    margin-top: 0;
+  }
+}
+
 /* per chi ha chiesto al sistema di ridurre i movimenti */
 @media (prefers-reduced-motion: reduce) {
   .competenze,
