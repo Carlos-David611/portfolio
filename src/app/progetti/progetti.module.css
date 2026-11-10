@@ -1,0 +1,323 @@
+/* ===== Pagina Progetti: CSS Module, vale solo per questa pagina ===== */
+
+.etichetta {
+  margin: 0;
+  color: var(--accento);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.titoloPagina {
+  margin: 0.25rem 0 2.5rem;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* due colonne; sul telefono diventa una sola */
+.griglia {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem;
+}
+
+/* ---------- la card ---------- */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 2.25rem;
+  overflow: hidden;
+  border-radius: 28px;
+  color: #fff;
+  /* vetro cannettato, solo CSS. Dall'alto verso il basso gli strati sono:
+     1. il velo che scurisce in basso, per i testi
+     2. le coste: 101deg = inclinazione, 16px = larghezza di una costa;
+        il primo bianco è il riflesso, l'ultimo nero è l'ombra sul bordo
+     3-4. le macchie di colore dietro il vetro
+     5-6. la luce in alto e il vetro scuro di base */
+  background:
+    linear-gradient(180deg, transparent 20%, rgba(12, 12, 12, 0.45) 100%),
+    repeating-linear-gradient(
+      101deg,
+      transparent 0,
+      rgba(255, 255, 255, 0.11) 3px,
+      transparent 6px,
+      transparent 9px,
+      rgba(0, 0, 0, 0.32) 16px
+    ),
+    radial-gradient(ellipse 60% 45% at 75% 55%, rgba(255, 90, 54, 0.45), transparent 100%),
+    radial-gradient(ellipse 50% 40% at 15% 25%, rgba(170, 165, 160, 0.3), transparent 100%),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.2), transparent 40%),
+    rgba(12, 12, 12, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  /* la riga -webkit- deve restare prima: invertendole, in Chrome la sfocatura sparisce.
+     blur = quanto è sfocato ciò che sta dietro, saturate = quanto ne ravviva i colori */
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    0 2px 0 #2a2a2a,
+    0 4px 0 #1e1e1e,
+    0 6px 0 #141414,
+    0 30px 50px rgba(0, 0, 0, 0.55);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.5s, box-shadow 0.5s;
+}
+
+/* il bagliore rosso nell'angolo, si accende al passaggio */
+.card::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -30%;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 74, 28, 0.55), transparent 65%);
+  filter: blur(30px);
+  opacity: 0.35;
+  pointer-events: none;
+  transition: opacity 0.5s, transform 0.6s;
+}
+
+/* la linea luminosa in basso, come sotto la navbar */
+.card::after {
+  content: "";
+  position: absolute;
+  left: 2.25rem;
+  right: 2.25rem;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accento), transparent);
+  transform: scaleX(0);
+  transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(255, 90, 54, 0.35);
+}
+
+.card:hover::before {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.card:hover::after {
+  transform: scaleX(1);
+}
+
+/* ---------- contenuto ---------- */
+.cardTesta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.numero {
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.85);
+  transition: -webkit-text-stroke-color 0.4s;
+}
+
+.card:hover .numero {
+  -webkit-text-stroke-color: var(--accento);
+}
+
+.categoria {
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 90, 54, 0.45);
+  background: rgba(255, 90, 54, 0.12);
+  color: #ffb4a3;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.titolo {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.descrizione {
+  margin: 0 0 1.5rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1.05rem;
+}
+
+.obiettivi {
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.obiettivi li {
+  position: relative;
+  padding-left: 1.4rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+/* il pallino arancione al posto del punto elenco */
+.obiettivi li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accento);
+  box-shadow: 0 0 8px var(--accento);
+}
+
+.tecnologie {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.tag {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.85rem;
+  transition: background 0.3s, color 0.3s;
+}
+
+.tag:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* il bottone resta sempre in fondo alla card */
+.bottone {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.4rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #ff5a36, #c8240f);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 8px 20px rgba(229, 50, 28, 0.35);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.bottone:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 12px 28px rgba(229, 50, 28, 0.55);
+}
+
+.freccia {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.bottone:hover .freccia {
+  transform: translateX(4px);
+}
+
+/* ---------- telefono ---------- */
+@media (max-width: 860px) {
+  .griglia {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 1.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- tema giorno ----------
+   :global serve perché data-tema sta su <html>, fuori da questo modulo */
+:global(:root[data-tema="giorno"]) .card {
+  color: var(--testo);
+  /* gli stessi strati del tema notte, con colori chiari.
+     Ultima riga: il colore della card; più è basso l'ultimo numero, più è trasparente */
+  background:
+    linear-gradient(180deg, rgba(255, 240, 228, 0.2) 0%, rgba(255, 240, 228, 0.55) 100%),
+    repeating-linear-gradient(
+      101deg,
+      transparent 0,
+      rgba(255, 255, 255, 0.4) 3px,
+      transparent 6px,
+      transparent 9px,
+      rgba(90, 50, 35, 0.1) 16px
+    ),
+    radial-gradient(ellipse 60% 45% at 75% 55%, rgba(255, 90, 54, 0.22), transparent 100%),
+    radial-gradient(ellipse 50% 40% at 15% 25%, rgba(120, 110, 105, 0.18), transparent 100%),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.5), transparent 40%),
+    rgba(255, 240, 228, 0.12);
+  border-color: rgba(255, 255, 255, 0.75);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    0 2px 0 #e7d9cd,
+    0 4px 0 #ddccbe,
+    0 6px 0 #d3c0b0,
+    0 30px 50px rgba(90, 50, 35, 0.2);
+}
+
+:global(:root[data-tema="giorno"]) .numero {
+  -webkit-text-stroke-color: rgba(60, 30, 20, 0.75);
+}
+
+:global(:root[data-tema="giorno"]) .card:hover .numero {
+  -webkit-text-stroke-color: var(--accento);
+}
+
+:global(:root[data-tema="giorno"]) .categoria {
+  border-color: rgba(194, 51, 15, 0.45);
+  background: rgba(194, 51, 15, 0.08);
+  color: #9c2a0c;
+}
+
+:global(:root[data-tema="giorno"]) .descrizione {
+  color: #3d322c;
+}
+
+:global(:root[data-tema="giorno"]) .obiettivi li {
+  color: var(--testo);
+}
+
+:global(:root[data-tema="giorno"]) .tag {
+  border-color: rgba(60, 30, 20, 0.22);
+  background: rgba(60, 30, 20, 0.05);
+}
+
+:global(:root[data-tema="giorno"]) .tag:hover {
+  background: var(--testo);
+  color: #fff;
+}

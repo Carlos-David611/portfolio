@@ -1,0 +1,405 @@
+/* ==========================================================
+   NAVBAR: la lastra di vetro fluttuante in alto.
+   Il pulsante giorno/notte che sta dentro ha i suoi stili in globals.css (.tema-bottone)
+   ========================================================== */
+
+.navbar {
+  /* sticky + top: resta sospesa a 12px dal bordo anche mentre si scrolla */
+  position: sticky;
+  top: 12px;
+  z-index: 10;
+  height: var(--altezza-navbar);
+
+  /* più stretta dello schermo e centrata: così "galleggia" */
+  width: min(1200px, 100% - 2rem);
+  margin: 12px auto 0;
+
+  /* tre colonne: logo a sinistra, link al centro, la terza vuota bilancia la prima */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 1.75rem;
+
+  /* gli angoli tondi: più è alto il numero, più è tondeggiante */
+  border-radius: 24px;
+
+  /* 1. il vetro: un po' più chiaro in alto, come una lastra colpita dalla luce */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.03)
+  );
+
+  /* 2. la smerigliatura (la riga -webkit- deve restare prima) */
+  -webkit-backdrop-filter: blur(28px) saturate(110%);
+  backdrop-filter: blur(28px) saturate(110%);
+
+  border: 1px solid rgba(255, 255, 255, 0.14);
+
+  /* 3. lo spessore e il sollevamento:
+        - le due inset = riflesso sul bordo alto, ombra sul bordo basso
+        - le ombre senza sfocatura (0 3px 0...) = il fianco della lastra
+        - le ultime due, sfocate = l'ombra sulla pagina, che la fa sembrare sollevata */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.06),
+    0 3px 0 #1c1c1c,
+    0 5px 0 #141414,
+    0 7px 0 #0d0d0d,
+    0 18px 30px rgba(0, 0, 0, 0.55),
+    0 30px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* 4. il riflesso di luce sulla metà alta del vetro */
+.navbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* inherit: il riflesso segue gli stessi angoli tondi della navbar */
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.05) 45%,
+    transparent 60%
+  );
+}
+
+/* 5. la luce sotto la navbar, con i colori dello sfondo */
+.navbar::after {
+  content: "";
+  position: absolute;
+  /* più sono alti left e right, più la luce è stretta */
+  left: 10%;
+  right: 10%;
+  /* parte appena sotto lo spessore della navbar */
+  top: calc(100% + 8px);
+  height: 34px;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(255, 90, 54, 0.6) 0%,
+    rgba(229, 50, 28, 0.25) 45%,
+    transparent 75%
+  );
+  /* la sfocatura trasforma la macchia in un alone di luce */
+  filter: blur(14px);
+  animation: navbar-luce 6s ease-in-out infinite alternate;
+}
+
+/* la luce "respira": si allarga e si accende piano */
+@keyframes navbar-luce {
+  from { opacity: 0.6; transform: scaleX(0.9); }
+  to   { opacity: 1;   transform: scaleX(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar::after {
+    animation: none;
+  }
+}
+
+.logo {
+  position: relative;
+  justify-self: start;
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: text-shadow 0.3s, transform 0.3s;
+}
+
+/* il logo si illumina al passaggio: fa capire che si può cliccare */
+.logo:hover {
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+}
+
+.links {
+  position: relative;
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* i link sono piccole "pillole" di vetro che si accendono al passaggio */
+.links a {
+  /* relative: serve al ::before per posizionarsi sopra la pillola
+     isolation: il ::before con z-index -1 resta dietro al testo ma dentro la pillola */
+  position: relative;
+  isolation: isolate;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  transition: border-color 0.4s, box-shadow 0.4s;
+}
+
+/* il vetro colorato: è nascosto (opacity 0) e compare in hover */
+.links a::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    /* 1. il riflesso: luce in alto che sfuma verso il basso */
+    linear-gradient(
+      180deg,
+      rgba(225, 13, 13, 0.129) 0%,
+      rgba(255, 255, 255, 0.03) 55%,
+      transparent 100%
+    ),
+    /* 2. il colore: rosso in alto che sfuma verso il basso
+          l'ultimo numero di ogni colore è la sua forza: più è basso, più è chiaro */
+    linear-gradient(
+      180deg,
+      rgba(209, 127, 109, 0.185) 0%,
+      rgba(120, 112, 110, 0.348) 100%
+    );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.links a:hover {
+  color: #fff;
+  border-color: rgba(255, 120, 90, 0.22);
+  /* bordo chiaro in alto, scuro in basso (lo spessore) e alone rosso intorno */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    0 0 14px rgba(229, 50, 28, 0.18);
+}
+
+.links a:hover::before {
+  opacity: 1;
+}
+
+/* il pulsante burger: su computer è nascosto, si attiva nel blocco Telefono */
+.burger {
+  display: none;
+}
+
+/* i link restano nella colonna centrale anche se nel codice vengono dopo le azioni */
+.links {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/* il contenitore a destra: pulsante giorno/notte + burger */
+.azioni {
+  position: relative;
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* ---------- Telefono ---------- */
+@media (max-width: 768px) {
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    /* sul telefono più vicina ai bordi, e un po' meno tonda */
+    width: calc(100% - 1rem);
+    top: 8px;
+    margin-top: 8px;
+    border-radius: 18px;
+    /* niente riquadro: sul telefono restano solo interruttore e burger */
+    background: none;
+    border: none;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    /* la fascia vuota non deve bloccare i tocchi sulla pagina che ci passa sotto */
+    pointer-events: none;
+  }
+
+  .navbar::before,
+  .navbar::after {
+    display: none;
+  }
+
+  .azioni,
+  .links {
+    pointer-events: auto;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+    white-space: nowrap;
+  }
+
+  /* il pulsante burger: 44px è la misura comoda da toccare con il dito */
+  .burger {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    /* solo le tre linee, senza riquadro: l'area da toccare resta comunque di 44px */
+    border: none;
+    border-radius: 12px;
+    background: none;
+    cursor: pointer;
+  }
+
+  /* senza riquadro, chi naviga con la tastiera deve comunque vedere dove si trova */
+  .burger:focus-visible {
+    outline: 2px solid var(--accento);
+    outline-offset: 2px;
+  }
+
+  .burger span {
+    width: 22px;
+    height: 2px;
+    border-radius: 2px;
+    background: #fff;
+    /* l'ombra tiene visibili le linee quando passano sopra testi chiari */
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+    transition: transform 0.35s ease, opacity 0.2s ease;
+  }
+
+  /* a menu aperto le tre linee diventano una X */
+  .burger[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .burger[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .burger[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* il pannello del menu, che scende sotto la navbar */
+  .links {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem 1.25rem;
+    /* stessi angoli della navbar sul telefono */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+    /* fondo pieno: il testo della pagina non deve trasparire dietro il menu */
+    background: #0a0a0a;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  }
+
+  .links.aperto {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* le sezioni entrano da sinistra, una dopo l'altra */
+  .links a {
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    font-size: 1.15rem;
+    opacity: 0;
+    transform: translateX(-28px);
+    transition: opacity 0.4s ease, transform 0.4s ease, background 0.3s;
+  }
+
+  .links.aperto a {
+    opacity: 1;
+    transform: translateX(0);
+    /* il ritardo cresce con la posizione: qui si regola la distanza tra una sezione e l'altra */
+    transition-delay: calc(var(--posizione) * 80ms + 80ms);
+  }
+}
+
+/* per chi ha chiesto al sistema di ridurre i movimenti: il menu appare senza animazioni */
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  .burger span,
+  .links,
+  .links a,
+  .links.aperto a {
+    transition: none;
+  }
+}
+
+/* ---------- Tema giorno ----------
+   :global serve perché data-tema sta su <html>, fuori da questo modulo */
+:global(:root[data-tema="giorno"]) .navbar {
+  /* il vetro: più sono bassi i due ultimi numeri, più è trasparente (0.14 in alto, 0.06 in basso) */
+  background: linear-gradient(180deg, rgba(255, 240, 228, 0.14), rgba(255, 240, 228, 0.06));
+  /* la sfocatura: più è bassa, più si legge cosa passa sotto (la riga -webkit- deve restare prima) */
+  -webkit-backdrop-filter: blur(4px) saturate(110%);
+  backdrop-filter: blur(4px) saturate(110%);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(60, 30, 20, 0.12),
+    0 3px 0 #e7d9cd,
+    0 5px 0 #ddccbe,
+    0 7px 0 #d3c0b0,
+    0 18px 30px rgba(90, 50, 35, 0.2),
+    0 30px 60px rgba(90, 50, 35, 0.12);
+}
+
+/* il riflesso sulla metà alta del vetro: di giorno più leggero, o la navbar torna bianca */
+:global(:root[data-tema="giorno"]) .navbar::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.02) 45%,
+    transparent 60%
+  );
+}
+
+:global(:root[data-tema="giorno"]) .links a,
+:global(:root[data-tema="giorno"]) .links a:hover {
+  color: var(--testo);
+  /* l'alone chiaro tiene leggibili i link quando dietro il vetro passa il video scuro */
+  text-shadow:
+    0 0 3px rgba(255, 255, 255, 0.95),
+    0 0 8px rgba(255, 255, 255, 0.9),
+    0 0 16px rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 768px) {
+  /* anche di giorno, sul telefono, nessun riquadro */
+  :global(:root[data-tema="giorno"]) .navbar {
+    background: none;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  :global(:root[data-tema="giorno"]) .burger span {
+    background: var(--testo);
+    /* di giorno l'alone è chiaro: serve quando le linee passano sopra il badge scuro */
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.95);
+  }
+
+  /* il pannello del menu: anche qui fondo pieno */
+  :global(:root[data-tema="giorno"]) .links {
+    background: #fff8f2;
+    border-color: rgba(60, 30, 20, 0.15);
+    box-shadow: 0 20px 40px rgba(90, 50, 35, 0.25);
+  }
+}

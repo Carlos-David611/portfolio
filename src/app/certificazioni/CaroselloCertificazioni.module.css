@@ -1,0 +1,586 @@
+
+
+/* la scena: le misure delle card stanno qui, cambiale solo qui */
+.scena {
+  /* la larghezza della card cresce sugli schermi alti (tablet in verticale, monitor grandi),
+     da 280 a 380px. Il primo valore dentro min() la lega all'altezza dello schermo,
+     il secondo impedisce che le card escano ai lati. L'altezza segue: 1.36 = le proporzioni */
+  --larghezza: clamp(280px, min(calc((100svh - 22rem) * 0.53), calc((100vw - 3rem) / 2.1 - 30px)), 380px);
+  --altezza: calc(var(--larghezza) * 1.36);
+  /* lo spazio tra l'asse centrale e le card: più è alto, più la ruota è larga.
+     Si adatta allo schermo: 90px al massimo, ma mai tanto da far uscire le card ai lati.
+     2.1 = quante volte (card + distanza) sta nella ruota vista di fronte; 3rem = margine */
+  --distanza: clamp(24px, calc((100vw - 3rem) / 2.1 - var(--larghezza)), 90px);
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  /* tutto lo spazio che resta sotto il testo, con la ruota al centro: così sotto le card
+     non resta una fascia vuota. 18rem = navbar, intestazione e margini */
+  height: max(calc(var(--altezza) + 10rem), calc(100svh - 18rem));
+  /* da quanto lontano guardiamo: più è basso, più l'effetto 3D è forte */
+  perspective: 1400px;
+  /* clip: niente scroll orizzontale quando le card escono ai lati */
+  overflow-x: clip;
+  /* la ruota si trascina in orizzontale (lo gestisce il componente);
+     in verticale il dito continua a scorrere la pagina */
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.scena[data-trascino] {
+  cursor: grabbing;
+}
+
+/* il ventaglio: l'inclinazione fissa, come se lo guardassimo un po' dall'alto.
+   È largo e alto 0: è solo il punto in cui passa l'asse */
+.ventaglio {
+  position: relative;
+  width: 0;
+  height: 0;
+  transform: rotateX(-4deg);
+  transform-style: preserve-3d;
+}
+
+/* la ruota: è lei che gira.
+   La teniamo separata dal ventaglio, così la rotazione non cancella l'inclinazione */
+.ruota {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* da ferma (movimenti ridotti) resta girata di 20°, perché si vedano bene le card */
+  transform: rotateY(-20deg);
+  transform-style: preserve-3d;
+  /* il primo tempo è quanto ci mette a fare un giro: più è alto, più è lenta */
+  animation: ruota-gira 40s linear infinite;
+}
+
+/* parte dai -20° di prima e fa un giro intero */
+@keyframes ruota-gira {
+  from { transform: rotateY(-20deg); }
+  to   { transform: rotateY(-380deg); }
+}
+
+/* "fermati su una card per guardarla": col mouse sopra.
+   Solo dove c'è davvero un mouse (hover: hover): sui telefoni, dopo un tocco, la ruota
+   resterebbe "sotto il cursore" finché non tocchi altrove, e non ripartirebbe più */
+@media (hover: hover) {
+  .ruota:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* ferma anche:
+   - arrivandoci col tasto Tab. focus-visible e non focus-within: dopo un tocco o un clic
+     la card resta selezionata, e la ruota non ripartirebbe più
+   - mentre il certificato è aperto
+   - mentre la giri col dito, e per qualche secondo dopo (data-fermo, dal componente) */
+.ruota:has(.card:focus-visible),
+.scena:has(.visore[open]) .ruota,
+.ruota[data-fermo] {
+  animation-play-state: paused;
+}
+
+/* chi ha chiesto meno movimenti nel sistema la vede ferma */
+@media (prefers-reduced-motion: reduce) {
+  .ruota {
+    animation: none;
+  }
+}
+
+/* ogni "raggio" è una card attaccata all'asse con il suo lato sinistro */
+.raggio {
+  position: absolute;
+  left: 0;
+  /* metà dell'altezza verso l'alto: così la card è centrata sull'asse */
+  top: calc(var(--altezza) / -2);
+  width: var(--larghezza);
+  height: var(--altezza);
+  /* la cerniera: la card ruota intorno al lato sinistro, non al centro */
+  transform-origin: left center;
+  /* --angolo arriva dal componente (0°, 60°, 120°...) */
+  transform: rotateY(var(--angolo)) translateX(var(--distanza));
+  transform-style: preserve-3d;
+}
+
+/* la card: è un bottone (nel passo 3 al clic aprirà il PDF) */
+.card {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: none;
+  border-radius: 18px;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+
+/* ---------- Le due facce ---------- */
+.fronte,
+.retro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border-radius: 18px;
+  overflow: hidden;
+  /* quando la faccia ci dà le spalle, sparisce: niente scritte a specchio */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  color: var(--inchiostro);
+  
+  background:
+    linear-gradient(180deg, transparent 35%, var(--velo) 100%),
+    repeating-linear-gradient(
+      101deg,
+      transparent 0,
+      var(--costa-luce) 3px,
+      transparent 6px,
+      transparent 9px,
+      var(--costa-ombra) 16px
+    ),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.2), transparent 40%),
+    var(--sfondo);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+/* ---------- Il certificato che si intravede ----------
+   sta sotto i testi e si fonde con il colore della card: --anteprima-forza dice quanto si
+   vede, --anteprima-fusione come si mescola (cambiano per ogni palette, vedi sotto) */
+.anteprima {
+  object-fit: cover;
+  opacity: var(--anteprima-forza);
+  mix-blend-mode: var(--anteprima-fusione);
+  /* l'immagine ha già le sue coste, larghe quasi come quelle della card: sovrapposte
+     farebbero righe incrociate. Sfocata, resta solo la sagoma del certificato */
+  filter: blur(1.5px);
+  /* il bordo sfocato sbiadirebbe: ingrandita un poco, esce dalla card e non si vede */
+  transform: scale(1.06);
+  pointer-events: none;
+}
+
+/* i testi stanno sopra il certificato */
+.fronte > :not(.anteprima),
+.retro > :not(.anteprima) {
+  position: relative;
+  z-index: 1;
+}
+
+/* il fronte: un poster tipografico */
+.fronte {
+  justify-content: space-between;
+}
+
+/* il retro: girato di 180° rispetto al fronte, dello stesso colore */
+.retro {
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transform: rotateY(180deg);
+}
+
+/* ---------- Le quattro palette dei poster ----------
+   il componente dà a ogni card un numero da 0 a 3 (data-colore).
+   --sfondo e --inchiostro: il colore della card e dei testi.
+   --costa-luce, --costa-ombra e --velo: quanto si vede il vetro; sulla card chiara
+   sono più tenui, altrimenti la sporcherebbero */
+.raggio[data-colore="0"],
+.copertina[data-colore="0"] {
+  --sfondo: linear-gradient(160deg, #ff5a36, #c8240f);
+  --inchiostro: #fff;
+  --costa-luce: rgba(255, 255, 255, 0.14);
+  --costa-ombra: rgba(0, 0, 0, 0.22);
+  --velo: rgba(80, 15, 5, 0.35);
+  --anteprima-forza: 0.78;
+  --anteprima-fusione: luminosity;
+}
+
+.raggio[data-colore="1"],
+.copertina[data-colore="1"] {
+  --sfondo: #f2ebe4;
+  --inchiostro: #121212;
+  --costa-luce: rgba(255, 255, 255, 0.6);
+  --costa-ombra: rgba(90, 50, 35, 0.1);
+  --velo: rgba(255, 240, 228, 0.5);
+  --anteprima-forza: 0.62;
+  --anteprima-fusione: multiply;
+}
+
+.raggio[data-colore="2"],
+.copertina[data-colore="2"] {
+  --sfondo: linear-gradient(160deg, #2c2c2c, #0b0b0b);
+  --inchiostro: #fff;
+  --costa-luce: rgba(255, 255, 255, 0.11);
+  --costa-ombra: rgba(0, 0, 0, 0.32);
+  --velo: rgba(12, 12, 12, 0.45);
+  --anteprima-forza: 0.68;
+  --anteprima-fusione: luminosity;
+}
+
+.raggio[data-colore="3"],
+.copertina[data-colore="3"] {
+  --sfondo: linear-gradient(160deg, #ffb347, #ff7a3d);
+  --inchiostro: #1a0d08;
+  --costa-luce: rgba(255, 255, 255, 0.22);
+  --costa-ombra: rgba(120, 40, 10, 0.18);
+  --velo: rgba(255, 140, 70, 0.3);
+  --anteprima-forza: 0.72;
+  --anteprima-fusione: luminosity;
+}
+
+/* ---------- La tipografia del poster ---------- */
+
+/* l'anno enorme e sottile, come il "5.1" del riferimento */
+.anno {
+  font-size: 5.5rem;
+  font-weight: 200;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.testi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ente {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.nome {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* il retro */
+.retroIniziali {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  /* il bordo è il colore dei testi, più trasparente */
+  border: 1px solid color-mix(in srgb, var(--inchiostro) 35%, transparent);
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.retroAnno {
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  opacity: 0.75;
+}
+
+/* ---------- Telefono: card più piccole ---------- */
+@media (max-width: 768px) {
+  .scena {
+    /* 170px sui telefoni; sui tablet piccoli (fino a 768px) cresce come sopra, ma al massimo
+       280px. 2.4 e non 2.1: qui la prospettiva è più forte e le card vicine sembrano più larghe */
+    --larghezza: clamp(170px, min(calc((100svh - 22rem) * 0.53), calc((100vw - 1rem) / 2.4 - 12px)), 280px);
+    /* sui telefoni le card sono più slanciate: la larghezza non può crescere (uscirebbero ai
+       lati), l'altezza sì, tra 240 e 290px. Sui tablet vince la proporzione normale */
+    --altezza: max(clamp(240px, calc(100svh - 560px), 290px), calc(var(--larghezza) * 1.36));
+    /* la scena prende tutto lo spazio che resta sotto il testo e ci mette la ruota al centro:
+       così sotto le card non resta una fascia vuota. 18rem = navbar, intestazione e margini */
+    height: max(calc(var(--altezza) + 6rem), calc(100svh - 18rem));
+    /* come sopra, con un margine più piccolo: qui lo schermo è stretto */
+    --distanza: clamp(4px, calc((100vw - 1rem) / 2.1 - var(--larghezza)), 40px);
+    perspective: 900px;
+    /* la ruota è più larga della colonna del testo: la scena esce dai margini della pagina
+       (2rem per lato, il padding di .contenuto) e usa tutta la larghezza.
+       Non 100vw: conterebbe anche la barra di scorrimento, e la pagina scorrerebbe di lato */
+    width: calc(100% + 4rem);
+    margin-left: -2rem;
+  }
+
+  .fronte,
+  .retro {
+    padding: 1rem;
+  }
+
+  .anno {
+    font-size: 3.4rem;
+  }
+
+  .nome {
+    font-size: 1.1rem;
+  }
+
+  .retroIniziali {
+    width: 60px;
+    height: 60px;
+    font-size: 1.3rem;
+  }
+}
+
+/* ---------- Telefoni più stretti: la ruota deve stare nello schermo ---------- */
+@media (max-width: 360px) {
+  .scena {
+    /* qui i margini della pagina sono di 1rem per lato */
+    width: calc(100% + 2rem);
+    margin-left: -1rem;
+    --larghezza: 140px;
+    --altezza: 198px;
+  }
+
+  .anno {
+    font-size: 3rem;
+  }
+
+  .nome {
+    font-size: 1rem;
+  }
+}
+
+/* ==========================================================
+   Il visore del PDF
+   ========================================================== */
+
+/* a visore aperto la pagina dietro non scorre */
+:global(html):has(.visore[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+/* [open]: display va deciso solo da aperto, altrimenti il visore resterebbe sempre visibile */
+.visore[open] {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.visore::backdrop {
+  background: transparent;
+}
+
+@keyframes visore-entra {
+  from { opacity: 0; }
+}
+
+/* il fondo scuro e sfocato dietro il certificato */
+.fondo {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.72);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* il pannello. L'arrivo (la card che vola) lo anima il componente */
+.pannello {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* la larghezza che fa stare il foglio intero anche in altezza (90px = l'intestazione) */
+  width: min(1040px, 94vw, calc((92dvh - 90px) * 1.34));
+  max-height: 92dvh;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(155deg, #34302d, #1a1816);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 2px 0 #24211f,
+    0 4px 0 #1c1a18,
+    0 6px 0 #151312,
+    0 8px 0 #0f0e0d,
+    0 50px 90px rgba(0, 0, 0, 0.7);
+}
+
+.pannelloTesta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1rem 0.85rem 1.5rem;
+}
+
+.pannelloTitoli {
+  min-width: 0;
+}
+
+.pannelloEnte {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ffd0c4;
+}
+
+.pannelloNome {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.chiudi {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.chiudi svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.chiudi:hover {
+  border-color: rgba(255, 90, 54, 0.6);
+  background: rgba(255, 90, 54, 0.14);
+}
+
+.chiudi:focus-visible,
+.apriFile:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 2px;
+}
+
+/* il foglio del certificato, con le proporzioni degli attestati */
+.foglio {
+  position: relative;
+  aspect-ratio: 1600 / 1190;
+  width: 100%;
+  min-height: 0;
+}
+
+/* all'arrivo diventa bianco mentre il PDF si carica */
+.foglioPronto {
+  background: #fff;
+}
+
+/* ---------- La card che vola ---------- */
+
+/* il suo posto nella ruota resta vuoto finché è aperta */
+.volata .card {
+  visibility: hidden;
+}
+
+/* la faccia della card sopra il pannello: si vede solo durante il volo (la anima il componente) */
+.copertina {
+  z-index: 3;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* qui PDF.js mette le pagine: centrate, e se sono più di una si scorrono */
+.pagine {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow: auto;
+}
+
+/* la pagina non compare di colpo: entra con una dissolvenza.
+   max-width e max-height: resta intera nel foglio, a qualsiasi grandezza */
+.pdf {
+  display: block;
+  flex-shrink: 0;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+  animation: visore-entra 0.4s ease-out;
+}
+
+/* "Caricamento…" o il messaggio di errore, al centro del foglio */
+.avviso {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 1.5rem;
+  color: #1a1512;
+  text-align: center;
+}
+
+.avviso p {
+  margin: 0;
+}
+
+.apriFile {
+  padding: 0.75rem 1.4rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff5a36, #c8240f);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pdf {
+    animation: none;
+  }
+}
+
+/* tema giorno del visore */
+:global(:root[data-tema="giorno"]) .fondo {
+  background: rgba(90, 60, 45, 0.45);
+}
+
+:global(:root[data-tema="giorno"]) .pannello {
+  background: linear-gradient(155deg, #fffaf5, #f0e2d6);
+  border-color: rgba(255, 255, 255, 0.8);
+  color: var(--testo);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 2px 0 #dfcdbf,
+    0 4px 0 #d5c1b2,
+    0 6px 0 #cab5a5,
+    0 8px 0 #bfa998,
+    0 50px 90px rgba(60, 30, 20, 0.45);
+}
+
+:global(:root[data-tema="giorno"]) .pannelloEnte {
+  color: #9c2a0c;
+}
+
+:global(:root[data-tema="giorno"]) .chiudi {
+  border-color: rgba(60, 30, 20, 0.25);
+  background: rgba(60, 30, 20, 0.05);
+}

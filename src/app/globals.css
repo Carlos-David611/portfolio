@@ -1,49 +1,809 @@
+/* ==========================================================
+   COLORI DEL SITO
+   cambiate un valore qui e cambia in tutte le pagine
+   ========================================================== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html {
-  height: 100%;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --testo: #f5f5f5;
+  --grigio: #a3a3a3;
+  --bordo: rgba(255, 255, 255, 0.12);
+  --accento: #ff5a36;
+  --card: rgba(20, 20, 20, 0.6);
+  --altezza-navbar: 64px;
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
+}
+
+/* la pagina non scorre mai di lato: se un elemento animato (il badge che oscilla, gli archi
+   dello sfondo, le card che girano) sporge per un istante oltre il bordo, viene tagliato.
+   clip e non hidden: hidden romperebbe la navbar che resta in alto (position: sticky) */
+html,
+body {
+  overflow-x: clip;
+}
+
+body {
   margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  color: var(--testo);
+  background: #0a0a0a;
 }
 
 a {
   color: inherit;
-  text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* ---------- Contenuto ---------- */
+.contenuto {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ---------- Card di progetti, esperienze e certificazioni ---------- */
+article {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--bordo);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--testo);
+  backdrop-filter: blur(10px);
+}
+
+/* i link delle card */
+article a {
+  color: var(--accento);
+}
+
+/* ---------- Intestazione della pagina Esperienze ---------- */
+/* il titolo grande di Esperienze e Certificazioni: stessi valori di "Progetti"
+   (.titoloPagina in progetti.module.css). Se ne cambi uno, cambia anche l'altro.
+   Solo lo spazio sotto è minore, perché qui segue il sottotitolo */
+.pagina-titolo {
+  margin: 0.25rem 0 0.75rem;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* intestazione e timeline hanno la stessa larghezza, centrata nella pagina:
+   1080px è la larghezza massima del blocco, più è basso più il contenuto va verso il centro.
+   4rem sono i margini minimi ai lati nelle finestre strette */
+.contenuto {
+  --larghezza-esperienze: min(1080px, 100vw - 4rem);
+}
+
+@media (min-width: 769px) {
+  .esperienze-intestazione {
+    width: var(--larghezza-esperienze);
+    margin-left: calc((100% - var(--larghezza-esperienze)) / 2);
   }
+}
+
+.esperienze-sottotitolo {
+  margin: 0.25rem 0 0;
+  color: var(--grigio);
+  font-size: 1.2rem;
+}
+
+/* ---------- Home ---------- */
+.home-hero {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.5rem;
+  /* nessuna altezza minima: alta quanto il suo contenuto. Con 100vh, sugli schermi
+     alti come i tablet in verticale, sotto il badge restava un grande vuoto */
+}
+
+.hero-saluto {
+  color: var(--accento);
+  font-weight: 600;
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.hero-nome {
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  margin: 0.25rem 0 0.5rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.hero-ruolo {
+  font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+  color: var(--grigio);
+  margin: 0 0 2rem;
+}
+
+
+/* più è alto il numero, più il testo scende:
+   con 12.375rem parte alla stessa altezza della card del badge */
+.home-testo {
+  padding-top: 12.375rem;
+}
+
+.home-testo p:last-child {
+  max-width: 600px;
+  font-size: 1.3rem;
+  line-height: 1.6;
+}
+
+/* la colonna del badge parte da dietro la navbar e scorre con la pagina */
+.home-badge {
+  align-self: start;
+  display: flex;
+  justify-content: flex-start;
+  /* -2rem annulla il padding di .contenuto, -40px porta il laccio dietro la navbar */
+  margin-top: calc(-2rem - 40px);
+}
+
+/* il badge sfuma mentre esce in alto (solo nei browser che lo supportano) */
+@supports (animation-timeline: view()) {
+  .home-badge {
+    animation: badge-esce linear both;
+    animation-timeline: view();
+    animation-range: exit 0% exit 60%;
+  }
+
+  @keyframes badge-esce {
+    to {
+      opacity: 0;
+      transform: scale(0.92) translateY(-20px);
+    }
+  }
+}
+
+/* ---------- Telefono ---------- */
+@media (max-width: 768px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+  }
+
+  /* qui il badge sta sotto il testo: non serve allinearli.
+     padding-top è la distanza tra la navbar e la scritta */
+  .home-testo {
+    padding-top: 1.5rem;
+  }
+
+  .home-badge {
+    justify-content: center;
+    margin-top: 0;
+  }
+
+}
+
+/* sui telefoni più stretti il badge da 290px non ci starebbe con i margini pieni */
+@media (max-width: 360px) {
+  .contenuto {
+    padding-inline: 1rem;
+  }
+}
+
+/* ---------- Sfondo animato ---------- */
+.sfondo {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 35%, #1d1d1d 0%, #0b0b0b 55%, #050505 100%);
+}
+
+/* le macchie di luce */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  will-change: transform;
+  /* quanto si vede il rosso dello sfondo: da 0 (niente) a 1 (pieno) */
+  opacity: 0.4;
+}
+
+/* in animation il primo tempo è la durata: più è basso, più la macchia è veloce */
+.blob-1 {
+  width: 50vw;
+  height: 50vw;
+  top: -28vw;
+  left: -22vw;
+  background: radial-gradient(circle, #c9543a 0%, #7d2a18 35%, transparent 70%);
+  animation: muovi-1 9s ease-in-out infinite alternate;
+}
+
+.blob-2 {
+  width: 55vw;
+  height: 55vw;
+  bottom: -30vw;
+  right: -22vw;
+  background: radial-gradient(circle, #c9583a 0%, #76281a 35%, transparent 70%);
+  animation: muovi-2 11s ease-in-out infinite alternate;
+}
+
+.blob-3 {
+  width: 45vw;
+  height: 45vw;
+  top: 35%;
+  left: 30%;
+  background: radial-gradient(circle, rgba(120, 35, 20, 0.4) 0%, transparent 70%);
+  animation: muovi-3 13s ease-in-out infinite alternate;
+}
+
+/* in "to" ci sono lo spostamento e la grandezza finale di ogni macchia */
+@keyframes muovi-1 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(12vw, 9vw) scale(1.15); }
+}
+
+@keyframes muovi-2 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-14vw, -9vw) scale(1.2); }
+}
+
+@keyframes muovi-3 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-18vw, 12vw) scale(0.85); }
+}
+
+/* le linee curve */
+.arco {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  will-change: transform;
+}
+
+.arco-1 {
+  width: 90vw;
+  height: 90vw;
+  top: -62vw;
+  left: -45vw;
+  border-bottom-color: rgba(255, 90, 40, 0.95);
+  border-right-color: rgba(255, 90, 40, 0.45);
+  filter: drop-shadow(0 0 8px rgba(255, 80, 30, 0.8));
+  animation: oscilla-1 14s ease-in-out infinite alternate;
+}
+
+.arco-2 {
+  width: 110vw;
+  height: 110vw;
+  top: -20vw;
+  left: 20vw;
+  border-bottom-color: rgba(255, 80, 30, 0.8);
+  filter: drop-shadow(0 0 6px rgba(255, 135, 30, 0.5));
+  animation: oscilla-2 17s ease-in-out infinite alternate;
+}
+
+.arco-3 {
+  width: 80vw;
+  height: 80vw;
+  top: 50vh;
+  left: -40vw;
+  border-top-color: rgba(255, 255, 255, 0.3);
+  border-right-color: rgba(255, 255, 255, 0.15);
+  animation: oscilla-1 20s ease-in-out infinite alternate-reverse;
+}
+
+/* i gradi dicono quanto ruotano le linee: più sono distanti, più ampio è il movimento */
+@keyframes oscilla-1 {
+  from { transform: rotate(-20deg); }
+  to   { transform: rotate(24deg); }
+}
+
+@keyframes oscilla-2 {
+  from { transform: rotate(22deg); }
+  to   { transform: rotate(-22deg); }
+}
+
+/* ---------- Scritta gigante di sfondo ---------- */
+.sfondo-scritta {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1vw;
+  color: #c4b6b635;
+  opacity: 0.3;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.riga-1 { font-size: 14vw; }
+.riga-2 { font-size: 12vw; }
+.riga-3 { font-size: 6vw; letter-spacing: 0.05em; }
+
+/* sul telefono la scritta finisce dietro i testi: più tenue, così restano leggibili */
+@media (max-width: 768px) {
+  .sfondo-scritta {
+    opacity: 0.12;
+  }
+}
+
+/* la grana */
+.grana {
+  position: absolute;
+  inset: 0;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* chi ha chiesto meno animazioni nel sistema operativo, le vede ferme */
+@media (prefers-reduced-motion: reduce) {
+  .blob,
+  .arco {
+    animation: none;
+  }
+}
+
+/* ---------- Competenze ---------- */
+.competenze {
+  background: #0000005b;
+  color: #fff;
+  border-radius: 28px;
+  /* la larghezza del contenitore: esce dalla colonna centrale della pagina */
+  --larghezza-competenze: min(1200px, 100vw - 3rem);
+  box-sizing: border-box;
+  width: var(--larghezza-competenze);
+  margin: 4rem calc((100% - var(--larghezza-competenze)) / 2);
+  padding: clamp(2rem, 5vw, 4rem);
+  /* la luce sulla superficie, sopra il colore di fondo */
+  background-image: linear-gradient(155deg, rgba(255, 255, 255, 0.12), transparent 45%);
+  backdrop-filter: blur(10px);
+  /* l'inclinazione: più è alto rotateX, più il contenitore sembra coricato */
+  transform: perspective(1600px) rotateX(3deg);
+  transform-origin: center bottom;
+  transition: transform 0.6s ease-out;
+  /* riflesso sul bordo, spessore del blocco e ombra sotto */
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.28),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.6),
+    0 2px 0 #333,
+    0 4px 0 #2a2a2a,
+    0 6px 0 #222,
+    0 8px 0 #1a1a1a,
+    0 10px 0 #121212,
+    0 40px 70px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* passando il mouse il contenitore si raddrizza e si solleva */
+.competenze:hover {
+  transform: perspective(1600px) rotateX(0deg) translateY(-8px);
+}
+
+/* col dito non esiste il passaggio del mouse: dopo un tocco resterebbe bloccato sollevato */
+@media (hover: none) {
+  .competenze:hover {
+    transform: perspective(1600px) rotateX(3deg);
+  }
+}
+
+/* sul telefono il box è molto alto: con 3 gradi la parte alta si abbasserebbe parecchio,
+   allargando lo spazio sotto il badge rispetto agli altri dispositivi */
+@media (max-width: 768px) {
+  .competenze,
+  .competenze:hover {
+    transform: perspective(1600px) rotateX(1deg);
+  }
+}
+
+/* per chi ha chiesto al sistema di ridurre i movimenti */
+@media (prefers-reduced-motion: reduce) {
+  .competenze,
+  .competenze:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
+.competenze-etichetta {
+  color: var(--accento);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.competenze-titolo {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin: 0.25rem 0 2.5rem;
+  letter-spacing: -0.02em;
+}
+
+.competenze-griglia {
+  display: grid;
+  /* min() evita che le colonne escano dal contenitore sui telefoni */
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ogni competenza */
+.competenza {
+  position: relative;
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: default;
+  transition: background 0.4s;
+}
+
+/* la linea arancione che si allunga */
+.competenza::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0;
+  height: 2px;
+  background: var(--accento);
+  transition: width 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.competenza:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.competenza:hover::after {
+  width: 100%;
+}
+
+.competenza-numero {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-variant-numeric: tabular-nums;
+}
+
+.competenza-nome {
+  font-size: 1.8rem;
+  margin: 0.5rem 0;
+  font-weight: 800;
+}
+
+/* il testo che scorre verso l'alto */
+.scorri {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.35;
+}
+
+.scorri-interno {
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.scorri-interno::after {
+  content: attr(data-testo);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  color: var(--accento);
+}
+
+.competenza:hover .scorri-interno {
+  transform: translateY(-100%);
+}
+
+.competenza-descrizione {
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  max-width: 320px;
+  transition: color 0.4s, transform 0.4s;
+}
+
+.competenza:hover .competenza-descrizione {
+  color: #fff;
+  transform: translateX(6px);
+}
+
+/* la freccia che compare */
+.competenza-freccia {
+  position: absolute;
+  top: 2rem;
+  right: 1.5rem;
+  font-size: 1.5rem;
+  color: var(--accento);
+  opacity: 0;
+  transform: translate(-12px, 12px) rotate(-45deg);
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+.competenza:hover .competenza-freccia {
+  opacity: 1;
+  transform: translate(0, 0) rotate(-45deg);
+}
+
+/* gli strumenti */
+.strumenti {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+}
+
+.strumento {
+  padding: 0.5rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  font-size: 0.95rem;
+  transition: background 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+}
+
+.strumento:hover {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+  transform: translateY(-3px);
+}
+
+
+/* ---------- Prototipi ----------
+   il contenitore è lo stesso di Competenze (classe .competenze):
+   qui c'è solo quello che riguarda il contenuto */
+.prototipi-intestazione {
+  display: flex;
+  justify-content: space-between;
+  /* il testo poggia sulla stessa linea della parola "Prototipi" */
+  align-items: last baseline;
+  gap: 2rem;
+}
+
+/* il blocco con etichetta e titolo non si stringe: "Dal design allo schermo" resta
+   su una riga, ed è il testo a destra ad andare a capo se manca spazio */
+.prototipi-intestazione > div {
+  flex-shrink: 0;
+}
+
+.prototipi-testo {
+  margin: 0 0 2.5rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.3rem;
+}
+
+/* la stessa linea che Competenze ha sopra la griglia */
+.prototipi-cornice {
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* il video resta dentro i margini del box e con le sue proporzioni (16:9):
+   così non viene ingrandito né tagliato, e non sgrana */
+.prototipi-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 20px;
+  background: #121212;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* sul telefono il testo va sotto il titolo: meno spazio tra i due */
+@media (max-width: 768px) {
+  .prototipi-intestazione {
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .prototipi-intestazione .competenze-titolo {
+    margin-bottom: 1rem;
+  }
+
+  .prototipi-testo {
+    font-size: 1.15rem;
+  }
+}
+
+/* ---------- Pulsante giorno / notte ---------- */
+/* la "rotaia" dell'interruttore, di vetro come la navbar */
+.tema-bottone {
+  position: relative;
+  width: 64px;
+  height: 34px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.tema-bottone:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 2px;
+}
+
+/* sul telefono l'interruttore sparisce scrollando in basso e torna scrollando in alto.
+   Lo decide BottoneTema.js; qui ci sono durata e movimento */
+@media (max-width: 768px) {
+  .tema-bottone {
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  }
+
+  .tema-nascosto {
+    opacity: 0;
+    /* si sposta verso l'alto mentre sparisce */
+    transform: translateY(-12px);
+    /* visibility: da nascosto non si può premere per sbaglio */
+    visibility: hidden;
+  }
+}
+
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  .tema-bottone {
+    transition: none;
+  }
+}
+
+/* il pallino che scorre, con dentro l'icona */
+.tema-pallino {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(160deg, #3a3a3a, #111);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+/* le due icone stanno una sopra l'altra: se ne vede una alla volta */
+.tema-pallino svg {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  transition: opacity 0.4s, transform 0.5s;
+}
+
+/* di notte il sole è nascosto, girato e rimpicciolito */
+.icona-sole {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+}
+
+/* di giorno il pallino va a destra e diventa arancione */
+:root[data-tema="giorno"] .tema-pallino {
+  transform: translateX(30px);
+  background: linear-gradient(160deg, #ffb347, #ff5a36);
+}
+
+:root[data-tema="giorno"] .icona-sole {
+  opacity: 1;
+  transform: none;
+}
+
+:root[data-tema="giorno"] .icona-luna {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tema-pallino,
+  .tema-pallino svg {
+    transition: none;
+  }
+}
+
+/* ==========================================================
+   TEMA GIORNO
+   qui ci sono solo i colori che cambiano rispetto alla notte.
+   Navbar e badge hanno i loro colori del giorno nei propri file
+   (Navbar.module.css e Badge.module.css), le card di Progetti in progetti.module.css
+   ========================================================== */
+:root[data-tema="giorno"] {
+  --testo: #1a1512;
+  --grigio: #5f534c;
+  --bordo: rgba(0, 0, 0, 0.12);
+  /* un po' più scuro che di notte, per leggersi bene sul chiaro */
+  --accento: #c2330f;
+  /* box di Esperienze e Certificazioni: più è basso l'ultimo numero, più sono trasparenti */
+  --card: rgba(255, 240, 228, 0.2);
+}
+
+:root[data-tema="giorno"] body {
+  background: #f7efe7;
+}
+
+/* --- sfondo --- */
+:root[data-tema="giorno"] .sfondo {
+  background: radial-gradient(ellipse at 50% 35%, #fff6ef 0%, #f3e6dc 55%, #ead7c9 100%);
+}
+
+/* quanto si vede il rosso dello sfondo di giorno */
+:root[data-tema="giorno"] .blob {
+  opacity: 0.28;
+}
+
+:root[data-tema="giorno"] .arco-3 {
+  border-top-color: rgba(60, 30, 20, 0.25);
+  border-right-color: rgba(60, 30, 20, 0.12);
+}
+
+/* la scritta gigante: l'ultimo numero è la sua forza, più è basso meno si vede */
+:root[data-tema="giorno"] .sfondo-scritta {
+  color: rgba(90, 50, 35, 0.1);
+}
+
+/* --- pulsante giorno/notte --- */
+:root[data-tema="giorno"] .tema-bottone {
+  border-color: rgba(60, 30, 20, 0.25);
+  background: rgba(60, 30, 20, 0.08);
+  box-shadow: inset 0 1px 3px rgba(60, 30, 20, 0.2);
+}
+
+/* --- competenze e prototipi --- */
+:root[data-tema="giorno"] .competenze {
+  /* il colore del box: più è basso l'ultimo numero, più è trasparente */
+  background-color: rgba(255, 240, 228, 0.2);
+  /* il riflesso di luce nell'angolo: più è basso, meno il box sembra bianco */
+  background-image: linear-gradient(155deg, rgba(255, 255, 255, 0.12), transparent 45%);
+  color: var(--testo);
+  border-color: rgba(60, 30, 20, 0.1);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -2px 4px rgba(60, 30, 20, 0.08),
+    0 2px 0 #eadfd5,
+    0 4px 0 #e4d7cb,
+    0 6px 0 #ddcec1,
+    0 8px 0 #d6c5b7,
+    0 10px 0 #cfbcad,
+    0 40px 70px rgba(90, 50, 35, 0.22);
+}
+
+:root[data-tema="giorno"] .competenze-griglia,
+:root[data-tema="giorno"] .competenza,
+:root[data-tema="giorno"] .prototipi-cornice {
+  border-color: rgba(60, 30, 20, 0.15);
+}
+
+:root[data-tema="giorno"] .competenza:hover {
+  background: rgba(60, 30, 20, 0.05);
+}
+
+:root[data-tema="giorno"] .competenza-numero {
+  color: rgba(60, 30, 20, 0.6);
+}
+
+:root[data-tema="giorno"] .competenza-descrizione,
+:root[data-tema="giorno"] .prototipi-testo {
+  color: var(--grigio);
+}
+
+:root[data-tema="giorno"] .competenza:hover .competenza-descrizione {
+  color: var(--testo);
+}
+
+:root[data-tema="giorno"] .strumento {
+  border-color: rgba(60, 30, 20, 0.3);
+}
+
+:root[data-tema="giorno"] .strumento:hover {
+  background: var(--testo);
+  border-color: var(--testo);
+  color: #fff;
+}
+
+:root[data-tema="giorno"] .prototipi-video {
+  box-shadow:
+    0 0 0 1px rgba(60, 30, 20, 0.12),
+    0 20px 40px rgba(90, 50, 35, 0.25);
 }

@@ -1,0 +1,808 @@
+/* ==========================================================
+   CHATBOT
+   ========================================================== */
+
+/* ---------- Il pulsante rotondo ---------- */
+.bottone {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  /* sopra a tutto il sito (la navbar ha 10) */
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  background: linear-gradient(160deg, #ff7a52, #e5321c 60%, #a8200e);
+  color: #fff;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35),
+    0 2px 0 #a8200e,
+    0 4px 0 #86190b,
+    0 6px 0 #641308,
+    0 16px 30px rgba(229, 50, 28, 0.45);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.bottone:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35),
+    0 2px 0 #a8200e,
+    0 4px 0 #86190b,
+    0 6px 0 #641308,
+    0 20px 40px rgba(229, 50, 28, 0.65);
+}
+
+.bottone:focus-visible,
+.invia:focus-visible,
+.suggerimento:focus-visible,
+.campo:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 3px;
+}
+
+/* le due icone (fumetto e X) una sopra l'altra: se ne vede una alla volta */
+.bottone svg {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 0.3s, transform 0.4s;
+}
+
+.iconaChiudi {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.6);
+}
+
+.bottoneAperto .iconaChat {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.6);
+}
+
+.bottoneAperto .iconaChiudi {
+  opacity: 1;
+  transform: none;
+}
+
+/* a chat aperta il pulsante sparisce: si chiude con la X in alto nella chat, come in home */
+.bottoneNascosto {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* ---------- Il pannello ----------
+   nelle pagine senza badge la chat è un pannello in basso a destra, fatto come quella della
+   home (sul retro del badge): stessa larghezza, stessi angoli, la X in alto per chiuderla.
+   --sopra: lo spazio per la navbar. --sotto e --destra: la distanza dai bordi dello schermo */
+.pannello {
+  --largo: min(290px, calc(100vw - 1rem));
+  --sopra: calc(var(--altezza-navbar) + 36px);
+  --sotto: 24px;
+  --destra: 24px;
+  /* il dito lo gestisce ChatBot.js: il browser non deve provare a scorrere la pagina */
+  touch-action: none;
+  position: fixed;
+  right: var(--destra);
+  /* --tastiera: quanto schermo copre la tastiera di telefoni e tablet (lo misura ChatBot.js).
+     Con la tastiera aperta la chat sale sopra di lei */
+  bottom: calc(var(--sotto) + var(--tastiera, 0px));
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  width: var(--largo);
+  /* come in home: alta fino a 640px, ma sempre tra la navbar e il fondo dello schermo.
+     Il terzo valore: con la tastiera aperta, tutta dentro la parte di schermo che resta visibile */
+  height: min(
+    640px,
+    calc(100dvh - var(--sotto) - var(--sopra)),
+    calc(var(--alto-visibile, 100dvh) - var(--sotto) * 2)
+  );
+  overflow: hidden;
+  border-radius: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: #0a0a0a;
+  /* riflesso sul bordo, spessore della lastra (le righe con 0 di sfocatura) e ombra sulla pagina */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 3px 0 #2b2725,
+    0 6px 0 #231f1d,
+    0 9px 0 #1b1816,
+    0 12px 0 #141211,
+    0 40px 60px -10px rgba(0, 0, 0, 0.75);
+  /* chiuso: invisibile e un po' più in basso. La chiusura è rapida, così chat e tastiera
+     se ne vanno insieme; visibility aspetta la fine della dissolvenza */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(16px) scale(0.97);
+  transform-origin: bottom right;
+  transition: opacity 0.25s, transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1), visibility 0s 0.3s;
+}
+
+.pannelloAperto {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  /* visibility 0s: visibile da subito, altrimenti il campo non può ricevere il cursore */
+  transition: opacity 0.3s, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s;
+}
+
+/* i contenuti stanno sopra lo sfondo */
+.pannello > :not(.fondoHome) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Lo sfondo della home ----------
+   .sfondo qui è grande come lo schermo e allineato ad esso, come in home: il pannello ne
+   mostra il pezzo che ha dietro. Così blob, archi, scritta e colori del tema restano quelli */
+.fondoHome {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fondoHome :global(.sfondo) {
+  position: absolute;
+  /* al centro della chat: i blob della home restano visibili anche in poco spazio */
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  transform: translate(-50%, -50%);
+}
+
+/* il riflesso di luce sulla parte alta, come sulla navbar */
+.pannello::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.03) 28%,
+    transparent 45%
+  );
+}
+
+/* ---------- La chat sul retro del badge ----------
+   in home il badge si gira e la chat è il suo retro: non serve più la lastra flottante */
+:global([data-badge="giro"]):has(.pannelloAperto) {
+  transform: perspective(1200px) rotateY(180deg);
+  /* il giro di apertura: regolare dall'inizio alla fine, così si vede tutto.
+     Quello di chiusura, più rapido, è in Badge.module.css (.giro) */
+  transition: transform 0.9s cubic-bezier(0.45, 0.05, 0.25, 1);
+}
+
+/* a chat aperta il badge sta fermo, altrimenti non si riesce a leggere.
+   Il secondo: niente dissolvenza scrollando, e con l'opacità il 3D si appiattirebbe */
+:global(html):has(.pannelloBadge.pannelloAperto) :global([data-badge="pendolo"]),
+:global(html):has(.pannelloBadge.pannelloAperto) :global(.home-badge) {
+  animation: none;
+}
+
+/* il laccio si solleva: il badge sale dietro la navbar di --salita (la calcola ChatBot.js) e
+   torna giù alla chiusura. Il ritaglio tiene nascosto ciò che supera la navbar: 47px è la parte
+   del laccio che sta già dietro. Non sul telefono: lì il badge non arriva fino alla navbar */
+@media (min-width: 769px) {
+  :global(html):has(.pannelloBadge.pannelloAperto) :global([data-badge="pendolo"]) {
+    transform: translateY(calc(var(--salita, 0px) * -1));
+    clip-path: inset(calc(var(--salita, 0px) + 47px) -100vw -100vw -100vw);
+    /* la salita, con i tempi del giro di apertura */
+    transition: transform 0.9s cubic-bezier(0.45, 0.05, 0.25, 1), clip-path 0.9s cubic-bezier(0.45, 0.05, 0.25, 1);
+  }
+}
+
+/* giro finito: niente più 3D, così il testo è nitido anche sui telefoni.
+   Si vede uguale: mezzo giro del badge più mezzo giro del retro fanno un retro dritto */
+:global([data-badge="lanyard"]):has(.pannelloFermo) {
+  perspective: none;
+}
+
+:global([data-badge="giro"]):has(.pannelloFermo) {
+  transform: none;
+  transform-style: flat;
+  transition: none;
+}
+
+:global([data-badge="retro"]):has(.pannelloFermo) {
+  transform: none;
+}
+
+:global([data-badge="giro"]):has(.pannelloFermo) :global([data-badge="card"]) {
+  visibility: hidden;
+}
+
+.pannello.pannelloBadge {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 34px;
+  opacity: 1;
+  transform: none;
+  /* resta visibile mentre il badge si rigira: il tempo è la durata del giro di chiusura
+     (0.55s, .giro in Badge.module.css) */
+  transition: visibility 0s 0.55s;
+}
+
+.pannello.pannelloBadge.pannelloAperto {
+  visibility: visible;
+  transition: visibility 0s;
+}
+
+/* la chat è larga come la card del badge (290px): tutto un po' più compatto.
+   Vale sia in home sia nel pannello delle altre pagine */
+.pannello .testa {
+  gap: 0.6rem;
+  padding: 0.9rem 1rem 0.75rem;
+}
+
+/* sul badge il padding alto lascia posto al moschettone */
+.pannelloBadge .testa {
+  padding-top: 2.25rem;
+}
+
+.pannello .messaggi {
+  padding: 1rem;
+}
+
+.pannello .bolla {
+  max-width: 92%;
+  font-size: 0.9rem;
+}
+
+/* le domande suggerite su due colonne: in una sola occupavano metà della chat */
+.pannello .suggerimenti {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  padding: 0 1rem 0.75rem;
+}
+
+.pannello .suggerimento {
+  padding: 0.45rem 0.6rem;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  line-height: 1.25;
+  text-align: center;
+}
+
+/* con la tastiera aperta lo spazio è poco: i suggerimenti spariscono e restano messaggi e campo.
+   data-tastiera lo mette ChatBot.js */
+.pannello[data-tastiera] .suggerimenti {
+  display: none;
+}
+
+/* sui telefoni e tablet il cursore nel campo vuol dire tastiera aperta, anche quando il
+   browser non lo fa capire: stessa cosa */
+@media (hover: none) {
+  .pannello:has(.campo:focus) .suggerimenti {
+    display: none;
+  }
+}
+
+.pannello .modulo {
+  padding: 0.7rem;
+}
+
+/* il pulsante per richiudere, a destra nell'intestazione */
+.chiudi {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  background: rgba(20, 20, 20, 0.6);
+  color: var(--testo);
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.chiudi svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.chiudi:hover {
+  border-color: rgba(255, 90, 54, 0.6);
+  background: rgba(120, 35, 20, 0.7);
+}
+
+.chiudi:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 2px;
+}
+
+:global(:root[data-tema="giorno"]) .chiudi {
+  border-color: rgba(60, 30, 20, 0.2);
+  background: rgba(255, 250, 245, 0.75);
+}
+
+:global(:root[data-tema="giorno"]) .chiudi:hover {
+  border-color: rgba(194, 51, 15, 0.45);
+  background: rgba(255, 228, 214, 0.9);
+}
+
+/* ---------- Intestazione ---------- */
+.testa {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(10, 10, 10, 0.35);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #ff7a52, #e5321c);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #fff;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    0 2px 0 #a8200e,
+    0 3px 0 #86190b;
+}
+
+.titolo {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+/* il pallino verde "online" */
+.stato {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--grigio);
+}
+
+.stato::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3ddc84;
+  box-shadow: 0 0 6px #3ddc84;
+}
+
+/* ---------- I messaggi ---------- */
+.messaggi {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 1.25rem;
+  list-style: none;
+  /* se i messaggi sono tanti, si scorre solo quest'area */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* niente barra di scorrimento grigia: si scorre lo stesso con rotellina e dito */
+  scrollbar-width: none;
+}
+
+.messaggi::-webkit-scrollbar {
+  display: none;
+}
+
+.bolla {
+  max-width: 85%;
+  padding: 0.65rem 0.95rem;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  /* rispetta gli "a capo" del testo e spezza le parole lunghissime */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  animation: bolla-entra 0.3s ease-out;
+}
+
+@keyframes bolla-entra {
+  from { opacity: 0; transform: translateY(6px); }
+}
+
+/* il bot: vetro, a sinistra, angolo in basso a sinistra meno tondo */
+.bot {
+  align-self: flex-start;
+  border-bottom-left-radius: 6px;
+  background: rgba(20, 20, 20, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  /* lo spessore della bolla */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 2px 0 #1b1816,
+    0 3px 0 #141211,
+    0 8px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* il visitatore: rosso, a destra */
+.utente {
+  align-self: flex-end;
+  border-bottom-right-radius: 6px;
+  background: linear-gradient(160deg, #ff6a45, #d42d18);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 2px 0 #a8200e,
+    0 3px 0 #86190b,
+    0 8px 14px rgba(120, 25, 10, 0.4);
+}
+
+.errore {
+  align-self: flex-start;
+  border: 1px solid rgba(255, 90, 54, 0.5);
+  background: rgba(40, 12, 6, 0.75);
+  color: #ffc9bb;
+}
+
+/* ---------- I tre puntini ---------- */
+.scrive {
+  display: flex;
+  gap: 5px;
+  padding: 0.9rem 1rem;
+}
+
+.scrive span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--testo);
+  animation: puntino 1.2s ease-in-out infinite;
+}
+
+/* ogni puntino parte un po' dopo il precedente: l'effetto "onda" */
+.scrive span:nth-child(2) { animation-delay: 0.15s; }
+.scrive span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes puntino {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30%           { opacity: 1;   transform: translateY(-4px); }
+}
+
+/* ---------- Domande suggerite ---------- */
+.suggerimenti {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 1.25rem 1rem;
+}
+
+.suggerimento {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(20, 20, 20, 0.6);
+  color: var(--testo);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 2px 0 #1b1816,
+    0 3px 0 #141211;
+  transition: background 0.3s, border-color 0.3s, transform 0.2s;
+}
+
+.suggerimento:hover {
+  border-color: rgba(255, 90, 54, 0.6);
+  background: rgba(120, 35, 20, 0.7);
+  transform: translateY(-1px);
+}
+
+/* ---------- Il campo per scrivere ---------- */
+.modulo {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(10, 10, 10, 0.35);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.campo {
+  flex: 1;
+  min-width: 0;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--testo);
+  /* incavato nella lastra: l'ombra è dentro il campo */
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.12);
+  /* 16px: sotto questa misura, su iPhone la pagina fa lo zoom quando tocchi il campo */
+  font: inherit;
+  font-size: 16px;
+}
+
+.campo::placeholder {
+  color: var(--grigio);
+}
+
+.invia {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #ff7a52, #e5321c);
+  color: #fff;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    0 2px 0 #a8200e,
+    0 3px 0 #86190b,
+    0 8px 14px rgba(229, 50, 28, 0.35);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.invia svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.invia:hover:not(:disabled) {
+  transform: scale(1.06);
+}
+
+.invia:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- Telefono ---------- */
+@media (max-width: 768px) {
+  .bottone {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  /* il pannello al centro, largo come la chat sul badge. Qui la navbar è più bassa */
+  .pannello {
+    --sopra: 80px;
+    --sotto: 16px;
+    --destra: calc((100vw - var(--largo)) / 2);
+    transform-origin: bottom center;
+  }
+
+  /* niente vetro smerigliato: sui telefoni pesa e può sfocare il testo che ci sta sopra.
+     Le bolle più piene: senza sfocatura gli archi dello sfondo disturberebbero la lettura */
+  .testa,
+  .modulo,
+  .bot {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .bot {
+    background: rgba(20, 20, 20, 0.85);
+  }
+
+  /* il menu scende proprio dove sta il pannello: mentre è aperto, la chat si fa da parte */
+  :global(html):has(:global([data-menu-aperto])) .pannello:not(.pannelloBadge) {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+/* per chi ha chiesto al sistema di ridurre i movimenti */
+@media (prefers-reduced-motion: reduce) {
+  .bottone,
+  .bottone svg,
+  .pannello,
+  .bolla,
+  .scrive span {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ---------- Tema giorno ---------- */
+:global(:root[data-tema="giorno"]) .pannello {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: #f7efe7;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    inset 0 -1px 0 rgba(90, 50, 35, 0.15),
+    0 3px 0 #ecdccf,
+    0 6px 0 #e3d1c3,
+    0 9px 0 #d9c5b6,
+    0 12px 0 #cfb9a9,
+    0 40px 60px -10px rgba(90, 50, 35, 0.45);
+}
+
+:global(:root[data-tema="giorno"]) .testa,
+:global(:root[data-tema="giorno"]) .modulo {
+  border-color: rgba(60, 30, 20, 0.12);
+  background: rgba(255, 250, 245, 0.45);
+}
+
+:global(:root[data-tema="giorno"]) .testa {
+  box-shadow: 0 6px 14px rgba(90, 50, 35, 0.1);
+}
+
+:global(:root[data-tema="giorno"]) .bot,
+:global(:root[data-tema="giorno"]) .suggerimento {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 250, 245, 0.85);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 2px 0 #dfcdbf,
+    0 3px 0 #d5c1b2,
+    0 8px 14px rgba(90, 50, 35, 0.18);
+}
+
+:global(:root[data-tema="giorno"]) .suggerimento:hover {
+  border-color: rgba(194, 51, 15, 0.45);
+  background: rgba(255, 228, 214, 0.9);
+}
+
+:global(:root[data-tema="giorno"]) .errore {
+  border-color: rgba(194, 51, 15, 0.45);
+  background: rgba(255, 228, 214, 0.85);
+  color: #9c2a0c;
+}
+
+:global(:root[data-tema="giorno"]) .campo {
+  border-color: rgba(60, 30, 20, 0.2);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow:
+    inset 0 2px 4px rgba(90, 50, 35, 0.2),
+    0 1px 0 #fff;
+}
+
+/* per chi ha chiesto meno movimenti: il badge si gira e sale senza animazione */
+@media (prefers-reduced-motion: reduce) {
+  :global([data-badge="giro"]):has(.pannelloAperto),
+  :global(html):has(.pannelloBadge.pannelloAperto) :global([data-badge="pendolo"]) {
+    transition: none;
+  }
+}
+
+/* ---------- Schermi bassi (telefoni in orizzontale) ----------
+   qui la chat è alta poco più di 250px: intestazione, suggerimenti e campo si fanno compatti,
+   altrimenti per i messaggi non resterebbe spazio (e sul badge il campo finirebbe fuori) */
+@media (max-height: 500px) {
+  .pannello .testa {
+    gap: 0.5rem;
+    padding: 0.45rem 0.75rem;
+  }
+
+  /* sul badge resta un po' di spazio in alto per il moschettone */
+  .pannelloBadge .testa {
+    padding-top: 1.6rem;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 0.75rem;
+  }
+
+  .titolo {
+    font-size: 0.9rem;
+  }
+
+  .stato {
+    font-size: 0.72rem;
+  }
+
+  .chiudi {
+    width: 30px;
+    height: 30px;
+  }
+
+  .pannello .messaggi {
+    gap: 0.4rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .pannello .bolla {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .pannello .suggerimenti {
+    gap: 0.3rem;
+    padding: 0 0.75rem 0.5rem;
+  }
+
+  .pannello .suggerimento {
+    padding: 0.3rem 0.45rem;
+    font-size: 0.72rem;
+  }
+
+  .pannello .modulo {
+    padding: 0.45rem 0.6rem;
+  }
+
+  .campo {
+    padding: 0.45rem 0.9rem;
+  }
+
+  .invia {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* sul badge la chat non può allargarsi: i suggerimenti diventano una riga sola che si scorre
+     di lato col dito (lo permette ChatBot.js). Occupano 30px invece di 100 */
+  .pannelloBadge .suggerimenti {
+    display: flex;
+    /* nowrap: tutti in fila, senza andare a capo (la regola di base dice wrap) */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    /* il resto della chat blocca i gesti del browser (touch-action: none): qui no, in orizzontale */
+    touch-action: pan-x;
+  }
+
+  .pannelloBadge .suggerimenti::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pannelloBadge .suggerimento {
+    flex: none;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  /* nelle altre pagine c'è spazio in larghezza: il pannello si allarga, così i suggerimenti
+     stanno su una riga sola e ai messaggi resta più posto */
+  .pannello:not(.pannelloBadge) {
+    --largo: min(520px, calc(100vw - 2rem));
+  }
+}

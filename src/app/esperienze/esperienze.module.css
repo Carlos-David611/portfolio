@@ -1,0 +1,468 @@
+/* ==========================================================
+   TIMELINE ESPERIENZE
+   ========================================================== */
+
+/* niente box: la timeline sta direttamente sullo sfondo della pagina */
+.timeline {
+  position: relative;
+  margin: 2rem 0 2rem;
+  /* due colonne: la linea del tempo a sinistra, il resto a destra.
+     auto = larga quanto serve alle date; gap = la distanza tra linea e contenuto */
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+/* il blocco è centrato nella pagina: --larghezza-esperienze sta in .contenuto, in globals.css.
+   min-height: la pagina riempie lo schermo (22rem = navbar, intestazione e margini),
+   ma non più di 44rem: sugli schermi alti i pallini si distanzierebbero troppo */
+@media (min-width: 769px) {
+  .timeline {
+    width: var(--larghezza-esperienze);
+    margin-left: calc((100% - var(--larghezza-esperienze)) / 2);
+    min-height: min(calc(100vh - 22rem), 44rem);
+  }
+}
+
+/* ---------- Le tre colonne: frecce | anni | dettagli ---------- */
+.corpo {
+  /* nel codice viene prima della linea del tempo: qui decidiamo la colonna */
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  
+  grid-template-columns: clamp(13rem, 20vw, 16rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  /* altezza fissa minima: così cambiando esperienza la linea a fianco non "salta" */
+  min-height: 380px;
+}
+
+/* ---------- Frecce: solo sul telefono ---------- */
+.frecce {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* questa regola deve restare dopo .frecce, altrimenti non vale */
+@media (min-width: 769px) {
+  .frecce {
+    display: none;
+  }
+}
+
+.freccia {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s, opacity 0.3s;
+}
+
+.freccia svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* :not(:disabled): l'hover vale solo se la freccia si può usare */
+.freccia:hover:not(:disabled) {
+  border-color: rgba(255, 90, 54, 0.6);
+  background: rgba(255, 90, 54, 0.12);
+  transform: translateY(-2px);
+}
+
+.freccia:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* ---------- Anni grandi ---------- */
+.anni {
+  text-align: right;
+  line-height: 1;
+}
+
+.annoPiccolo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin: 0;
+  font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+  color: var(--grigio);
+}
+
+/* la lineetta prima dei mesi */
+.lineetta {
+  display: inline-block;
+  width: clamp(30px, 5vw, 70px);
+  height: 1px;
+  background: currentColor;
+}
+
+.annoGrande {
+  margin: 0.5rem 0 0;
+  /* come "Carlos David" nella home */
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(180deg, #ffffff 30%, #ffb4a0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 6px 24px rgba(229, 50, 28, 0.35));
+}
+
+/* ---------- Dettagli ---------- */
+.dettagliPila {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.dettagliPila > * {
+  grid-area: 1 / 1;
+}
+
+/* visibility: hidden occupa spazio ma non si vede, e gli screen reader la saltano */
+.fantasma {
+  visibility: hidden;
+}
+
+.intestazione {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.azienda {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+  font-weight: 800;
+}
+
+.luogo {
+  margin: 0.2rem 0 0;
+  font-size: 1.15rem;
+  color: var(--grigio);
+}
+
+.periodo {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--accento);
+  font-variant-numeric: tabular-nums;
+}
+
+.ruolo {
+  margin: 0.75rem 0 1.25rem;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.descrizione {
+  /* come il testo di presentazione nella home */
+  max-width: 600px;
+  margin: 0 0 1.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.3rem;
+  line-height: 1.6;
+}
+
+/* l'elenco con i pallini arancioni, come gli obiettivi dei Progetti */
+.tecnologie {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tecnologie li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.tecnologie li::before {
+  content: "";
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accento);
+  box-shadow: 0 0 8px rgba(255, 90, 54, 0.8);
+}
+
+/* ---------- Linea del tempo, in verticale sul lato sinistro ---------- */
+.linea {
+  grid-column: 1;
+  grid-row: 1;
+  /* la direzione della sfumatura della linea: 180deg in verticale, 90deg sul telefono */
+  --direzione-linea: 180deg;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.linea::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 8.5px;
+  width: 1px;
+  background: linear-gradient(
+    var(--direzione-linea),
+    transparent,
+    rgba(255, 255, 255, 0.35) 10%,
+    rgba(255, 255, 255, 0.35) 90%,
+    transparent
+  );
+}
+
+/* ogni voce occupa lo stesso spazio: i pallini si distribuiscono da soli */
+.linea li {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.punto {
+  display: flex;
+  align-items: center;
+  /* la distanza tra il pallino e la data */
+  gap: 0.9rem;
+  padding: 0.75rem 0.75rem 0.75rem 4px;
+  border: none;
+  border-radius: 12px;
+  background: none;
+  color: var(--grigio);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* il contorno da tastiera: chi naviga con Tab deve vedere dove si trova */
+.punto:focus-visible,
+.freccia:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 3px;
+}
+
+.pallino {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.etichetta {
+  font-size: 1rem;
+  white-space: nowrap;
+  transition: color 0.3s;
+}
+
+.punto:hover .pallino {
+  transform: scale(1.4);
+}
+
+.punto:hover .etichetta {
+  color: #fff;
+}
+
+/* ---------- La voce selezionata ---------- */
+.attivo .pallino {
+  background: var(--accento);
+  transform: scale(1.3);
+  box-shadow:
+    0 0 0 4px rgba(255, 90, 54, 0.2),
+    0 0 18px rgba(255, 90, 54, 0.9);
+}
+
+.attivo .etichetta {
+  color: #fff;
+}
+
+/* il cono di luce sopra il pallino attivo */
+.attivo .pallino::before {
+  content: "";
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  width: 44px;
+  height: 64px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  border-radius: 50% 50% 40% 40%;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(255, 130, 80, 0.75) 0%,
+    rgba(229, 50, 28, 0.3) 45%,
+    transparent 70%
+  );
+  filter: blur(5px);
+  animation: luce-respira 3s ease-in-out infinite alternate;
+}
+
+@keyframes luce-respira {
+  from { opacity: 0.6; }
+  to   { opacity: 1; }
+}
+
+/* ---------- Telefono ---------- */
+@media (max-width: 768px) {
+  .corpo {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .anni {
+    order: 1;
+    text-align: left;
+  }
+
+  .annoPiccolo {
+    justify-content: flex-start;
+  }
+
+  .dettagliPila {
+    order: 2;
+  }
+
+  /* le frecce in fila e girate: su = indietro (sinistra), giù = avanti (destra) */
+  .frecce {
+    order: 3;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .freccia svg {
+    transform: rotate(-90deg);
+  }
+
+  /* sul telefono la linea del tempo sta sotto e torna orizzontale */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* se le esperienze sono tante, la linea scorre di lato invece di stringersi */
+  .linea {
+    --direzione-linea: 90deg;
+    flex-direction: row;
+    margin-top: 3rem;
+    overflow-x: auto;
+  }
+
+  /* top: 21px = metà del pallino + il padding del bottone */
+  .linea::before {
+    top: 21px;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 1px;
+  }
+
+  .linea li {
+    flex: 1 0 auto;
+    justify-content: center;
+    align-items: stretch;
+  }
+
+  .punto {
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 1rem 0.75rem;
+  }
+}
+
+/* per chi ha chiesto al sistema di ridurre i movimenti */
+@media (prefers-reduced-motion: reduce) {
+  .attivo .pallino::before {
+    animation: none;
+  }
+
+  .freccia,
+  .pallino {
+    transition: none;
+  }
+}
+
+/* ---------- Tema giorno ----------
+ */
+
+:global(:root[data-tema="giorno"]) .freccia {
+  border-color: rgba(60, 30, 20, 0.25);
+  background: rgba(60, 30, 20, 0.05);
+  color: var(--testo);
+}
+
+:global(:root[data-tema="giorno"]) .freccia:hover:not(:disabled) {
+  border-color: var(--accento);
+  background: rgba(194, 51, 15, 0.1);
+}
+
+/* qui background-image e non background: l'altro azzererebbe il ritaglio sulle lettere */
+:global(:root[data-tema="giorno"]) .annoGrande {
+  background-image: linear-gradient(180deg, #1a1512 30%, #c2330f 100%);
+  filter: drop-shadow(0 6px 18px rgba(194, 51, 15, 0.2));
+}
+
+:global(:root[data-tema="giorno"]) .descrizione {
+  color: var(--grigio);
+}
+
+:global(:root[data-tema="giorno"]) .tecnologie li {
+  color: var(--testo);
+}
+
+:global(:root[data-tema="giorno"]) .tecnologie li::before {
+  box-shadow: none;
+}
+
+:global(:root[data-tema="giorno"]) .linea::before {
+  background: linear-gradient(
+    var(--direzione-linea),
+    transparent,
+    rgba(60, 30, 20, 0.35) 10%,
+    rgba(60, 30, 20, 0.35) 90%,
+    transparent
+  );
+}
+
+:global(:root[data-tema="giorno"]) .pallino {
+  background: var(--grigio);
+}
+
+:global(:root[data-tema="giorno"]) .attivo .pallino {
+  background: var(--accento);
+}
+
+:global(:root[data-tema="giorno"]) .punto:hover .etichetta,
+:global(:root[data-tema="giorno"]) .attivo .etichetta {
+  color: var(--testo);
+}

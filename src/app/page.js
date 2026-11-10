@@ -1,69 +1,86 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Badge from "@/components/Badge";
+import { competenze, strumenti } from "@/data/competenze";
+import VideoPrototipi from "@/components/VideoPrototipi";
+import TestoRitardato from "@/components/TestoRitardato";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.js</code> file.
-          </h1>
+    <>
+      <section className="home-hero">
+        <TestoRitardato className="home-testo">
+          <p className="hero-saluto">Ciao, sono</p>
+          <h1 className="hero-nome">Carlos David</h1>
+          <p className="hero-ruolo">UX/UI Designer & Web Designer</p>
           <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+            Progetto e sviluppo interfacce web curate, semplici da usare e belle da vedere.
+            Mi piace trasformare idee in prodotti digitali concreti, partendo dal design.
+          </p>
+        </TestoRitardato>
+
+        <div className="home-badge">
+          <Badge
+            nome="Carlos"
+            cognome="David"
+            ruolo="UX/UI Designer & Web Designer"
+            luogo="Italia"
+            intestazione="Portfolio"
+            colore="#e5331cdd"
+            foto="/immagini/foto.jpg"
+          />
+        </div>
+      </section>
+
+      <section className="competenze">
+        <p className="competenze-etichetta">Cosa so fare</p>
+        <h2 className="competenze-titolo">Competenze</h2>
+
+        <div className="competenze-griglia">
+          {competenze.map((c, i) => (
+            <div key={c.nome} className="competenza">
+              <span className="competenza-numero">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+
+              <h3 className="competenza-nome">
+                <span className="scorri">
+                  <span className="scorri-interno" data-testo={c.nome}>
+                    {c.nome}
+                  </span>
+                </span>
+              </h3>
+
+              <p className="competenza-descrizione">{c.descrizione}</p>
+              <span className="competenza-freccia">→</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="strumenti">
+          {strumenti.map((s) => (
+            <span key={s} className="strumento">{s}</span>
+          ))}
+        </div>
+      </section>
+
+
+      <section className="competenze">
+        <div className="prototipi-intestazione">
+          <div>
+            <p className="competenze-etichetta">Dal design allo schermo</p>
+            <h2 className="competenze-titolo">Prototipi</h2>
+          </div>
+          <p className="prototipi-testo">
+            Interfacce progettate per ogni dispositivo: desktop, tablet e mobile.
           </p>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="prototipi-cornice">
+          <VideoPrototipi
+            src="/video/prototipi.mp4"
+            poster="/video/prototipi-anteprima.webp"
+          />
         </div>
-      </main>
-    </div>
+      </section>
+    </>
   );
 }

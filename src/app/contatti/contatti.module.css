@@ -1,0 +1,163 @@
+/* ==========================================================
+   PAGINA CONTATTI
+   il box è lo stesso di Competenze (classe .competenze in globals.css):
+   qui c'è solo quello che sta dentro
+   ========================================================== */
+
+/* la lista: stessa linea in alto delle competenze */
+.lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ogni contatto è una riga cliccabile */
+.contatto {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.75rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.4s;
+}
+
+/* la linea arancione che si allunga, come nelle competenze */
+.contatto::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0;
+  height: 2px;
+  background: var(--accento);
+  transition: width 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.contatto:hover,
+.contatto:focus-visible {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.contatto:hover::after,
+.contatto:focus-visible::after {
+  width: 100%;
+}
+
+.contatto:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 2px;
+}
+
+/* il cerchio con l'icona */
+.icona {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 1.5rem;
+  transition: background 0.4s, border-color 0.4s, transform 0.4s, box-shadow 0.4s;
+}
+
+/* in hover il cerchio si accende di arancione */
+.contatto:hover .icona,
+.contatto:focus-visible .icona {
+  background: linear-gradient(160deg, #ff7a52, #e5321c);
+  border-color: transparent;
+  color: #fff;
+  transform: scale(1.08);
+  box-shadow: 0 8px 20px rgba(229, 50, 28, 0.45);
+}
+
+/* i testi: min-width 0 permette all'indirizzo lungo di andare a capo */
+.testi {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.etichetta {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accento);
+}
+
+.valore {
+  font-size: clamp(1.15rem, 2.5vw, 1.6rem);
+  font-weight: 700;
+  /* le email lunghe vanno a capo invece di uscire dal box */
+  overflow-wrap: anywhere;
+  transition: transform 0.4s;
+}
+
+.contatto:hover .valore,
+.contatto:focus-visible .valore {
+  transform: translateX(6px);
+}
+
+/* la freccia che compare, come nelle competenze */
+.freccia {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  color: var(--accento);
+  opacity: 0;
+  transform: translate(-12px, 12px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+.contatto:hover .freccia,
+.contatto:focus-visible .freccia {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Telefono ---------- */
+@media (max-width: 768px) {
+  .contatto {
+    gap: 1rem;
+    padding: 1.25rem 0.5rem;
+  }
+
+  .icona {
+    width: 46px;
+    height: 46px;
+    font-size: 1.25rem;
+  }
+
+  /* sul telefono la freccia è sempre visibile: l'hover non esiste */
+  .freccia {
+    opacity: 0.7;
+    transform: none;
+  }
+}
+
+/* ---------- Tema giorno ---------- */
+:global(:root[data-tema="giorno"]) .lista,
+:global(:root[data-tema="giorno"]) .contatto {
+  border-color: rgba(60, 30, 20, 0.12);
+}
+
+:global(:root[data-tema="giorno"]) .icona {
+  border-color: rgba(60, 30, 20, 0.2);
+  background: rgba(60, 30, 20, 0.04);
+}
+
+/* per chi ha chiesto al sistema di ridurre i movimenti */
+@media (prefers-reduced-motion: reduce) {
+  .contatto::after,
+  .icona,
+  .valore,
+  .freccia {
+    transition: none;
+  }
+}

@@ -1,0 +1,409 @@
+/* ==========================================================
+   BADGE: il cartellino appeso al laccio, in home.
+   La colonna che lo contiene (.home-badge) è della pagina: sta in globals.css.
+   La chat sul retro e la salita del badge quando si apre: ChatBot.module.css.
+   Gli attributi data-badge="..." (in Badge.js) servono a ChatBot per agganciarlo
+   ========================================================== */
+
+.lanyard {
+  position: relative;
+  z-index: 5;
+  transform: translateY(-110%);
+  visibility: hidden;
+  /* la profondità di tutte le rotazioni 3D: più è basso, più l'effetto è forte */
+  perspective: 1000px;
+}
+
+.visibile {
+  visibility: visible;
+  /* durata della caduta e attesa prima che parta */
+  animation: badge-cade 1.3s cubic-bezier(0.3, 1.35, 0.6, 1) 0.3s forwards;
+}
+
+@keyframes badge-cade {
+  from { transform: translateY(-110%); }
+  to   { transform: translateY(0); }
+}
+
+.pendolo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: top center;
+  /* quanto si muove il badge: 1 = normale, più alto = movimenti più ampi */
+  --forza-animazione: 0.8;
+  /* la salita quando si apre la chat: stessa durata del giro del badge.
+     Il ritaglio (inset) sale insieme al badge: così non spunta mai sopra la navbar */
+  clip-path: inset(0 -100vw -100vw -100vw);
+  /* questi tempi valgono quando il badge TORNA GIÙ (chiusura della chat): rapidi e veloci
+     da subito, insieme alla tastiera che si chiude. Quelli della salita sono in ChatBot.module.css */
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1), clip-path 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.visibile .pendolo {
+  /* prima l'oscillazione, poi un movimento continuo */
+  animation:
+    badge-oscilla 3s ease-out 1.2s,
+    badge-respiro 6s ease-in-out 4.2s infinite;
+}
+
+@keyframes badge-oscilla {
+  0%   { transform: rotateZ(0deg) rotateY(0deg); }
+  20%  { transform: rotateZ(calc(11deg * var(--forza-animazione))) rotateY(calc(-28deg * var(--forza-animazione))); }
+  40%  { transform: rotateZ(calc(-8deg * var(--forza-animazione))) rotateY(calc(22deg * var(--forza-animazione))); }
+  60%  { transform: rotateZ(calc(5deg * var(--forza-animazione))) rotateY(calc(-13deg * var(--forza-animazione))); }
+  80%  { transform: rotateZ(calc(-2.5deg * var(--forza-animazione))) rotateY(calc(6deg * var(--forza-animazione))); }
+  100% { transform: rotateZ(0deg) rotateY(0deg); }
+}
+
+@keyframes badge-respiro {
+  0%, 100% { transform: rotateZ(0deg) rotateY(0deg); }
+  25%      { transform: rotateZ(calc(1.5deg * var(--forza-animazione))) rotateY(calc(18deg * var(--forza-animazione))); }
+  75%      { transform: rotateZ(calc(-1.5deg * var(--forza-animazione))) rotateY(calc(-18deg * var(--forza-animazione))); }
+}
+
+/* il laccio finisce dietro la navbar: 40px restano dietro il vetro, 100px si vedono sotto.
+   Per allungarlo cambia height e animation-range qui sotto con lo stesso numero */
+.laccio {
+  width: 36px;
+  height: 140px;
+  /* le sfumature laterali fanno sembrare il laccio tondeggiante */
+  background: linear-gradient(90deg, #050505, #2a2a2a 45%, #050505);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 12px;
+  overflow: hidden;
+}
+
+.laccio span {
+  writing-mode: vertical-rl;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  /* con 2px la scritta resta tutta sotto la navbar: dietro il vetro sfarfallerebbe */
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* scrollando il laccio si accorcia dietro la navbar, così non spunta mai sopra di essa:
+   animation-range è la sua altezza, così si accorcia di 1px per ogni px di scroll */
+@media (min-width: 769px) {
+  @supports (animation-timeline: scroll()) {
+    .laccio {
+      animation: laccio-riavvolge linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 140px;
+    }
+  }
+}
+
+@keyframes laccio-riavvolge {
+  from { clip-path: inset(0 0 0 0); }
+  to   { clip-path: inset(100% 0 0 0); }
+}
+
+.fibbia {
+  width: 50px;
+  height: 54px;
+  background: linear-gradient(160deg, #4a4a4a, #1c1c1c 45%, #0a0a0a);
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.7),
+    0 6px 10px rgba(0, 0, 0, 0.5);
+}
+
+.laccioCorto {
+  width: 28px;
+  height: 50px;
+  background: linear-gradient(90deg, #050505, #2a2a2a 45%, #050505);
+}
+
+/* i bordi di colore diverso simulano il riflesso del metallo */
+.moschettone {
+  position: relative;
+  z-index: 2;
+  width: 28px;
+  height: 52px;
+  margin-top: -6px;
+  border: 4px solid #b5b5b5;
+  border-top-color: #f4f4f4;
+  border-left-color: #e2e2e2;
+  border-bottom-color: #7d7d7d;
+  border-radius: 16px;
+  box-shadow:
+    inset 0 0 2px rgba(0, 0, 0, 0.6),
+    0 3px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* il contenitore che si gira quando si apre la chat.
+   preserve-3d serve per il fronte e il retro: sulla card non si può, overflow lo annullerebbe */
+.giro {
+  position: relative;
+  width: 290px;
+  margin-top: -20px;
+  transform: perspective(1200px) rotateY(0deg);
+  transform-style: preserve-3d;
+  /* il giro di CHIUSURA della chat: rapido e veloce da subito, così il badge si rigira insieme
+     alla tastiera che si chiude. Il giro di apertura (più lento) è in ChatBot.module.css */
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* il retro con la chat: girato già di mezzo giro, così si vede dritto quando il badge si gira.
+   Larga come la card, ma più alta. L'altezza si accorcia solo se la finestra è bassa
+   (116px = navbar + margine in basso) */
+.retro {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: min(640px, calc(100dvh - 116px));
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+}
+
+/* la card: gli angoli molto arrotondati la rendono meno rettangolare */
+.card {
+  position: relative;
+  width: 290px;
+  border-radius: 34px;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: perspective(1000px);
+  transition: transform 0.5s ease-out;
+  /* le prime ombre senza sfocatura creano lo spessore della card */
+  box-shadow:
+    0 1px 0 #4a4a4a,
+    0 2px 0 #3a3a3a,
+    0 3px 0 #2c2c2c,
+    0 4px 0 #222,
+    0 5px 0 #1a1a1a,
+    0 6px 0 #111,
+    0 30px 45px rgba(0, 0, 0, 0.6);
+}
+
+/* passando il mouse la card si inclina verso chi guarda */
+.card:hover {
+  transform: perspective(1000px) rotateX(7deg) rotateY(-14deg) scale(1.03);
+}
+
+/* la fessura dove si aggancia il moschettone: sul fronte e sul retro (dove c'è la chat) */
+.card::before,
+.retro::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  z-index: 3;
+  width: 46px;
+  height: 11px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #050505;
+  box-shadow:
+    inset 0 2px 3px #000,
+    0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+/* sul retro la fessura deve stare sopra la chat. Dopo la regola qui sopra, altrimenti
+   quella (che dice z-index: 3) la scavalcherebbe */
+.retro::before {
+  z-index: 60;
+}
+
+/* il riflesso di luce sulla superficie */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.05) 28%,
+    transparent 46%
+  );
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- Il contenuto della card ---------- */
+.alto {
+  background: linear-gradient(160deg, #2b2b2b, #0b0b0b 65%);
+  color: #fff;
+  padding: 36px 18px 52px;
+}
+
+.testata {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.logo {
+  border: 2px solid #fff;
+  border-radius: 10px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* non scendere sotto 12px e 700: lettere più sottili, mentre la card ruota,
+   cadono tra i pixel del monitor e la scritta sfarfalla */
+.evento {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.foto {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #222;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 10px 20px rgba(0, 0, 0, 0.55);
+}
+
+.foto img {
+  object-fit: cover;
+}
+
+.nome {
+  margin: 16px 0 0;
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* la parte colorata sale sopra quella nera con un bordo curvo */
+.basso {
+  position: relative;
+  margin-top: -34px;
+  padding: 34px 22px 24px;
+  border-radius: 50% 50% 0 0 / 34px 34px 0 0;
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--colore-badge) 82%, white),
+    var(--colore-badge) 50%,
+    color-mix(in srgb, var(--colore-badge) 78%, black)
+  );
+  color: #0d0d0d;
+  text-align: center;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    0 -6px 14px rgba(0, 0, 0, 0.4);
+}
+
+.ruolo {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.luogo {
+  margin: 12px 0 0;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* per chi ha chiesto al sistema di ridurre i movimenti */
+@media (prefers-reduced-motion: reduce) {
+  .visibile,
+  .visibile .pendolo {
+    animation: none;
+  }
+
+  .visibile {
+    transform: translateY(0);
+  }
+
+  .giro,
+  .pendolo {
+    transition: none;
+  }
+
+  .card,
+  .card:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- Tablet e finestre medie ---------- */
+@media (max-width: 1100px) {
+  /* i margini sono stretti: con l'oscillazione piena il badge uscirebbe di lato */
+  .pendolo {
+    --forza-animazione: 0.4;
+  }
+}
+
+/* ---------- Telefono ---------- */
+@media (max-width: 768px) {
+  /* qui il badge sta sotto il testo: un laccio lungo lo coprirebbe */
+  .laccio {
+    height: 60px;
+    margin-top: 0;
+    /* il laccio corto sfuma verso l'alto invece di iniziare di colpo */
+    mask-image: linear-gradient(to bottom, transparent, #000 70%);
+  }
+
+  /* qui la navbar è più bassa: il retro ha più spazio (96px = navbar + margine in basso) */
+  .retro {
+    height: min(640px, calc(100dvh - 96px));
+  }
+
+  /* in un laccio così corto la scritta si vedrebbe solo a pezzi */
+  .laccio span {
+    display: none;
+  }
+
+  /* sullo schermo stretto un'oscillazione ampia farebbe uscire il badge */
+  .pendolo {
+    --forza-animazione: 0.4;
+  }
+}
+
+/* sui telefoni più stretti: qui anche un'oscillazione piccola farebbe uscire il badge dallo schermo */
+@media (max-width: 360px) {
+  .pendolo {
+    --forza-animazione: 0.15;
+  }
+}
+
+/* ---------- Tema giorno ----------
+   il badge resta scuro di proposito: è un oggetto, non cambia con la luce.
+   Cambia solo il laccio: il vetro di giorno è quasi trasparente, e i 40px di laccio dietro
+   la navbar si vedrebbero. Così il laccio esce dal bordo inferiore della navbar, anche scrollando.
+   40px = la parte dietro il vetro; 100px = la parte visibile (i due fanno height di .laccio) */
+@media (min-width: 769px) {
+  :global(:root[data-tema="giorno"]) .laccio {
+    clip-path: inset(40px 0 0 0);
+  }
+
+  @supports (animation-timeline: scroll()) {
+    :global(:root[data-tema="giorno"]) .laccio {
+      animation-name: laccio-riavvolge-giorno;
+      animation-range: 0px 100px;
+    }
+  }
+}
+
+@keyframes laccio-riavvolge-giorno {
+  from { clip-path: inset(40px 0 0 0); }
+  to   { clip-path: inset(100% 0 0 0); }
+}
