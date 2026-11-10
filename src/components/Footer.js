@@ -1,5 +1,3 @@
-// Nessun "use client": il footer ha solo link e hover in CSS.
-// Non ricorda niente e non reagisce con JavaScript, quindi resta server (leggero).
 
 import Link from "next/link";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
@@ -26,13 +24,13 @@ export default function Footer() {
 
   return (
     <footer className={styles.footer}>
-      {/* la firma gigante: decorativa, quindi nascosta agli screen reader */}
+      
       <div className={styles.firmaBox} aria-hidden="true">
         <span className={styles.firma}>Carlos David</span>
       </div>
 
       <div className={styles.griglia}>
-        {/* colonna 1: il marchio */}
+       
         <div>
           <Link href="/" className={styles.nome}>
             Carlos David
@@ -41,7 +39,7 @@ export default function Footer() {
           <p className={styles.disponibile}>Disponibile per nuovi progetti</p>
         </div>
 
-        {/* colonna 2: le pagine */}
+        
         <nav aria-label="Pagine del sito">
           <p className={styles.titoletto}>Pagine</p>
           <ul className={styles.elenco}>
@@ -55,7 +53,7 @@ export default function Footer() {
           </ul>
         </nav>
 
-        {/* colonna 3: i contatti, dallo stesso file della pagina Contatti */}
+        
         <div>
           <p className={styles.titoletto}>Contatti</p>
           <ul className={styles.social}>
@@ -86,9 +84,8 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* la barra in fondo */}
       <div className={styles.fondo}>
-        {/* href="#" riporta in cima alla pagina, senza JavaScript */}
+       
         <a href="#" className={styles.suSu}>
           Torna su ↑
         </a>

@@ -15,7 +15,6 @@ export default function Badge({
   foto = "/immagini/foto.jpg",
   aspettaScroll = false,
 }) {
-  // modalità normale: scende subito, senza aspettare che parta il JavaScript
   const [visibile, setVisibile] = useState(!aspettaScroll);
 
   useEffect(() => {
@@ -44,8 +43,7 @@ export default function Badge({
   const iniziali = nome[0] + cognome[0];
 
   return (
-    // data-badge="...": servono alla chat (ChatBot.js e ChatBot.module.css) per agganciare il badge.
-    // Le classi di un .module.css cambiano nome, questi attributi no
+    
     <div
       className={`${styles.lanyard} ${visibile ? styles.visibile : ""}`}
       style={{ "--colore-badge": colore }}
