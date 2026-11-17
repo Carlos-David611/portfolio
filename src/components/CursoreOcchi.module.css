@@ -1,0 +1,99 @@
+/* ==========================================================
+   CURSORE OCCHI
+   Tutto dipende da --h, l'altezza della pillola: cambia solo quella e
+   occhi, pupille, testo e angoli si riscalano insieme.
+   ========================================================== */
+.pillola {
+  /* l'unica misura da toccare */
+  --h: 36px;
+  /* larghezza 128px con altezza 36px: 128 / 36 = 3.556 */
+  --w: calc(var(--h) * 3.556);
+  --occhio-px: calc(var(--h) * var(--occhio));
+  --pupilla-px: calc(var(--occhio-px) * var(--pupilla));
+
+  --colore-pillola: #000000;
+  --colore-sclera: #ffffff;
+  --colore-pupilla: #000000;
+  --colore-testo: #ffffff;
+
+  /* un livello sopra la pagina che non intercetta niente */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: var(--w);
+  height: var(--h);
+  padding-left: calc(var(--h) * 0.33);
+  border-radius: var(--h);
+  background: var(--colore-pillola);
+  color: var(--colore-testo);
+  /* la scritta: Grotesk, media */
+  font-family: var(--font-sans, system-ui), sans-serif;
+  font-weight: 500;
+  font-size: calc(var(--h) * 0.39);
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 calc(var(--h) * 0.15) calc(var(--h) * 0.5) rgba(0, 0, 0, 0.35);
+
+  /* nascosta finché il mouse non si muove sulla pagina */
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  will-change: transform;
+}
+
+.pillola[data-visibile] {
+  opacity: 1;
+}
+
+/* sopra link, pulsanti e campi: la pillola si "accorge" e cresce un poco */
+.pillola[data-interattivo] .occhi,
+.pillola[data-interattivo] .etichetta {
+  transform: scale(1.08);
+}
+
+/* i due occhi, separati da 1px */
+.occhi {
+  display: flex;
+  gap: 1px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.occhio {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--occhio-px);
+  height: var(--occhio-px);
+  border-radius: 50%;
+  background: var(--colore-sclera);
+  overflow: hidden;
+  /* il battito: l'occhio si schiaccia in verticale, metà del tempo per chiudersi e metà per riaprirsi */
+  transition: transform calc(var(--battito) / 2) ease-in-out;
+}
+
+.occhio[data-chiuso] {
+  transform: scaleY(0.08);
+}
+
+.pupilla {
+  width: var(--pupilla-px);
+  height: var(--pupilla-px);
+  border-radius: 50%;
+  background: var(--colore-pupilla);
+}
+
+/* la scritta occupa lo spazio che resta, centrata */
+.etichetta {
+  flex: 1;
+  text-align: center;
+  /* lo stesso spazio del padding a sinistra, così il testo non tocca il bordo destro */
+  padding-right: calc(var(--h) * 0.33);
+  transition: transform 0.25s ease;
+}

@@ -3,6 +3,7 @@ import Sfondo from "@/components/Sfondo";
 import ChatBot from "@/components/ChatBot";
 import "./globals.css";
 import Footer from "@/components/Footer";
+import CursoreOcchi from "@/components/CursoreOcchi";
 
 export const metadata = {
   title: "Carlos David · Portfolio",
@@ -30,6 +31,8 @@ export default function RootLayout({ children }) {
         <main className="contenuto">{children}</main>
         <Footer />
         <ChatBot />
+        {/* la pillola con gli occhi che segue il mouse (solo computer, si aggiunge alla freccia) */}
+        <CursoreOcchi />
       </body>
     </html>
   );
