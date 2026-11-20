@@ -435,7 +435,7 @@ export default function CaroselloCertificazioni({ certificazioni }) {
             {/* la faccia della card: si vede durante il volo, poi sfuma e lascia il certificato */}
             <span ref={copertina} className={`${styles.fronte} ${styles.copertina}`} data-colore={aperta.colore} aria-hidden="true">
               <span className={styles.luce} />
-              <Image className={styles.anteprima} src={aperta.anteprima} alt="" fill sizes="600px" />
+              <Image className={styles.anteprima} src={aperta.anteprima} alt="" fill sizes="600px" loading="eager" />
               <span className={styles.anno}>{aperta.data.slice(0, 4)}</span>
               <span className={styles.testi}>
                 <span className={styles.ente}>{aperta.ente}</span>
