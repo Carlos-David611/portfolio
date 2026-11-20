@@ -14,8 +14,8 @@
 
 .visibile {
   visibility: visible;
-  /* durata della caduta e attesa prima che parta */
-  animation: badge-cade 1.3s cubic-bezier(0.3, 1.35, 0.6, 1) 0.3s forwards;
+  /* durata della caduta e attesa prima che parta: breve, il badge arriva subito */
+  animation: badge-cade 0.85s cubic-bezier(0.3, 1.3, 0.6, 1) 0.05s forwards;
 }
 
 @keyframes badge-cade {
@@ -37,8 +37,8 @@
 .visibile .pendolo {
   /* prima l'oscillazione, poi un movimento continuo */
   animation:
-    badge-oscilla 3s ease-out 1.2s,
-    badge-respiro 6s ease-in-out 4.2s infinite;
+    badge-oscilla 3s ease-out 0.6s,
+    badge-respiro 6s ease-in-out 3.6s infinite;
 }
 
 @keyframes badge-oscilla {

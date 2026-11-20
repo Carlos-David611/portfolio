@@ -5,6 +5,36 @@ import { flushSync } from "react-dom";
 import Image from "next/image";
 import styles from "@/app/certificazioni/CaroselloCertificazioni.module.css";
 
+// ---------- PDF pronti in anticipo ----------
+// il lettore dei PDF (pdf.js) è grande: si carica una volta sola, appena la pagina è libera.
+// Ogni certificato si prepara (scarica e legge) appena ci passi sopra o lo tocchi, non dopo
+// il volo della card: quando il visore si apre, il PDF è già pronto o quasi
+let lettore = null;
+function caricaLettore() {
+  if (!lettore) {
+    lettore = import("pdfjs-dist/legacy/build/pdf.mjs").then((pdfjs) => {
+      pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+        "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
+        import.meta.url
+      ).toString();
+      return pdfjs;
+    });
+    // se fallisce (es. rete assente), la prossima volta si riprova
+    lettore.catch(() => (lettore = null));
+  }
+  return lettore;
+}
+
+const documenti = new Map();
+function preparaPdf(url) {
+  if (!documenti.has(url)) {
+    const promessa = caricaLettore().then((pdfjs) => pdfjs.getDocument({ url }).promise);
+    promessa.catch(() => documenti.delete(url));
+    documenti.set(url, promessa);
+  }
+  return documenti.get(url);
+}
+
 function FoglioPdf({ pdf, titolo }) {
   const contenitore = useRef(null);
   const [stato, setStato] = useState("carica"); // "carica" | "pronto" | "errore"
@@ -12,20 +42,11 @@ function FoglioPdf({ pdf, titolo }) {
   useEffect(() => {
     const dove = contenitore.current;
     let annullato = false;
-    let caricamento = null;
 
     async function disegna() {
       try {
-      
-        const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
-        pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-          "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
-          import.meta.url
-        ).toString();
-
-        
-        caricamento = pdfjs.getDocument({ url: pdf });
-        const documento = await caricamento.promise;
+        // di solito è già pronto: preparato al passaggio sopra la card o al tocco
+        const documento = await preparaPdf(pdf);
 
         for (let numero = 1; numero <= documento.numPages; numero++) {
           const pagina = await documento.getPage(numero);
@@ -60,9 +81,9 @@ function FoglioPdf({ pdf, titolo }) {
 
     disegna();
 
+    // il documento resta in memoria (sono pochi e piccoli): riaprendolo è subito pronto
     return () => {
       annullato = true;
-      caricamento?.destroy();
       dove.replaceChildren();
     };
   }, [pdf, titolo]);
@@ -90,8 +111,8 @@ function FoglioPdf({ pdf, titolo }) {
 }
 
 // quanto dura il volo della card, in millisecondi
-const DURATA_APERTURA = 850;
-const DURATA_CHIUSURA = 500;
+const DURATA_APERTURA = 600;
+const DURATA_CHIUSURA = 400;
 
 // la posa del pannello in un punto del volo: spostato di (x, y), grande l × a, girato di gradi
 function posa(x, y, l, a, girY, girX = 0) {
@@ -135,6 +156,17 @@ export default function CaroselloCertificazioni({ certificazioni }) {
   const idTitolo = useId();
   const scena = useRef(null);
   const ruota = useRef(null);
+
+  // appena la pagina ha finito il lavoro importante, si carica il lettore dei PDF
+  useEffect(() => {
+    const carica = () => caricaLettore();
+    if ("requestIdleCallback" in window) {
+      const id = requestIdleCallback(carica, { timeout: 3000 });
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(carica, 1500);
+    return () => clearTimeout(id);
+  }, []);
 
   
   useEffect(() => {
@@ -257,6 +289,8 @@ export default function CaroselloCertificazioni({ certificazioni }) {
 
   function apri(evento, cert, colore) {
     if (inVolo.current) return;
+    // il PDF comincia a prepararsi subito, mentre la card vola
+    preparaPdf(cert.pdf);
     const card = evento.currentTarget;
     cardCliccata.current = card;
     apertaColMouse.current = evento.detail > 0;
@@ -334,6 +368,10 @@ export default function CaroselloCertificazioni({ certificazioni }) {
                   className={styles.card}
                   aria-label={`${cert.nome}, ${cert.ente}, ${anno}: apri il certificato`}
                   aria-haspopup="dialog"
+                  // passando sopra, col tab o al primo tocco il PDF si prepara già
+                  onPointerEnter={() => preparaPdf(cert.pdf)}
+                  onPointerDown={() => preparaPdf(cert.pdf)}
+                  onFocus={() => preparaPdf(cert.pdf)}
                   onClick={(evento) => apri(evento, cert, colore)}
                 >
                   <span className={styles.fronte}>

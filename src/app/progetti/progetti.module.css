@@ -81,30 +81,40 @@
 .flusso {
   position: absolute;
   inset: -70%;
+  /* 102deg: la fascia è quasi verticale, così passa da un lato all'altro della card.
+     La parte colorata (dal 22% al 78%) è più larga della card: a metà passaggio la copre tutta */
   background: linear-gradient(
-    118deg,
+    102deg,
     var(--f-1) 0%,
-    var(--f-1) 28%,
-    var(--f-2) 35%,
-    var(--f-1) 41%,
-    var(--f-3) 48%,
+    var(--f-1) 22%,
+    var(--f-2) 31%,
+    var(--f-1) 38%,
+    var(--f-3) 46%,
     var(--f-4) 54%,
-    var(--f-5) 60%,
-    var(--f-2) 66%,
-    var(--f-1) 73%,
+    var(--f-5) 62%,
+    var(--f-3) 69%,
+    var(--f-2) 74%,
+    var(--f-1) 80%,
     var(--f-1) 100%
   );
   filter: blur(6px) saturate(115%);
-  /* la fascia attraversa la card avanti e indietro */
-  animation: flusso-scorre 7s ease-in-out infinite alternate;
+  /* il passaggio di luce: entra da sinistra, riempie la card, esce a destra, poi riparte */
+  animation: flusso-scorre 24s infinite;
 }
 
+/* la fascia colorata è larga poco più della card: fuori dalla card a sinistra (card blu notte),
+   attraversa e la riempie tutta a metà strada, esce a destra. L'ultimo tratto è una pausa
+   al buio prima del passaggio successivo */
 @keyframes flusso-scorre {
-  from {
-    transform: translate(-24%, 14%) rotate(-7deg);
+  0% {
+    transform: translate(-64%, 4%) rotate(-3deg);
+    animation-timing-function: cubic-bezier(0.45, 0.05, 0.4, 1);
   }
-  to {
-    transform: translate(22%, -16%) rotate(8deg);
+  78% {
+    transform: translate(64%, -4%) rotate(3deg);
+  }
+  100% {
+    transform: translate(64%, -4%) rotate(3deg);
   }
 }
 
@@ -123,9 +133,10 @@
    È questo scarto, una costa sì e una no, a fare i gradini di luce: così i gradini si muovono */
 .sfalsato {
   animation:
-    flusso-scorre 7s ease-in-out infinite alternate,
-    gradini 3.2s ease-in-out infinite alternate;
-  animation-delay: -1.5s, 0s;
+    flusso-scorre 24s infinite,
+    gradini 7s ease-in-out infinite alternate;
+  /* un soffio avanti: i gradini precedono di poco la luce */
+  animation-delay: -0.8s, 0s;
 }
 
 @keyframes gradini {
@@ -139,11 +150,11 @@
 
 /* una card sì e una no parte da un altro punto: non si muovono tutte insieme */
 .card:nth-child(2n) .flusso {
-  animation-delay: -3.5s;
+  animation-delay: -12s;
 }
 
 .card:nth-child(2n) .sfalsato {
-  animation-delay: -5s, -1.6s;
+  animation-delay: -12.8s, -3.5s;
 }
 
 /* le coste del vetro: ogni costa ha un lato in ombra e uno illuminato.
