@@ -64,7 +64,7 @@ export default function Footer() {
               return (
                 <li key={contatto.tipo}>
                   <a
-                    className={styles.socialLink}
+                    className={`${styles.socialLink} vetro-neon`}
                     href={contatto.link}
                     target={esterno ? "_blank" : undefined}
                     rel={esterno ? "noopener noreferrer" : undefined}

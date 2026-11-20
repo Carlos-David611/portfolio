@@ -8,7 +8,7 @@ export const certificazioni = [
     descrizione:
       "Percorso di sviluppo full stack: microservizi con Java e Spring Boot, frontend con Angular.",
     pdf: "/certificazioni/betacom.pdf",
-    anteprima: "/certificazioni/anteprime/betacom-vetro.jpg",
+    anteprima: "/certificazioni/anteprime/betacom.jpg",
   },
   {
     nome: "Certificazione UX",
@@ -16,7 +16,7 @@ export const certificazioni = [
     data: "2026-05-31",
     descrizione: "Principi di User Experience: ricerca, architettura dell'informazione e test.",
     pdf: "/certificazioni/certificazione-ux.pdf",
-    anteprima: "/certificazioni/anteprime/certificazione-ux-vetro.jpg",
+    anteprima: "/certificazioni/anteprime/certificazione-ux.jpg",
   },
   {
     nome: "UX/UI Design", 
@@ -24,7 +24,7 @@ export const certificazioni = [
     data:"2026-08-18", 
     descrizione: "Progettazione di interfacce: wireframe, prototipi e design system.",
     pdf: "/certificazioni/ux-ui.pdf",
-    anteprima: "/certificazioni/anteprime/ux-ui-vetro.jpg",
+    anteprima: "/certificazioni/anteprime/ux-ui.jpg",
   },
   {
     nome: "Code & Coding Agent",
@@ -32,7 +32,7 @@ export const certificazioni = [
     data: "2026-05-26",
     descrizione: "Sviluppo assistito dall'AI: lavorare con agenti di coding nel flusso di lavoro.",
     pdf: "/certificazioni/code-agent.pdf",
-    anteprima: "/certificazioni/anteprime/code-agent-vetro.jpg",
+    anteprima: "/certificazioni/anteprime/code-agent.jpg",
   },
   {
     nome: "Progettare il design con ChatGPT",
@@ -40,7 +40,7 @@ export const certificazioni = [
     data: "2026-05-19",
     descrizione: "Usare l'AI generativa nel processo di design, dall'idea al concept.",
     pdf: "/certificazioni/design-con-chat.pdf",
-    anteprima: "/certificazioni/anteprime/design-con-chat-vetro.jpg",
+    anteprima: "/certificazioni/anteprime/design-con-chat.jpg",
   },
   
 ];

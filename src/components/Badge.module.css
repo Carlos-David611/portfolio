@@ -1,8 +1,6 @@
 /* ==========================================================
    BADGE: il cartellino appeso al laccio, in home.
    La colonna che lo contiene (.home-badge) è della pagina: sta in globals.css.
-   La chat sul retro e la salita del badge quando si apre: ChatBot.module.css.
-   Gli attributi data-badge="..." (in Badge.js) servono a ChatBot per agganciarlo
    ========================================================== */
 
 .lanyard {
@@ -32,12 +30,8 @@
   transform-origin: top center;
   /* quanto si muove il badge: 1 = normale, più alto = movimenti più ampi */
   --forza-animazione: 0.8;
-  /* la salita quando si apre la chat: stessa durata del giro del badge.
-     Il ritaglio (inset) sale insieme al badge: così non spunta mai sopra la navbar */
+  /* il ritaglio in alto: il badge non spunta mai sopra il punto da cui pende */
   clip-path: inset(0 -100vw -100vw -100vw);
-  /* questi tempi valgono quando il badge TORNA GIÙ (chiusura della chat): rapidi e veloci
-     da subito, insieme alla tastiera che si chiude. Quelli della salita sono in ChatBot.module.css */
-  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1), clip-path 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
 .visibile .pendolo {
@@ -62,27 +56,28 @@
   75%      { transform: rotateZ(calc(-1.5deg * var(--forza-animazione))) rotateY(calc(-18deg * var(--forza-animazione))); }
 }
 
-/* il laccio finisce dietro la navbar: 40px restano dietro il vetro, 100px si vedono sotto.
-   Per allungarlo cambia height e animation-range qui sotto con lo stesso numero */
+/* il laccio finisce dietro la navbar: 40px restano dietro il vetro, 80px si vedono sotto.
+   Per allungarlo cambia height e animation-range qui sotto con lo stesso numero,
+   il range del tema giorno (la parte visibile) e il padding-top di .home-testo in globals.css */
 .laccio {
   width: 36px;
-  height: 140px;
+  height: 120px;
   /* le sfumature laterali fanno sembrare il laccio tondeggiante */
   background: linear-gradient(90deg, #050505, #2a2a2a 45%, #050505);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
   overflow: hidden;
 }
 
 .laccio span {
   writing-mode: vertical-rl;
   color: #fff;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  /* con 2px la scritta resta tutta sotto la navbar: dietro il vetro sfarfallerebbe */
-  letter-spacing: 2px;
+  /* con 1px la scritta resta tutta sotto la navbar: dietro il vetro sfarfallerebbe */
+  letter-spacing: 1px;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -94,7 +89,7 @@
     .laccio {
       animation: laccio-riavvolge linear both;
       animation-timeline: scroll(root);
-      animation-range: 0px 140px;
+      animation-range: 0px 120px;
     }
   }
 }
@@ -138,31 +133,11 @@
     0 3px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* il contenitore che si gira quando si apre la chat.
-   preserve-3d serve per il fronte e il retro: sulla card non si può, overflow lo annullerebbe */
+/* il contenitore della card, agganciato sotto il moschettone */
 .giro {
   position: relative;
   width: 290px;
   margin-top: -20px;
-  transform: perspective(1200px) rotateY(0deg);
-  transform-style: preserve-3d;
-  /* il giro di CHIUSURA della chat: rapido e veloce da subito, così il badge si rigira insieme
-     alla tastiera che si chiude. Il giro di apertura (più lento) è in ChatBot.module.css */
-  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
-}
-
-/* il retro con la chat: girato già di mezzo giro, così si vede dritto quando il badge si gira.
-   Larga come la card, ma più alta. L'altezza si accorcia solo se la finestra è bassa
-   (116px = navbar + margine in basso) */
-.retro {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: min(640px, calc(100dvh - 116px));
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  transform: rotateY(180deg);
 }
 
 /* la card: gli angoli molto arrotondati la rendono meno rettangolare */
@@ -191,9 +166,8 @@
   transform: perspective(1000px) rotateX(7deg) rotateY(-14deg) scale(1.03);
 }
 
-/* la fessura dove si aggancia il moschettone: sul fronte e sul retro (dove c'è la chat) */
-.card::before,
-.retro::before {
+/* la fessura dove si aggancia il moschettone */
+.card::before {
   content: "";
   position: absolute;
   top: 12px;
@@ -207,12 +181,6 @@
   box-shadow:
     inset 0 2px 3px #000,
     0 1px 0 rgba(255, 255, 255, 0.22);
-}
-
-/* sul retro la fessura deve stare sopra la chat. Dopo la regola qui sopra, altrimenti
-   quella (che dice z-index: 3) la scavalcherebbe */
-.retro::before {
-  z-index: 60;
 }
 
 /* il riflesso di luce sulla superficie */
@@ -235,10 +203,87 @@
 }
 
 /* ---------- Il contenuto della card ---------- */
+/* la parte scura della card: dentro scorre lo sfondo animato della home (.fondoCard) */
 .alto {
-  background: linear-gradient(160deg, #2b2b2b, #0b0b0b 65%);
+  position: relative;
+  isolation: isolate;
+  background: #0b0b0b;
   color: #fff;
   padding: 36px 18px 52px;
+}
+
+/* lo sfondo animato dentro la card: una copia di quello della pagina, grande come la card.
+   Le macchie di luce sono rimesse in posizione rispetto alla card (agli angoli e di lato),
+   così passano intorno alla foto e si vedono su ogni schermo */
+.fondoCard {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* lo sfondo nella card arriva dopo che la pagina si è vista (Badge.js): compare sfumando */
+.fondoCard :global(.sfondo) {
+  animation: fondo-compare 0.8s ease-out both;
+}
+
+@keyframes fondo-compare {
+  from { opacity: 0; }
+}
+
+/* la grana su un pezzo così piccolo non si nota: un effetto in meno da disegnare */
+.fondoCard :global(.grana) {
+  display: none;
+}
+
+.fondoCard :global(.sfondo) {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.fondoCard :global(.blob) {
+  height: auto;
+  aspect-ratio: 1;
+  /* senza sfocatura la luce è più concentrata: un po' più tenue, come prima */
+  opacity: 0.6;
+}
+
+/* in alto a sinistra, dietro al logo */
+.fondoCard :global(.blob-1) {
+  width: 95%;
+  top: -30%;
+  left: -35%;
+}
+
+/* in basso a destra, dietro al nome */
+.fondoCard :global(.blob-2) {
+  width: 100%;
+  top: auto;
+  bottom: -30%;
+  right: -40%;
+}
+
+/* a metà, sul lato sinistro */
+.fondoCard :global(.blob-3) {
+  width: 80%;
+  top: 30%;
+  left: -25%;
+}
+
+.fondoCard :global(.sfondo-scritta) {
+  opacity: 0.45;
+}
+
+/* il velo scuro sopra lo sfondo: tiene leggibili nome e logo.
+   Più sono alti gli ultimi numeri, più la card è scura e l'animazione si vede meno */
+.fondoCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(160deg, rgba(30, 30, 30, 0.15), rgba(8, 8, 8, 0.45) 70%);
 }
 
 .testata {
@@ -362,11 +407,6 @@
     mask-image: linear-gradient(to bottom, transparent, #000 70%);
   }
 
-  /* qui la navbar è più bassa: il retro ha più spazio (96px = navbar + margine in basso) */
-  .retro {
-    height: min(640px, calc(100dvh - 96px));
-  }
-
   /* in un laccio così corto la scritta si vedrebbe solo a pezzi */
   .laccio span {
     display: none;
@@ -375,6 +415,49 @@
   /* sullo schermo stretto un'oscillazione ampia farebbe uscire il badge */
   .pendolo {
     --forza-animazione: 0.4;
+  }
+}
+
+/* sul telefono e sul tablet (col dito) il laccio è più corto: il badge sta sotto il testo
+   e così resta più vicino. Su computer no, nemmeno con la finestra stretta: lì resta com'era */
+@media (max-width: 768px) and (hover: none) {
+  .laccio {
+    height: 18px;
+  }
+
+  /* anche il tratto tra la fibbia e il moschettone */
+  .laccioCorto {
+    height: 18px;
+  }
+}
+
+/* tablet più grandi (col dito): il badge pende dalla navbar come su computer, con il laccio
+   più corto di 30px in tutto. "PORTFOLIO" un poco più piccola per restare sotto la navbar.
+   Il testo accanto sale degli stessi 30px: .home-testo in globals.css */
+@media (min-width: 769px) and (max-width: 1366px) and (hover: none) {
+  /* 40px dietro la navbar, 64px visibili */
+  .laccio {
+    height: 104px;
+    padding-bottom: 6px;
+  }
+
+  .laccio span {
+    font-size: 9px;
+    letter-spacing: 0.5px;
+  }
+
+  .laccioCorto {
+    height: 36px;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .laccio {
+      animation-range: 0px 104px;
+    }
+
+    :global(:root[data-tema="giorno"]) .laccio {
+      animation-range: 0px 64px;
+    }
   }
 }
 
@@ -389,7 +472,7 @@
    il badge resta scuro di proposito: è un oggetto, non cambia con la luce.
    Cambia solo il laccio: il vetro di giorno è quasi trasparente, e i 40px di laccio dietro
    la navbar si vedrebbero. Così il laccio esce dal bordo inferiore della navbar, anche scrollando.
-   40px = la parte dietro il vetro; 100px = la parte visibile (i due fanno height di .laccio) */
+   40px = la parte dietro il vetro; 80px = la parte visibile (i due fanno height di .laccio) */
 @media (min-width: 769px) {
   :global(:root[data-tema="giorno"]) .laccio {
     clip-path: inset(40px 0 0 0);
@@ -398,7 +481,7 @@
   @supports (animation-timeline: scroll()) {
     :global(:root[data-tema="giorno"]) .laccio {
       animation-name: laccio-riavvolge-giorno;
-      animation-range: 0px 100px;
+      animation-range: 0px 80px;
     }
   }
 }
@@ -406,4 +489,10 @@
 @keyframes laccio-riavvolge-giorno {
   from { clip-path: inset(40px 0 0 0); }
   to   { clip-path: inset(100% 0 0 0); }
+}
+
+/* di giorno lo sfondo copiato dentro la card è chiaro: il velo è più scuro e caldo,
+   così il badge resta un oggetto scuro e l'animazione ci passa sotto appena velata */
+:global(:root[data-tema="giorno"]) .fondoCard::after {
+  background: linear-gradient(160deg, rgba(48, 36, 32, 0.7), rgba(18, 13, 11, 0.85) 65%);
 }

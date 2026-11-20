@@ -5,16 +5,6 @@ import { flushSync } from "react-dom";
 import Image from "next/image";
 import styles from "@/app/certificazioni/CaroselloCertificazioni.module.css";
 
-// da "Betacom Academy" ricava "BA"
-function iniziali(testo) {
-  return testo
-    .split(" ")
-    .slice(0, 2)
-    .map((parola) => parola[0])
-    .join("")
-    .toUpperCase();
-}
-
 function FoglioPdf({ pdf, titolo }) {
   const contenitore = useRef(null);
   const [stato, setStato] = useState("carica"); // "carica" | "pronto" | "errore"
@@ -90,7 +80,7 @@ function FoglioPdf({ pdf, titolo }) {
       {stato === "errore" && (
         <div className={styles.avviso} role="alert">
           <p>Non riesco a mostrare il certificato qui.</p>
-          <a className={styles.apriFile} href={pdf} target="_blank" rel="noopener">
+          <a className={`${styles.apriFile} vetro-neon`} href={pdf} target="_blank" rel="noopener">
             Apri il PDF
           </a>
         </div>
@@ -347,6 +337,8 @@ export default function CaroselloCertificazioni({ certificazioni }) {
                   onClick={(evento) => apri(evento, cert, colore)}
                 >
                   <span className={styles.fronte}>
+                    {/* le luci sfocate che si muovono dietro il vetro a coste */}
+                    <span className={styles.luce} aria-hidden="true" />
                     <Image className={styles.anteprima} src={cert.anteprima} alt="" fill sizes="280px" loading="eager" />
                     <span className={styles.anno}>{anno}</span>
                     <span className={styles.testi}>
@@ -355,11 +347,10 @@ export default function CaroselloCertificazioni({ certificazioni }) {
                     </span>
                   </span>
 
-                  
+                  {/* il retro: solo il certificato dietro il vetro, senza scritte */}
                   <span className={styles.retro} aria-hidden="true">
+                    <span className={styles.luce} />
                     <Image className={styles.anteprima} src={cert.anteprima} alt="" fill sizes="280px" loading="eager" />
-                    <span className={styles.retroIniziali}>{iniziali(cert.ente)}</span>
-                    <span className={styles.retroAnno}>{anno}</span>
                   </span>
                 </button>
               </li>
@@ -405,6 +396,7 @@ export default function CaroselloCertificazioni({ certificazioni }) {
 
             {/* la faccia della card: si vede durante il volo, poi sfuma e lascia il certificato */}
             <span ref={copertina} className={`${styles.fronte} ${styles.copertina}`} data-colore={aperta.colore} aria-hidden="true">
+              <span className={styles.luce} />
               <Image className={styles.anteprima} src={aperta.anteprima} alt="" fill sizes="600px" />
               <span className={styles.anno}>{aperta.data.slice(0, 4)}</span>
               <span className={styles.testi}>

@@ -1,10 +1,7 @@
-/* ==========================================================
-   NAVBAR: la lastra di vetro fluttuante in alto.
-   Il pulsante giorno/notte che sta dentro ha i suoi stili in globals.css (.tema-bottone)
-   ========================================================== */
+
 
 .navbar {
-  /* sticky + top: resta sospesa a 12px dal bordo anche mentre si scrolla */
+  
   position: sticky;
   top: 12px;
   z-index: 10;
@@ -30,16 +27,12 @@
     rgba(255, 255, 255, 0.03)
   );
 
-  /* 2. la smerigliatura (la riga -webkit- deve restare prima) */
   -webkit-backdrop-filter: blur(28px) saturate(110%);
   backdrop-filter: blur(28px) saturate(110%);
 
   border: 1px solid rgba(255, 255, 255, 0.14);
 
-  /* 3. lo spessore e il sollevamento:
-        - le due inset = riflesso sul bordo alto, ombra sul bordo basso
-        - le ombre senza sfocatura (0 3px 0...) = il fianco della lastra
-        - le ultime due, sfocate = l'ombra sulla pagina, che la fa sembrare sollevata */
+ 
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.45),
     inset 0 -1px 0 rgba(0, 0, 0, 0.5),
@@ -56,7 +49,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  /* inherit: il riflesso segue gli stessi angoli tondi della navbar */
+  
   border-radius: inherit;
   pointer-events: none;
   background: linear-gradient(
@@ -71,10 +64,10 @@
 .navbar::after {
   content: "";
   position: absolute;
-  /* più sono alti left e right, più la luce è stretta */
+  
   left: 10%;
   right: 10%;
-  /* parte appena sotto lo spessore della navbar */
+  
   top: calc(100% + 8px);
   height: 34px;
   z-index: -1;
@@ -125,61 +118,20 @@
   gap: 0.5rem;
 }
 
-/* i link sono piccole "pillole" di vetro che si accendono al passaggio */
+
 .links a {
-  /* relative: serve al ::before per posizionarsi sopra la pillola
-     isolation: il ::before con z-index -1 resta dietro al testo ma dentro la pillola */
-  position: relative;
-  isolation: isolate;
   padding: 0.4rem 1rem;
   border-radius: 999px;
-  border: 1px solid transparent;
   font-size: 1.1rem;
   font-weight: 600;
   text-decoration: none;
-  color: rgb(255, 255, 255);
-  transition: border-color 0.4s, box-shadow 0.4s;
 }
 
-/* il vetro colorato: è nascosto (opacity 0) e compare in hover */
-.links a::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  pointer-events: none;
-  background:
-    /* 1. il riflesso: luce in alto che sfuma verso il basso */
-    linear-gradient(
-      180deg,
-      rgba(225, 13, 13, 0.129) 0%,
-      rgba(255, 255, 255, 0.03) 55%,
-      transparent 100%
-    ),
-    /* 2. il colore: rosso in alto che sfuma verso il basso
-          l'ultimo numero di ogni colore è la sua forza: più è basso, più è chiaro */
-    linear-gradient(
-      180deg,
-      rgba(209, 127, 109, 0.185) 0%,
-      rgba(120, 112, 110, 0.348) 100%
-    );
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.links a:hover {
-  color: #fff;
-  border-color: rgba(255, 120, 90, 0.22);
-  /* bordo chiaro in alto, scuro in basso (lo spessore) e alone rosso intorno */
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
-    0 0 14px rgba(229, 50, 28, 0.18);
-}
-
-.links a:hover::before {
-  opacity: 1;
+/* ogni lettera delle voci è un pezzo a sé: nel menu del telefono girano una per una */
+.lettera {
+  display: inline-block;
+  /* gli spazi restano spazi */
+  white-space: pre;
 }
 
 /* il pulsante burger: su computer è nascosto, si attiva nel blocco Telefono */
@@ -269,7 +221,7 @@
     height: 2px;
     border-radius: 2px;
     background: #fff;
-    /* l'ombra tiene visibili le linee quando passano sopra testi chiari */
+    
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
     transition: transform 0.35s ease, opacity 0.2s ease;
   }
@@ -287,48 +239,163 @@
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  /* il pannello del menu, che scende sotto la navbar */
+  /* ---------- Il menu: un pannello di vetro che si apre come quello del sito Apple ----------
+     Si srotola dall'alto fino quasi in fondo allo schermo (clip-path), dentro scorre lo sfondo
+     animato della home, e le voci scendono una dopo l'altra */
   .links {
     position: absolute;
     top: calc(100% + 10px);
     left: 0;
     right: 0;
+    /* quasi tutto lo schermo sotto la navbar: 90px = navbar + margini */
+    height: calc(100dvh - 90px);
+    max-height: 620px;
     flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.75rem 1rem 1.25rem;
-    /* stessi angoli della navbar sul telefono */
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 18px;
-    /* fondo pieno: il testo della pagina non deve trasparire dietro il menu */
-    background: #0a0a0a;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-    visibility: hidden;
+    gap: 0.15rem;
+    padding: 1.5rem 1.25rem 2rem;
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: 26px;
+
+    /* il vetro: fumé, con la pagina sfocata dietro */
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+      rgba(14, 11, 10, 0.55);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    /* riflessi sui bordi e ombra sulla pagina */
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      inset 0 -1px 0 rgba(255, 90, 54, 0.25),
+      0 24px 50px rgba(0, 0, 0, 0.55);
+
+    /* chiuso: in alto e invisibile. Si chiude dopo che le voci sono sparite.
+       Solo transform e opacità, e il pannello resta già disegnato (will-change) anche da chiuso:
+       al tocco il telefono deve solo farlo scendere, senza scatti all'inizio */
     opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    pointer-events: none;
+    transform: translateY(-28px);
+    will-change: transform, opacity;
+    transition:
+      opacity 0.3s ease 0.1s,
+      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
   }
 
+  /* aperto: scende dall'alto */
   .links.aperto {
-    visibility: visible;
     opacity: 1;
-    transform: translateY(0);
+    pointer-events: auto;
+    transform: none;
+    transition:
+      opacity 0.35s ease,
+      transform 0.55s cubic-bezier(0.32, 0.72, 0, 1);
   }
 
-  /* le sezioni entrano da sinistra, una dopo l'altra */
-  .links a {
-    padding: 0.8rem 1rem;
-    border-radius: 12px;
-    font-size: 1.15rem;
+  /* il riflesso di luce sulla parte alta del vetro, sopra lo sfondo animato */
+  .links::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(170deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 30%, transparent 50%);
+  }
+
+  /* lo sfondo animato della home dentro il menu, come nel badge. Senza il suo fondo scuro:
+     restano blob, archi e scritta che si muovono sotto il vetro */
+  .fondoMenu {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .fondoMenu :global(.sfondo) {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: none;
+  }
+
+  /* la grana e la scritta gigante disturberebbero la lettura delle voci */
+  .fondoMenu :global(.grana),
+  .fondoMenu :global(.sfondo-scritta) {
+    display: none;
+  }
+
+  .fondoMenu :global(.blob) {
+    opacity: 0.55;
+  }
+
+  /* le voci: grandi e in grassetto come nel menu Apple, sopra lo sfondo.
+     .links.links: più forte delle regole del vetro (vetro-neon.css), che hanno un'altra transizione */
+  .links.links a {
+    position: relative;
+    z-index: 2;
+    display: block;
+    /* larga quanto la scritta: così gira attorno al suo centro, senza spostarsi di lato */
+    align-self: flex-start;
+    padding: 0.55rem 0.9rem;
+    border-radius: 16px;
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    /* chiuse: un poco più in alto e invisibili. Spariscono subito, prima che il pannello si chiuda */
     opacity: 0;
-    transform: translateX(-28px);
-    transition: opacity 0.4s ease, transform 0.4s ease, background 0.3s;
+    transform: translateY(-14px);
+    transition: opacity 0.18s ease, transform 0.25s ease;
   }
 
+  /* aperto: scendono una dopo l'altra. Il ritardo cresce con la posizione */
   .links.aperto a {
     opacity: 1;
-    transform: translateX(0);
-    /* il ritardo cresce con la posizione: qui si regola la distanza tra una sezione e l'altra */
-    transition-delay: calc(var(--posizione) * 80ms + 80ms);
+    transform: none;
+    transition:
+      opacity 0.4s ease,
+      transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition-delay: calc(var(--posizione) * 50ms + 180ms);
+  }
+
+  /* toccata: ogni lettera gira su se stessa in verticale, una dopo l'altra come un'onda.
+     Poi si apre la pagina (Navbar.js aspetta la fine dell'ultima lettera: 450ms + 30ms a lettera) */
+  .links.aperto a[data-gira] .lettera {
+    animation: lettera-gira 0.45s cubic-bezier(0.45, 0.05, 0.25, 1) both;
+    animation-delay: calc(var(--i) * 30ms);
+  }
+
+  /* perspective dentro il transform: la profondità è quella della lettera stessa */
+  @keyframes lettera-gira {
+    from {
+      transform: perspective(300px) rotateX(0deg);
+    }
+    to {
+      transform: perspective(300px) rotateX(360deg);
+    }
+  }
+}
+
+/* tablet in verticale: il pannello è largo, le voci tutte a sinistra lasciavano un gran vuoto.
+   Qui stanno al centro del pannello, in orizzontale e in verticale */
+@media (min-width: 540px) and (max-width: 768px) {
+  .links {
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  /* .links.links: più forte della regola del telefono, che le allinea a sinistra */
+  .links.links a {
+    align-self: center;
+  }
+}
+
+/* lo sfondo del menu esiste solo nel menu burger */
+@media (min-width: 769px) {
+  .fondoMenu {
+    display: none;
   }
 }
 
@@ -336,21 +403,24 @@
 @media (max-width: 768px) and (prefers-reduced-motion: reduce) {
   .burger span,
   .links,
-  .links a,
-  .links.aperto a {
+  .links.aperto,
+  .links.links a,
+  .links.aperto a,
+  .links.aperto a[data-gira] .lettera {
     transition: none;
+    animation: none;
   }
 }
 
 /* ---------- Tema giorno ----------
    :global serve perché data-tema sta su <html>, fuori da questo modulo */
 :global(:root[data-tema="giorno"]) .navbar {
-  /* il vetro: più sono bassi i due ultimi numeri, più è trasparente (0.14 in alto, 0.06 in basso) */
-  background: linear-gradient(180deg, rgba(255, 240, 228, 0.14), rgba(255, 240, 228, 0.06));
+  /* il vetro bianco latte, come i box: più chiaro dello sfondo albicocca */
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.18));
   /* la sfocatura: più è bassa, più si legge cosa passa sotto (la riga -webkit- deve restare prima) */
-  -webkit-backdrop-filter: blur(4px) saturate(110%);
-  backdrop-filter: blur(4px) saturate(110%);
-  border-color: rgba(255, 255, 255, 0.45);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border-color: rgba(255, 255, 255, 0.7);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.7),
     inset 0 -1px 0 rgba(60, 30, 20, 0.12),
@@ -396,10 +466,18 @@
     box-shadow: 0 0 4px rgba(255, 255, 255, 0.95);
   }
 
-  /* il pannello del menu: anche qui fondo pieno */
+  /* il pannello del menu: vetro chiaro e caldo, con lo sfondo di giorno che ci scorre sotto */
   :global(:root[data-tema="giorno"]) .links {
-    background: #fff8f2;
-    border-color: rgba(60, 30, 20, 0.15);
-    box-shadow: 0 20px 40px rgba(90, 50, 35, 0.25);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.25)),
+      rgba(255, 244, 236, 0.45);
+    border-color: rgba(255, 255, 255, 0.7);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 0 rgba(229, 50, 28, 0.18),
+      0 24px 50px rgba(90, 50, 35, 0.22);
+  }
+
+  :global(:root[data-tema="giorno"]) .links::after {
+    background: linear-gradient(170deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.08) 30%, transparent 50%);
   }
 }

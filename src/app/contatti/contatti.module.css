@@ -52,7 +52,7 @@
   outline-offset: 2px;
 }
 
-/* il cerchio con l'icona */
+/* il cerchio con l'icona: è la CTA in vetro col neon (.vetro-neon in vetro-neon.css) */
 .icona {
   display: grid;
   place-items: center;
@@ -60,20 +60,22 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
   font-size: 1.5rem;
-  transition: background 0.4s, border-color 0.4s, transform 0.4s, box-shadow 0.4s;
 }
 
-/* in hover il cerchio si accende di arancione */
-.contatto:hover .icona,
-.contatto:focus-visible .icona {
-  background: linear-gradient(160deg, #ff7a52, #e5321c);
-  border-color: transparent;
-  color: #fff;
+/* passando sulla riga il neon del cerchio si accende al massimo (non si riempie) */
+.contatto:focus-visible .icona,
+.contatto:active .icona {
+  --sopra: 1;
   transform: scale(1.08);
-  box-shadow: 0 8px 20px rgba(229, 50, 28, 0.45);
+}
+
+/* solo col mouse: sul telefono :hover resta attaccato dopo il tocco */
+@media (hover: hover) {
+  .contatto:hover .icona {
+    --sopra: 1;
+    transform: scale(1.08);
+  }
 }
 
 /* i testi: min-width 0 permette all'indirizzo lungo di andare a capo */
@@ -145,11 +147,6 @@
 :global(:root[data-tema="giorno"]) .lista,
 :global(:root[data-tema="giorno"]) .contatto {
   border-color: rgba(60, 30, 20, 0.12);
-}
-
-:global(:root[data-tema="giorno"]) .icona {
-  border-color: rgba(60, 30, 20, 0.2);
-  background: rgba(60, 30, 20, 0.04);
 }
 
 /* per chi ha chiesto al sistema di ridurre i movimenti */

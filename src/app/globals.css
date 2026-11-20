@@ -120,9 +120,16 @@ article a {
 
 
 /* più è alto il numero, più il testo scende:
-   con 12.375rem parte alla stessa altezza della card del badge */
+   con 11.125rem parte alla stessa altezza della card del badge (dipende dal laccio, Badge.module.css) */
 .home-testo {
-  padding-top: 12.375rem;
+  padding-top: 11.125rem;
+}
+
+/* sui tablet più grandi il laccio del badge è 30px più corto (Badge.module.css): il testo sale con lui */
+@media (min-width: 769px) and (max-width: 1366px) and (hover: none) {
+  .home-testo {
+    padding-top: 9.25rem;
+  }
 }
 
 .hero-descrizione {
@@ -194,11 +201,13 @@ article a {
   background: radial-gradient(ellipse at 50% 35%, #1d1d1d 0%, #0b0b0b 55%, #050505 100%);
 }
 
-/* le macchie di luce */
+/* le macchie di luce.
+   Niente filter: blur: la sfumatura morbida la fa già il gradiente, con più passaggi verso il
+   trasparente. La sfocatura su macchie così grandi era la parte più lenta da disegnare
+   all'apertura del sito, soprattutto sui telefoni */
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(70px);
   will-change: transform;
   /* quanto si vede il rosso dello sfondo: da 0 (niente) a 1 (pieno) */
   opacity: 0.4;
@@ -210,7 +219,15 @@ article a {
   height: 50vw;
   top: -28vw;
   left: -22vw;
-  background: radial-gradient(circle, #c9543a 0%, #7d2a18 35%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    #c9543a 0%,
+    #a3412b 16%,
+    #7d2a18 34%,
+    rgba(125, 42, 24, 0.5) 50%,
+    rgba(125, 42, 24, 0.18) 61%,
+    transparent 71%
+  );
   animation: muovi-1 9s ease-in-out infinite alternate;
 }
 
@@ -219,7 +236,15 @@ article a {
   height: 55vw;
   bottom: -30vw;
   right: -22vw;
-  background: radial-gradient(circle, #c9583a 0%, #76281a 35%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    #c9583a 0%,
+    #a0412a 16%,
+    #76281a 34%,
+    rgba(118, 40, 26, 0.5) 50%,
+    rgba(118, 40, 26, 0.18) 61%,
+    transparent 71%
+  );
   animation: muovi-2 11s ease-in-out infinite alternate;
 }
 
@@ -228,8 +253,23 @@ article a {
   height: 45vw;
   top: 35%;
   left: 30%;
-  background: radial-gradient(circle, rgba(120, 35, 20, 0.4) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(120, 35, 20, 0.4) 0%,
+    rgba(120, 35, 20, 0.22) 30%,
+    rgba(120, 35, 20, 0.08) 52%,
+    transparent 71%
+  );
   animation: muovi-3 13s ease-in-out infinite alternate;
+}
+
+/* sul telefono le macchie sono piccole: un po' più grandi e più tenui, così restano un alone
+   diffuso come prima (quando era la sfocatura ad allargarle) */
+@media (max-width: 768px) {
+  .blob {
+    opacity: 0.28;
+    scale: 1.35;
+  }
 }
 
 /* in "to" ci sono lo spostamento e la grandezza finale di ogni macchia */
@@ -410,13 +450,20 @@ article a {
   .competenze:first-child {
     margin-top: 0;
   }
+
+  /* sotto il badge: l'ombra della card e l'inclinazione del box aggiungono già spazio,
+     qui ne basta meno perché la distanza sembri uguale alle altre */
+  .home-hero + .competenze {
+    margin-top: 1.75rem;
+  }
 }
 
 /* tablet (anche l'iPad grande in orizzontale, che non ha il mouse):
    sezioni un po' più staccate che sul telefono, ma meno che sul computer */
 @media (min-width: 769px) and (max-width: 1180px), (min-width: 769px) and (max-width: 1366px) and (hover: none) {
+  /* lo stesso ritmo tra tutte le sezioni: circa 55px a occhio */
   .competenze {
-    margin-block: 3rem;
+    margin-block: 2.6rem;
   }
 
   .competenze:last-child {
@@ -425,6 +472,11 @@ article a {
 
   .competenze:first-child {
     margin-top: 0;
+  }
+
+  /* sotto il badge: ombra della card e inclinazione del box aggiungono già spazio */
+  .home-hero + .competenze {
+    margin-top: 1.5rem;
   }
 }
 
@@ -788,22 +840,26 @@ article a {
   --bordo: rgba(0, 0, 0, 0.12);
   /* un po' più scuro che di notte, per leggersi bene sul chiaro */
   --accento: #c2330f;
-  /* box di Esperienze e Certificazioni: più è basso l'ultimo numero, più sono trasparenti */
-  --card: rgba(255, 240, 228, 0.2);
+  /* box di Esperienze e Certificazioni: vetro bianco latte, più chiaro dello sfondo */
+  --card: rgba(255, 255, 255, 0.3);
 }
 
 :root[data-tema="giorno"] body {
-  background: #f7efe7;
+  background: #efd8c8;
 }
 
-/* --- sfondo --- */
+/* --- sfondo ---
+   il vetro si vede solo se dietro c'è qualcosa da sfocare: di giorno lo sfondo era quasi tutto
+   crema, uguale ai box, e il vetro spariva. Qui è una sfumatura albicocca: crema al centro,
+   rosa terracotta verso i bordi, con le macchie di luce più presenti.
+   I box di vetro, bianco latte, si staccano e sfocano i colori che hanno dietro */
 :root[data-tema="giorno"] .sfondo {
-  background: radial-gradient(ellipse at 50% 35%, #fff6ef 0%, #f3e6dc 55%, #ead7c9 100%);
+  background: radial-gradient(ellipse at 50% 30%, #fff2e8 0%, #f4d9c7 42%, #e8bea8 78%, #dcaa92 100%);
 }
 
 /* quanto si vede il rosso dello sfondo di giorno */
 :root[data-tema="giorno"] .blob {
-  opacity: 0.28;
+  opacity: 0.5;
 }
 
 :root[data-tema="giorno"] .arco-3 {
@@ -825,12 +881,15 @@ article a {
 
 /* --- competenze e prototipi --- */
 :root[data-tema="giorno"] .competenze {
-  /* il colore del box: più è basso l'ultimo numero, più è trasparente */
-  background-color: rgba(255, 240, 228, 0.2);
-  /* il riflesso di luce nell'angolo: più è basso, meno il box sembra bianco */
-  background-image: linear-gradient(155deg, rgba(255, 255, 255, 0.12), transparent 45%);
+  /* vetro bianco latte: più chiaro dello sfondo albicocca, così si vede come una lastra */
+  background-color: rgba(255, 255, 255, 0.28);
+  /* il riflesso di luce nell'angolo */
+  background-image: linear-gradient(155deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.06) 45%);
+  /* di giorno la sfocatura è più forte: trasforma i colori dietro in una luce morbida */
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
   color: var(--testo);
-  border-color: rgba(60, 30, 20, 0.1);
+  border-color: rgba(255, 255, 255, 0.7);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.9),
     inset 0 -2px 4px rgba(60, 30, 20, 0.08),

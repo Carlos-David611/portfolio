@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { annunciaRetro } from "@/components/retroBadge";
+import Sfondo from "@/components/Sfondo";
 import styles from "./Badge.module.css";
 
 export default function Badge({
@@ -33,11 +33,17 @@ export default function Badge({
     return () => window.removeEventListener("scroll", controllaScroll);
   }, [aspettaScroll]);
 
-  // avvisa la chat che il retro è pronto, e che non c'è più quando si cambia pagina
-  const retro = useRef(null);
+  // lo sfondo animato dentro la card arriva solo quando il browser ha finito il lavoro importante:
+  // così non rallenta la prima comparsa della pagina
+  const [sfondoPronto, setSfondoPronto] = useState(false);
   useEffect(() => {
-    annunciaRetro(retro.current);
-    return () => annunciaRetro(null);
+    const pronto = () => setSfondoPronto(true);
+    if ("requestIdleCallback" in window) {
+      const id = requestIdleCallback(pronto, { timeout: 1500 });
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(pronto, 400);
+    return () => clearTimeout(id);
   }, []);
 
   const iniziali = nome[0] + cognome[0];
@@ -47,9 +53,8 @@ export default function Badge({
     <div
       className={`${styles.lanyard} ${visibile ? styles.visibile : ""}`}
       style={{ "--colore-badge": colore }}
-      data-badge="lanyard"
     >
-      <div className={styles.pendolo} data-badge="pendolo">
+      <div className={styles.pendolo}>
         <div className={styles.laccio}>
           <span>Portfolio</span>
         </div>
@@ -57,10 +62,13 @@ export default function Badge({
         <div className={styles.laccioCorto} />
         <div className={styles.moschettone} />
 
-        {/* è questo che si gira: davanti la card, dietro la chat (ce la mette ChatBot) */}
-        <div className={styles.giro} data-badge="giro">
-        <div className={styles.card} data-badge="card">
+        <div className={styles.giro}>
+        <div className={styles.card}>
           <div className={styles.alto}>
+            {/* lo sfondo animato della home anche dentro la card */}
+            <div className={styles.fondoCard} aria-hidden="true">
+              {sfondoPronto && <Sfondo />}
+            </div>
             <div className={styles.testata}>
               <span className={styles.logo}>{iniziali}</span>
               <span className={styles.evento}>{intestazione}</span>
@@ -82,8 +90,6 @@ export default function Badge({
             <p className={styles.luogo}>{luogo}</p>
           </div>
         </div>
-
-        <div ref={retro} className={styles.retro} data-badge="retro" />
         </div>
       </div>
     </div>

@@ -2,15 +2,19 @@
 
 /* la scena: le misure delle card stanno qui, cambiale solo qui */
 .scena {
+  /* lo spazio tra i margini della pagina, lo stesso del testo: la ruota non deve uscirne.
+     1200px = la colonna della pagina, 4rem = i suoi margini, 16px = la barra di scorrimento */
+  --spazio: calc(min(1200px, 100vw) - 4rem - 16px);
+  /* la ruota vista di fronte è larga due volte il raggio (distanza + card): il raggio massimo
+     è metà dello spazio (0.96 = un piccolo margine per la prospettiva) */
+  --raggio-max: calc(var(--spazio) / 2 * 0.96);
   /* la larghezza della card cresce sugli schermi alti (tablet in verticale, monitor grandi),
      da 280 a 380px. Il primo valore dentro min() la lega all'altezza dello schermo,
-     il secondo impedisce che le card escano ai lati. L'altezza segue: 1.36 = le proporzioni */
-  --larghezza: clamp(280px, min(calc((100svh - 22rem) * 0.53), calc((100vw - 3rem) / 2.1 - 30px)), 380px);
+     il secondo la fa stare nel raggio. L'altezza segue: 1.36 = le proporzioni */
+  --larghezza: clamp(280px, min(calc((100svh - 22rem) * 0.53), calc(var(--raggio-max) - 24px)), 380px);
   --altezza: calc(var(--larghezza) * 1.36);
-  /* lo spazio tra l'asse centrale e le card: più è alto, più la ruota è larga.
-     Si adatta allo schermo: 90px al massimo, ma mai tanto da far uscire le card ai lati.
-     2.1 = quante volte (card + distanza) sta nella ruota vista di fronte; 3rem = margine */
-  --distanza: clamp(24px, calc((100vw - 3rem) / 2.1 - var(--larghezza)), 90px);
+  /* lo spazio tra l'asse centrale e le card: quello che resta del raggio, al massimo 90px */
+  --distanza: clamp(8px, calc(var(--raggio-max) - var(--larghezza)), 90px);
 
   position: relative;
   display: grid;
@@ -120,7 +124,13 @@
   transform-style: preserve-3d;
 }
 
-/* ---------- Le due facce ---------- */
+/* ---------- Le due facce ----------
+   come un vetro a coste verticali davanti a luci sfocate su fondo nero. Gli strati:
+   1. il fondo nero (qui sotto)
+   2. .luce: macchie di colore sfocate che si muovono piano
+   3. .anteprima: il certificato, chiaro e tenue, a metà tra visibile e nascosto
+   4. ::after: le coste del vetro, chiare al centro e scure ai bordi, che spezzano luce e certificato
+   5. i testi bianchi della card */
 .fronte,
 .retro {
   position: absolute;
@@ -130,48 +140,82 @@
   padding: 1.5rem;
   border-radius: 18px;
   overflow: hidden;
+  isolation: isolate;
   /* quando la faccia ci dà le spalle, sparisce: niente scritte a specchio */
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  color: var(--inchiostro);
-  
-  background:
-    linear-gradient(180deg, transparent 35%, var(--velo) 100%),
-    repeating-linear-gradient(
-      101deg,
-      transparent 0,
-      var(--costa-luce) 3px,
-      transparent 6px,
-      transparent 9px,
-      var(--costa-ombra) 16px
-    ),
-    linear-gradient(155deg, rgba(255, 255, 255, 0.2), transparent 40%),
-    var(--sfondo);
+  color: #fff;
+  background: #060606;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-/* ---------- Il certificato che si intravede ----------
-   sta sotto i testi e si fonde con il colore della card: --anteprima-forza dice quanto si
-   vede, --anteprima-fusione come si mescola (cambiano per ogni palette, vedi sotto) */
+/* 2. le luci: ellissi alte e sfocate, come nella foto di riferimento. I colori cambiano per
+   ogni card (le palette qui sotto). Si muovono solo con transform: il telefono non fatica */
+.luce {
+  position: absolute;
+  inset: -18%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 42% 66% at 26% 70%, var(--luce-a) 0%, color-mix(in srgb, var(--luce-a) 55%, transparent) 35%, transparent 72%),
+    radial-gradient(ellipse 38% 60% at 76% 26%, var(--luce-b) 0%, color-mix(in srgb, var(--luce-b) 55%, transparent) 35%, transparent 72%),
+    radial-gradient(ellipse 30% 46% at 60% 90%, var(--luce-c) 0%, transparent 72%);
+  filter: blur(12px) saturate(150%) brightness(1.15);
+  animation: luce-scorre 9s ease-in-out infinite alternate;
+  animation-delay: var(--luce-ritardo, 0s);
+}
+
+@keyframes luce-scorre {
+  from {
+    transform: translate(-7%, 5%) scale(1);
+  }
+  to {
+    transform: translate(7%, -6%) scale(1.14);
+  }
+}
+
+/* 3. il certificato: la prima pagina del PDF invertita (scritte chiare su nero) e fusa con
+   le luci. Più è alto --anteprima-forza, più si legge */
 .anteprima {
+  z-index: 1;
   object-fit: cover;
-  opacity: var(--anteprima-forza);
-  mix-blend-mode: var(--anteprima-fusione);
-  /* l'immagine ha già le sue coste, larghe quasi come quelle della card: sovrapposte
-     farebbero righe incrociate. Sfocata, resta solo la sagoma del certificato */
-  filter: blur(1.5px);
-  /* il bordo sfocato sbiadirebbe: ingrandita un poco, esce dalla card e non si vede */
-  transform: scale(1.06);
+  /* la card è stretta e alta: si vede la parte sinistra, dove iniziano titolo e scritte */
+  object-position: 8% center;
+  opacity: var(--anteprima-forza, 0.34);
+  mix-blend-mode: screen;
+  filter: invert(1) blur(0.5px);
   pointer-events: none;
 }
 
-/* i testi stanno sopra il certificato */
-.fronte > :not(.anteprima),
-.retro > :not(.anteprima) {
+/* 4. le coste del vetro, verticali: ogni costa ha i bordi scuri e una luce al centro.
+   16px = la larghezza di una costa. Sopra, un'ombra in alto e in basso dà profondità */
+.fronte::after,
+.retro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, transparent 25%, transparent 70%, rgba(0, 0, 0, 0.4) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.6) 0px,
+      rgba(0, 0, 0, 0.12) 3px,
+      rgba(255, 255, 255, 0.08) 6.5px,
+      rgba(255, 255, 255, 0.24) 8.5px,
+      rgba(0, 0, 0, 0.08) 12.5px,
+      rgba(0, 0, 0, 0.6) 16px
+    );
+}
+
+/* 5. i testi stanno sopra tutto */
+.fronte > :not(.anteprima):not(.luce),
+.retro > :not(.anteprima):not(.luce) {
   position: relative;
-  z-index: 1;
+  z-index: 3;
 }
 
 /* il fronte: un poster tipografico */
@@ -179,7 +223,7 @@
   justify-content: space-between;
 }
 
-/* il retro: girato di 180° rispetto al fronte, dello stesso colore */
+/* il retro: girato di 180° rispetto al fronte */
 .retro {
   justify-content: center;
   align-items: center;
@@ -187,56 +231,58 @@
   transform: rotateY(180deg);
 }
 
-/* ---------- Le quattro palette dei poster ----------
-   il componente dà a ogni card un numero da 0 a 3 (data-colore).
-   --sfondo e --inchiostro: il colore della card e dei testi.
-   --costa-luce, --costa-ombra e --velo: quanto si vede il vetro; sulla card chiara
-   sono più tenui, altrimenti la sporcherebbero */
+/* chi ha chiesto meno movimento: le luci restano ferme */
+@media (prefers-reduced-motion: reduce) {
+  .luce {
+    animation: none;
+  }
+}
+
+/* ---------- Le quattro palette delle luci ----------
+   il componente dà a ogni card un numero da 0 a 3 (data-colore): i tre colori delle luci
+   (--luce-a, -b, -c) e un ritardo diverso, così le card non si muovono tutte insieme */
 .raggio[data-colore="0"],
 .copertina[data-colore="0"] {
-  --sfondo: linear-gradient(160deg, #ff5a36, #c8240f);
-  --inchiostro: #fff;
-  --costa-luce: rgba(255, 255, 255, 0.14);
-  --costa-ombra: rgba(0, 0, 0, 0.22);
-  --velo: rgba(80, 15, 5, 0.35);
-  --anteprima-forza: 0.78;
-  --anteprima-fusione: luminosity;
+  /* rosso e ambra */
+  --luce-a: #ff4a26;
+  --luce-b: #ffb347;
+  --luce-c: #e5321c;
+  --luce-ritardo: 0s;
 }
 
 .raggio[data-colore="1"],
 .copertina[data-colore="1"] {
-  --sfondo: #f2ebe4;
-  --inchiostro: #121212;
-  --costa-luce: rgba(255, 255, 255, 0.6);
-  --costa-ombra: rgba(90, 50, 35, 0.1);
-  --velo: rgba(255, 240, 228, 0.5);
-  --anteprima-forza: 0.62;
-  --anteprima-fusione: multiply;
+  /* cremisi e arancio */
+  --luce-a: #c8240f;
+  --luce-b: #ff7a3d;
+  --luce-c: #ffd08a;
+  --luce-ritardo: -3s;
 }
 
 .raggio[data-colore="2"],
 .copertina[data-colore="2"] {
-  --sfondo: linear-gradient(160deg, #2c2c2c, #0b0b0b);
-  --inchiostro: #fff;
-  --costa-luce: rgba(255, 255, 255, 0.11);
-  --costa-ombra: rgba(0, 0, 0, 0.32);
-  --velo: rgba(12, 12, 12, 0.45);
-  --anteprima-forza: 0.68;
-  --anteprima-fusione: luminosity;
+  /* arancio e oro, come il giallo della foto di riferimento */
+  --luce-a: #ffc34d;
+  --luce-b: #ff5a36;
+  --luce-c: #ffe08a;
+  --luce-ritardo: -6s;
 }
 
 .raggio[data-colore="3"],
 .copertina[data-colore="3"] {
-  --sfondo: linear-gradient(160deg, #ffb347, #ff7a3d);
-  --inchiostro: #1a0d08;
-  --costa-luce: rgba(255, 255, 255, 0.22);
-  --costa-ombra: rgba(120, 40, 10, 0.18);
-  --velo: rgba(255, 140, 70, 0.3);
-  --anteprima-forza: 0.72;
-  --anteprima-fusione: luminosity;
+  /* ambra e rosso */
+  --luce-a: #ff7a3d;
+  --luce-b: #e5321c;
+  --luce-c: #ffc06a;
+  --luce-ritardo: -8s;
 }
 
 /* ---------- La tipografia del poster ---------- */
+/* tutti i testi bianchi: un'ombra leggerissima li stacca anche dalla parte più chiara delle card */
+.fronte {
+  text-shadow: 0 1px 3px rgba(40, 10, 0, 0.3);
+}
+
 
 /* l'anno enorme e sottile, come il "5.1" del riferimento */
 .anno {
@@ -267,54 +313,44 @@
   letter-spacing: -0.025em;
 }
 
-/* il retro */
-.retroIniziali {
-  display: grid;
-  place-items: center;
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  /* il bordo è il colore dei testi, più trasparente */
-  border: 1px solid color-mix(in srgb, var(--inchiostro) 35%, transparent);
-  font-size: 1.8rem;
-  font-weight: 800;
-}
-
-.retroAnno {
-  font-size: 0.85rem;
-  letter-spacing: 0.2em;
-  opacity: 0.75;
-}
-
 /* ---------- Tablet ----------
    la scena è alta solo quanto le card (più il loro movimento 3D), non quanto lo schermo:
    sui tablet in verticale, così alti, tra le card e il footer restava un grande vuoto */
 @media (min-width: 769px) and (max-width: 1180px), (min-width: 769px) and (max-width: 1366px) and (hover: none) {
   .scena {
-    height: calc(var(--altezza) + 12rem);
+    /* card grandi: in 3D quelle vicine sembrano più larghe, il raggio lascia più margine */
+    --raggio-max: calc(var(--spazio) / 2 * 0.93);
+    /* card grandi quanto lo spazio permette: il più possibile vicine al raggio */
+    --larghezza: clamp(280px, min(calc((100svh - 22rem) * 0.53), calc(var(--raggio-max) - 12px)), 380px);
+    /* le card in 3D, viste di sbieco, sono più alte di --altezza, e tanto più quanto sono grandi:
+       il primo numero copre la loro altezza vera, 3rem sono il margine sopra e sotto */
+    height: calc(var(--altezza) * 1.37 + 3rem);
+  }
+}
+
+/* tablet grandi: card più grandi, quindi in 3D ancora più alte */
+@media (min-width: 901px) and (max-width: 1180px), (min-width: 901px) and (max-width: 1366px) and (hover: none) {
+  .scena {
+    height: calc(var(--altezza) * 1.48 + 3rem);
   }
 }
 
 /* ---------- Telefono: card più piccole ---------- */
 @media (max-width: 768px) {
   .scena {
-    /* 170px sui telefoni; sui tablet piccoli (fino a 768px) cresce come sopra, ma al massimo
-       280px. 2.4 e non 2.1: qui la prospettiva è più forte e le card vicine sembrano più larghe */
-    --larghezza: clamp(170px, min(calc((100svh - 22rem) * 0.53), calc((100vw - 1rem) / 2.4 - 12px)), 280px);
-    /* sui telefoni le card sono più slanciate: la larghezza non può crescere (uscirebbero ai
-       lati), l'altezza sì, tra 240 e 290px. Sui tablet vince la proporzione normale */
-    --altezza: max(clamp(240px, calc(100svh - 560px), 290px), calc(var(--larghezza) * 1.36));
-    /* la scena prende tutto lo spazio che resta sotto il testo e ci mette la ruota al centro:
-       così sotto le card non resta una fascia vuota. 18rem = navbar, intestazione e margini */
-    height: max(calc(var(--altezza) + 6rem), calc(100svh - 18rem));
-    /* come sopra, con un margine più piccolo: qui lo schermo è stretto */
-    --distanza: clamp(4px, calc((100vw - 1rem) / 2.1 - var(--larghezza)), 40px);
+    /* qui nessuna barra di scorrimento da togliere, solo i margini della pagina */
+    --spazio: calc(100vw - 4rem - 6px);
+    /* la card riempie quasi tutto il raggio: la ruota resta dentro i margini */
+    --larghezza: clamp(120px, min(calc((100svh - 22rem) * 0.53), calc(var(--raggio-max) - 6px)), 320px);
+    /* sui telefoni le card non possono essere più larghe (uscirebbero ai lati): crescono in
+       altezza, tra 290 e 350px. Sui tablet vince la proporzione normale */
+    --altezza: max(clamp(290px, calc(100svh - 500px), 350px), calc(var(--larghezza) * 1.36));
+    /* alta quanto le card (viste in 3D sono più alte di --altezza) più un margine uguale sopra e
+       sotto: niente fasce vuote tra il testo, il carosello e il footer */
+    height: calc(var(--altezza) * 1.25 + 3rem);
+    /* quello che resta del raggio, tra 4 e 40px */
+    --distanza: clamp(4px, calc(var(--raggio-max) - var(--larghezza)), 40px);
     perspective: 900px;
-    /* la ruota è più larga della colonna del testo: la scena esce dai margini della pagina
-       (2rem per lato, il padding di .contenuto) e usa tutta la larghezza.
-       Non 100vw: conterebbe anche la barra di scorrimento, e la pagina scorrerebbe di lato */
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
   }
 
   .fronte,
@@ -329,11 +365,14 @@
   .nome {
     font-size: 1.1rem;
   }
+}
 
-  .retroIniziali {
-    width: 60px;
-    height: 60px;
-    font-size: 1.3rem;
+/* tablet piccoli in verticale (iPad mini): card grandi, in 3D più alte */
+@media (min-width: 540px) and (max-width: 768px) {
+  .scena {
+    /* card grandi con la prospettiva forte del telefono: più margine per non uscire ai lati */
+    --raggio-max: calc(var(--spazio) / 2 * 0.9);
+    height: calc(var(--altezza) * 1.6 + 2.5rem);
   }
 }
 
@@ -341,10 +380,7 @@
 @media (max-width: 360px) {
   .scena {
     /* qui i margini della pagina sono di 1rem per lato */
-    width: calc(100% + 2rem);
-    margin-left: -1rem;
-    --larghezza: 140px;
-    --altezza: 198px;
+    --spazio: calc(100vw - 2rem - 6px);
   }
 
   .anno {
@@ -552,11 +588,10 @@
   margin: 0;
 }
 
+/* l'aspetto (vetro fumé con il neon sotto) viene da .vetro-neon in vetro-neon.css */
 .apriFile {
   padding: 0.75rem 1.4rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, #ff5a36, #c8240f);
-  color: #fff;
   font-weight: 600;
   text-decoration: none;
 }

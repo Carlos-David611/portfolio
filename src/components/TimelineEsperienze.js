@@ -87,7 +87,7 @@ export default function TimelineEsperienze({ esperienze }) {
         <div className={styles.frecce}>
           <button
             type="button"
-            className={styles.freccia}
+            className={`${styles.freccia} vetro-neon`}
             onClick={() => setAttiva(attiva - 1)}
             disabled={primaEsperienza}
             aria-label="Esperienza precedente"
@@ -98,7 +98,7 @@ export default function TimelineEsperienze({ esperienze }) {
           </button>
           <button
             type="button"
-            className={styles.freccia}
+            className={`${styles.freccia} vetro-neon`}
             onClick={() => setAttiva(attiva + 1)}
             disabled={ultimaEsperienza}
             aria-label="Esperienza successiva"

@@ -38,7 +38,7 @@ export default function Contatti() {
                 // noopener noreferrer: la nuova scheda non può controllare il tuo sito
                 rel={esterno ? "noopener noreferrer" : undefined}
               >
-                <span className={styles.icona} aria-hidden="true">
+                <span className={`${styles.icona} vetro-neon`} aria-hidden="true">
                   <Icona />
                 </span>
 

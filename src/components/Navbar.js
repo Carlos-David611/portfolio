@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import BottoneTema from "@/components/BottoneTema";
+import Sfondo from "@/components/Sfondo";
 import styles from "./Navbar.module.css";
 
 const links = [
@@ -13,12 +15,53 @@ const links = [
   { href: "/contatti", label: "Contatti" },
 ];
 
-export default function Navbar() {
-  // il menu burger si vede solo sul telefono: su computer questo stato non cambia nulla
-  const [aperto, setAperto] = useState(false);
-  const navbar = useRef(null);
+// quando il menu è quello del telefono e del tablet (burger): la stessa misura del CSS
+const MENU_BURGER = "(max-width: 768px)";
+// il giro delle lettere della voce toccata (come nel CSS): quanto dura il giro di una lettera,
+// e quanto aspetta ogni lettera dopo la precedente. La pagina si apre quando finisce l'ultima
+const DURATA_LETTERA = 450;
+const RITARDO_LETTERA = 30;
 
-  // a menu aperto: si chiude toccando fuori dalla navbar o premendo Esc
+export default function Navbar() {
+  // il menu burger si vede solo su telefono e tablet: su computer questo stato non cambia nulla
+  const [aperto, setAperto] = useState(false);
+  // lo sfondo animato dentro il menu si prepara quando la pagina ha finito di caricarsi:
+  // non pesa all'avvio, e non rallenta la prima apertura del menu
+  const [sfondoPronto, setSfondoPronto] = useState(false);
+  // true dove c'è il menu burger (telefono e tablet): lì il menu chiuso non si deve poter usare
+  const [burger, setBurger] = useState(false);
+  // il link che sta girando su se stesso, prima di aprire la sua pagina
+  const [girando, setGirando] = useState(null);
+  const navbar = useRef(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const media = window.matchMedia(MENU_BURGER);
+    const aggiorna = () => setBurger(media.matches);
+    aggiorna();
+    media.addEventListener("change", aggiorna);
+    return () => media.removeEventListener("change", aggiorna);
+  }, []);
+
+  useEffect(() => {
+    // solo dove c'è il menu burger
+    if (!window.matchMedia(MENU_BURGER).matches) return;
+    const pronto = () => setSfondoPronto(true);
+    if ("requestIdleCallback" in window) {
+      const id = requestIdleCallback(pronto, { timeout: 2500 });
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(pronto, 800);
+    return () => clearTimeout(id);
+  }, []);
+
+  function apriChiudi() {
+    setSfondoPronto(true);
+    setAperto(!aperto);
+  }
+
+  // a menu aperto: si chiude toccando fuori dalla navbar o premendo Esc,
+  // e la pagina sotto non scorre (come nel menu del sito Apple)
   useEffect(() => {
     if (!aperto) return;
 
@@ -30,13 +73,42 @@ export default function Navbar() {
       if (evento.key === "Escape") setAperto(false);
     }
 
+    // il blocco arriva a pannello già sceso: farlo subito costringe il browser a ricalcolare
+    // tutta la pagina proprio mentre il menu si apre, e l'animazione scatterebbe
+    const radice = document.documentElement;
+    const menuBurger = window.matchMedia(MENU_BURGER).matches;
+    const blocca = setTimeout(() => {
+      if (menuBurger) radice.style.overflow = "hidden";
+    }, 560);
+
     document.addEventListener("pointerdown", toccoFuori);
     document.addEventListener("keydown", tastoPremuto);
     return () => {
+      clearTimeout(blocca);
+      radice.style.overflow = "";
       document.removeEventListener("pointerdown", toccoFuori);
       document.removeEventListener("keydown", tastoPremuto);
     };
   }, [aperto]);
+
+  // toccando un link del menu burger: le sue lettere girano, poi si apre la pagina e il menu si chiude
+  function vai(evento, href, label) {
+    const menuBurger = window.matchMedia(MENU_BURGER).matches;
+    const menoMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // su computer, per chi riduce i movimenti, o aprendo in un'altra scheda: subito, senza giro
+    if (!menuBurger || menoMovimento || evento.metaKey || evento.ctrlKey || evento.shiftKey) {
+      setAperto(false);
+      return;
+    }
+    evento.preventDefault();
+    if (girando) return;
+    setGirando(href);
+    setTimeout(() => {
+      router.push(href);
+      setAperto(false);
+      setGirando(null);
+    }, DURATA_LETTERA + (label.length - 1) * RITARDO_LETTERA);
+  }
 
   return (
     <header className={styles.navbar} ref={navbar}>
@@ -46,7 +118,7 @@ export default function Navbar() {
         title="Torna alla home"
         onClick={() => setAperto(false)}
       >
-        
+
       </Link>
 
       <div className={styles.azioni}>
@@ -57,7 +129,7 @@ export default function Navbar() {
           aria-label={aperto ? "Chiudi il menu" : "Apri il menu"}
           aria-expanded={aperto}
           aria-controls="navbar-menu"
-          onClick={() => setAperto(!aperto)}
+          onClick={apriChiudi}
         >
           <span />
           <span />
@@ -65,20 +137,37 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* data-menu-aperto: lo guarda la chat, che sul telefono si fa da parte quando il menu è aperto */}
       <nav
         id="navbar-menu"
         className={`${styles.links} ${aperto ? styles.aperto : ""}`}
-        data-menu-aperto={aperto || undefined}
+        // menu burger chiuso: invisibile ma già pronto, e inert lo rende non cliccabile e non
+        // raggiungibile con la tastiera o dallo screen reader
+        inert={burger && !aperto}
       >
+        {/* lo sfondo animato della home anche dentro il menu (solo telefono e tablet, vedi il CSS) */}
+        {sfondoPronto && (
+          <div className={styles.fondoMenu} aria-hidden="true">
+            <Sfondo />
+          </div>
+        )}
+
         {links.map((link, indice) => (
           <Link
             key={link.href}
             href={link.href}
+            // vetro-neon-latente: il vetro col neon delle CTA, che compare solo avvicinando il cursore
+            className="vetro-neon vetro-neon-latente"
             style={{ "--posizione": indice }}
-            onClick={() => setAperto(false)}
+            data-gira={girando === link.href || undefined}
+            onClick={(evento) => vai(evento, link.href, link.label)}
+            // le lettere sono separate per farle girare: chi usa lo screen reader sente la parola intera
+            aria-label={link.label}
           >
-            {link.label}
+            {[...link.label].map((lettera, i) => (
+              <span key={i} className={styles.lettera} style={{ "--i": i }} aria-hidden="true">
+                {lettera}
+              </span>
+            ))}
           </Link>
         ))}
       </nav>

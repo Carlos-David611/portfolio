@@ -1,11 +1,7 @@
-/* ==========================================================
-   CURSORE OCCHI
-   Tutto dipende da --h, l'altezza della pillola: cambia solo quella e
-   occhi, pupille, testo e angoli si riscalano insieme.
-   ========================================================== */
+
 .pillola {
   /* l'unica misura da toccare */
-  --h: 36px;
+  --h: 28px;
   /* larghezza 128px con altezza 36px: 128 / 36 = 3.556 */
   --w: calc(var(--h) * 3.556);
   --occhio-px: calc(var(--h) * var(--occhio));

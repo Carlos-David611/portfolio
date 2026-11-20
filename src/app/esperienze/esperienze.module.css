@@ -52,6 +52,7 @@
   }
 }
 
+/* l'aspetto (vetro fumé con il neon sotto) viene da .vetro-neon in vetro-neon.css */
 .freccia {
   display: grid;
   place-items: center;
@@ -59,11 +60,7 @@
   height: 44px;
   padding: 0;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
   cursor: pointer;
-  transition: background 0.3s, border-color 0.3s, transform 0.3s, opacity 0.3s;
 }
 
 .freccia svg {
@@ -78,8 +75,6 @@
 
 /* :not(:disabled): l'hover vale solo se la freccia si può usare */
 .freccia:hover:not(:disabled) {
-  border-color: rgba(255, 90, 54, 0.6);
-  background: rgba(255, 90, 54, 0.12);
   transform: translateY(-2px);
 }
 
@@ -415,17 +410,6 @@
 
 /* ---------- Tema giorno ----------
  */
-
-:global(:root[data-tema="giorno"]) .freccia {
-  border-color: rgba(60, 30, 20, 0.25);
-  background: rgba(60, 30, 20, 0.05);
-  color: var(--testo);
-}
-
-:global(:root[data-tema="giorno"]) .freccia:hover:not(:disabled) {
-  border-color: var(--accento);
-  background: rgba(194, 51, 15, 0.1);
-}
 
 /* qui background-image e non background: l'altro azzererebbe il ritaglio sulle lettere */
 :global(:root[data-tema="giorno"]) .annoGrande {

@@ -128,7 +128,7 @@
   font-size: 1.05rem;
 }
 
-/* lo stato con il pallino verde, come nel chatbot */
+/* lo stato con il pallino verde */
 .disponibile {
   display: inline-flex;
   align-items: center;
@@ -208,26 +208,19 @@
   list-style: none;
 }
 
+/* l'aspetto (vetro fumé con il neon sotto) viene da .vetro-neon in vetro-neon.css */
 .socialLink {
   display: grid;
   place-items: center;
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  color: inherit;
   font-size: 1.3rem;
-  transition: background 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .socialLink:hover,
 .socialLink:focus-visible {
-  background: linear-gradient(160deg, #ff7a52, #e5321c);
-  border-color: transparent;
-  color: #fff;
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(229, 50, 28, 0.45);
 }
 
 .email {
@@ -261,8 +254,6 @@
   gap: 1rem;
   margin-top: 3rem;
   padding-top: 1.5rem;
-  /* spazio a destra: il pulsante del chatbot non copre "Torna su" */
-  padding-right: 70px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 0.9rem;
   color: var(--grigio);
@@ -287,10 +278,10 @@
 }
 
 /* ---------- Tablet ----------
-   sopra ci sono già i 2rem di margine della pagina: in tutto circa 100px su ogni pagina */
+   sopra ci sono già i 2rem di margine della pagina: in tutto circa 75px su ogni pagina */
 @media (min-width: 769px) and (max-width: 1180px), (min-width: 769px) and (max-width: 1366px) and (hover: none) {
   .footer {
-    margin-top: 4rem;
+    margin-top: 2.5rem;
   }
 }
 
@@ -299,7 +290,7 @@
   .footer {
     width: calc(100% - 1rem);
     /* sul telefono basta meno stacco: sopra c'è già il margine della pagina (2rem) */
-    margin-top: 2.5rem;
+    margin-top: 1.5rem;
     border-radius: 28px 28px 18px 18px;
   }
 
@@ -314,9 +305,9 @@
     display: none;
   }
 
-  /* lo spazio sotto resta: il pulsante del chatbot non copre i contatti */
+  /* un po' d'aria sotto i contatti, dove passa la firma gigante */
   .footer {
-    padding-bottom: 5rem;
+    padding-bottom: 3rem;
   }
 }
 
@@ -344,11 +335,6 @@
 
 :global(:root[data-tema="giorno"]) .link:hover {
   color: var(--testo);
-}
-
-:global(:root[data-tema="giorno"]) .socialLink {
-  border-color: rgba(60, 30, 20, 0.2);
-  background: rgba(60, 30, 20, 0.04);
 }
 
 :global(:root[data-tema="giorno"]) .fondo {

@@ -1,0 +1,323 @@
+/* ==========================================================
+   CTA IN VETRO CON NEON (classe .vetro-neon)
+   Il pulsante resta quasi trasparente: vetro fumé con una luce al neon
+   intrappolata SOTTO la superficie. Non si riempie mai di colore.
+
+   Gli strati, dal basso verso l'alto:
+   1. il vetro fumé: sfoca quello che c'è dietro (backdrop-filter)
+   2. ::before → il neon: due macchie di luce sfumate nei colori della pagina
+   3. ::after  → la superficie del vetro: sfoca di nuovo il neon che ha sotto,
+      così sembra dentro il vetro e non una tinta appoggiata sopra
+   4. il testo o l'icona
+
+   VetroNeon.js scrive tre variabili mentre il cursore si avvicina:
+   --vicino (0 lontano → 1 sopra), --mx e --my (dove sta il cursore sul pulsante)
+   ========================================================== */
+
+/* registrate: così il browser le può animare in modo fluido */
+@property --vicino {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --mx {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 25%;
+}
+
+@property --my {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 85%;
+}
+
+/* 1 quando il cursore è sopra (o il dito preme): registrata anche lei, così si accende sfumando */
+@property --sopra {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* :where() = specificità zero: posizione e ritaglio li può cambiare il componente
+   (es. se un pulsante è position: fixed) */
+:where(.vetro-neon) {
+  position: relative;
+}
+
+/* .vetro-neon.vetro-neon: vince sugli stili del componente, ovunque sia caricato */
+.vetro-neon.vetro-neon {
+  /* i colori del neon: quelli della pagina */
+  --neon-1: #ff5a36;
+  --neon-2: #e5321c;
+  --neon-3: #ffb347;
+  /* quanto è acceso: il massimo tra la vicinanza del cursore e il passaggio sopra / il tocco */
+  /* --accesa: sul telefono il neon è sempre acceso (vedi il blocco "Telefono e tablet") */
+  --forza: max(var(--vicino), var(--sopra), var(--accesa, 0));
+
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--testo);
+  /* 1. il vetro fumé, leggermente opaco */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015)),
+    rgba(16, 13, 12, 0.38);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  /* bordi: sottili riflessi di luce in alto e sui lati, e un alone esterno solo quando si accende */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    inset 1px 0 0 rgba(255, 255, 255, 0.07),
+    inset -1px 0 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(255, 90, 54, calc(0.12 + 0.3 * var(--forza))),
+    0 0 calc(22px * var(--forza)) rgba(229, 50, 28, calc(0.28 * var(--forza)));
+  transition:
+    --vicino 0.35s ease-out,
+    --mx 0.35s ease-out,
+    --my 0.35s ease-out,
+    --sopra 0.3s ease-out,
+    border-color 0.4s,
+    box-shadow 0.4s,
+    transform 0.3s;
+}
+
+/* 2. il neon: luce concentrata in due zone, mai un riempimento uniforme.
+   La prima segue il cursore, la seconda resta verso l'angolo opposto.
+   Lo strato è più grande del pulsante (inset -40%): 22% + 0.556 × --mx riporta
+   la posizione del cursore sul pulsante dentro lo strato */
+.vetro-neon.vetro-neon::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at calc(22% + var(--mx) * 0.556) calc(22% + var(--my) * 0.556),
+      var(--neon-1) 0%,
+      color-mix(in srgb, var(--neon-2) 65%, transparent) 9%,
+      transparent 24%
+    ),
+    radial-gradient(
+      circle at calc(70% - var(--mx) * 0.2) calc(36% - var(--my) * 0.08),
+      color-mix(in srgb, var(--neon-3) 70%, transparent) 0%,
+      transparent 16%
+    );
+  /* l'alone morbido: più è alto il blur, più la luce è sfumata */
+  filter: blur(10px) saturate(130%);
+  /* a riposo è una brace; avvicinandosi si accende e si allarga */
+  opacity: calc(0.4 + 0.55 * var(--forza));
+  transform: scale(calc(0.85 + 0.5 * var(--forza)));
+  transition: opacity 0.4s, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 3. la superficie del vetro, SOPRA il neon: lo sfoca ancora e ci passa un riflesso.
+   È questo strato che fa sembrare la luce intrappolata dentro */
+.vetro-neon.vetro-neon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    /* il riflesso freddo in alto, come su una lastra */
+    linear-gradient(180deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.02) 45%, transparent 60%),
+    /* un velo fumé che smorza il neon: senza, sembrerebbe colore stampato sopra */
+    rgba(18, 14, 13, 0.22);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* focus da tastiera e dito premuto: acceso al massimo */
+.vetro-neon.vetro-neon:focus-visible,
+.vetro-neon.vetro-neon:active {
+  --sopra: 1;
+  border-color: rgba(255, 140, 110, 0.35);
+}
+
+/* il passaggio del mouse solo dove c'è un mouse: sui telefoni :hover resta "attaccato"
+   dopo il tocco e il neon resterebbe acceso */
+@media (hover: hover) {
+  .vetro-neon.vetro-neon:hover {
+    --sopra: 1;
+    border-color: rgba(255, 140, 110, 0.35);
+  }
+}
+
+/* disattivato: niente luce */
+.vetro-neon.vetro-neon:disabled {
+  --sopra: 0;
+  --vicino: 0;
+}
+
+.vetro-neon.vetro-neon:disabled::before {
+  opacity: 0.12;
+}
+
+/* .vetro-neon-notte: resta com'è di notte anche nel tema giorno (es. dentro una card scura) */
+.vetro-neon.vetro-neon.vetro-neon-notte {
+  color: #fff;
+}
+
+/* ---------- tema giorno ----------
+   Sul chiaro il neon corallo da solo si confondeva col fondo rosato, e il rosso pieno
+   sul bianco abbagliava. Qui il neon usa i colori della pagina (rosso-arancio) più il loro
+   complementare, un verde acqua: rosso-arancio dove sta il cursore, verde acqua nell'angolo opposto.
+   Vetro caldo e poco bianco, velo leggero sopra, alone esterno tenue */
+:root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte) {
+  /* i colori della pagina */
+  --neon-1: #ff5a36;
+  --neon-2: #e5321c;
+  /* il terzo, solo di giorno: il complementare del rosso-arancio */
+  --neon-complementare: #1fb5c4;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08)),
+    rgba(244, 230, 222, 0.26);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(229, 50, 28, calc(0.12 + 0.2 * var(--forza))),
+    0 2px 8px rgba(90, 50, 35, 0.1),
+    0 0 calc(18px * var(--forza)) rgba(229, 50, 28, calc(0.12 * var(--forza)));
+}
+
+/* i due neon: rosso-arancio che segue il cursore, verde acqua nell'angolo opposto */
+:root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte)::before {
+  background:
+    radial-gradient(
+      circle at calc(22% + var(--mx) * 0.556) calc(22% + var(--my) * 0.556),
+      var(--neon-1) 0%,
+      color-mix(in srgb, var(--neon-2) 70%, transparent) 9%,
+      transparent 24%
+    ),
+    radial-gradient(
+      circle at calc(72% - var(--mx) * 0.2) calc(38% - var(--my) * 0.08),
+      color-mix(in srgb, var(--neon-complementare) 80%, transparent) 0%,
+      color-mix(in srgb, var(--neon-complementare) 30%, transparent) 9%,
+      transparent 20%
+    );
+  filter: blur(11px) saturate(120%);
+}
+
+/* il velo lattiginoso: più è alto l'ultimo numero, più il neon resta tenue sotto il vetro */
+:root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte)::after {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.06) 50%, transparent 65%),
+    rgba(250, 240, 233, 0.18);
+}
+
+/* ==========================================================
+   VARIANTE LATENTE (classe .vetro-neon-latente, insieme a .vetro-neon)
+   Per i link della navbar: a riposo non si vede niente, solo il testo.
+   Avvicinando il cursore il vetro e il neon compaiono insieme alla luce,
+   e col cursore sopra è identica alle CTA.
+   Ogni strato è moltiplicato per --forza (0 lontano → 1 sopra)
+   ========================================================== */
+.vetro-neon.vetro-neon.vetro-neon-latente {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, calc(0.07 * var(--forza))),
+      rgba(255, 255, 255, calc(0.015 * var(--forza)))
+    ),
+    rgba(16, 13, 12, calc(0.38 * var(--forza)));
+  /* niente sfocatura propria: sta già dentro un vetro (la navbar), e una seconda sfocatura,
+     anche a zero, disegnerebbe una pillola grigia visibile a riposo */
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-color: rgba(255, 140, 110, calc(0.3 * var(--forza)));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, calc(0.32 * var(--forza))),
+    inset 1px 0 0 rgba(255, 255, 255, calc(0.07 * var(--forza))),
+    inset -1px 0 0 rgba(255, 255, 255, calc(0.05 * var(--forza))),
+    inset 0 -1px 0 rgba(255, 90, 54, calc(0.42 * var(--forza))),
+    0 0 calc(22px * var(--forza)) rgba(229, 50, 28, calc(0.28 * var(--forza)));
+}
+
+/* il neon nasce da spento invece che da brace */
+.vetro-neon.vetro-neon.vetro-neon-latente::before {
+  opacity: calc(0.95 * var(--forza));
+}
+
+.vetro-neon.vetro-neon.vetro-neon-latente::after {
+  opacity: var(--forza);
+}
+
+:root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte).vetro-neon-latente {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, calc(0.28 * var(--forza))),
+      rgba(255, 255, 255, calc(0.08 * var(--forza)))
+    ),
+    rgba(244, 230, 222, calc(0.26 * var(--forza)));
+  border-color: rgba(255, 255, 255, calc(0.6 * var(--forza)));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, calc(0.8 * var(--forza))),
+    inset 0 -1px 0 rgba(229, 50, 28, calc(0.32 * var(--forza))),
+    0 2px 8px rgba(90, 50, 35, calc(0.1 * var(--forza))),
+    0 0 calc(18px * var(--forza)) rgba(229, 50, 28, calc(0.12 * var(--forza)));
+}
+
+/* ==========================================================
+   TELEFONO E TABLET (niente mouse)
+   Il cursore non c'è: il neon è sempre acceso e respira piano dentro il vetro.
+   Toccando, la CTA si solleva un poco e poi apre la pagina
+   (il piccolo ritardo prima di aprirla lo mette VetroNeon.js)
+   ========================================================== */
+@media (hover: none) {
+  .vetro-neon.vetro-neon:not(.vetro-neon-latente) {
+    --accesa: 0.75;
+  }
+
+  /* la luce si sposta e pulsa piano. Si animano solo translate e opacity:
+     li muove la scheda grafica, il telefono non fatica */
+  .vetro-neon.vetro-neon:not(.vetro-neon-latente)::before {
+    animation: neon-vive 6s ease-in-out infinite alternate;
+  }
+
+  /* il sollevamento: mentre il dito preme e per un attimo dopo (data-sollevata) */
+  .vetro-neon.vetro-neon:not(.vetro-neon-latente):active,
+  .vetro-neon.vetro-neon[data-sollevata] {
+    --sopra: 1;
+    transform: translateY(-4px) scale(1.04);
+    border-color: rgba(255, 140, 110, 0.45);
+  }
+
+  /* disattivata: spenta e ferma */
+  .vetro-neon.vetro-neon:disabled {
+    --accesa: 0;
+  }
+
+  .vetro-neon.vetro-neon:disabled::before {
+    animation: none;
+  }
+}
+
+@keyframes neon-vive {
+  0% {
+    translate: -12% 8%;
+    opacity: 0.72;
+  }
+  50% {
+    translate: 10% -6%;
+    opacity: 0.95;
+  }
+  100% {
+    translate: -4% -10%;
+    opacity: 0.8;
+  }
+}
+
+/* chi ha chiesto meno movimento: la luce cambia, ma senza animazioni */
+@media (prefers-reduced-motion: reduce) {
+  .vetro-neon.vetro-neon,
+  .vetro-neon.vetro-neon::before,
+  .vetro-neon.vetro-neon:not(.vetro-neon-latente)::before {
+    transition: none;
+    animation: none;
+  }
+}
