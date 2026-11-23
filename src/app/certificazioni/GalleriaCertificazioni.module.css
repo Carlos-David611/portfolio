@@ -1,0 +1,174 @@
+/* ==========================================================
+   GALLERIA 3D DELLE CERTIFICAZIONI
+   La tela di Three.js è trasparente: dietro si vede lo sfondo del sito
+   ========================================================== */
+
+.palco {
+  /* quanto la galleria sale accanto al titolo (solo sugli schermi grandi, vedi in fondo).
+     Non --sopra: quel nome è già usato (come numero) dal neon in vetro-neon.css */
+  --galleria-sopra: 0px;
+  position: relative;
+  width: 100%;
+  /* quasi tutto lo schermo sotto l'intestazione, più la striscia accanto al titolo */
+  height: calc(clamp(440px, 74svh, 860px) + var(--galleria-sopra));
+  padding-top: var(--galleria-sopra);
+  box-sizing: border-box;
+  /* un po' di spazio sotto il titolo; con --galleria-sopra la galleria risale accanto al titolo */
+  margin-top: calc(1.25rem - var(--galleria-sopra));
+  outline: none;
+  /* il trascinamento in verticale lo gestisce la galleria */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* da tastiera si vede dove si trova il focus */
+.palco:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 4px;
+  border-radius: 18px;
+}
+
+.tela {
+  /* copre tutta la galleria, anche la striscia accanto al titolo */
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  /* solo un filo di sfumatura sui bordi: le card restano intere e naturali,
+     senza una fascia scura che le copre (più in basso un po' di più, sotto c'è il suggerimento) */
+  -webkit-mask-image:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0, #000 7%, #000 90%, transparent 100%),
+    linear-gradient(to right, transparent 0, #000 3%, #000 97%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0, #000 7%, #000 90%, transparent 100%),
+    linear-gradient(to right, transparent 0, #000 3%, #000 97%, transparent 100%);
+  mask-composite: intersect;
+}
+
+.tela:active {
+  cursor: grabbing;
+}
+
+/* ---------- il vetro sfocato ----------
+   una lastra di vetro leggera in alto (e una più sottile in basso): le card che si allontanano
+   ci passano sotto e si sfocano, quella di fronte resta nitida. Dà profondità alla galleria.
+   La maschera fa sfumare il vetro: pieno sul bordo, sparisce verso il centro */
+.palco::before,
+.palco::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(2.5px) saturate(108%);
+  backdrop-filter: blur(2.5px) saturate(108%);
+  /* un velo appena visibile, come un vetro */
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+}
+
+/* in alto: dall'inizio della galleria (anche la striscia accanto al titolo) per un buon tratto */
+.palco::before {
+  top: 0;
+  height: calc(var(--galleria-sopra) + 18%);
+  /* sfuma verso il basso e anche ai lati: nessun bordo del vetro si vede */
+  -webkit-mask-image:
+    linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* in basso: più sottile */
+.palco::after {
+  bottom: 0;
+  height: 13%;
+  -webkit-mask-image:
+    linear-gradient(to top, #000 0%, #000 30%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to top, #000 0%, #000 30%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  mask-composite: intersect;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+}
+
+/* il suggerimento in fondo, discreto */
+.suggerimento {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 0.5rem;
+  margin: 0;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--grigio);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* solo per gli screen reader */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- senza WebGL: elenco semplice di immagini ---------- */
+.elenco {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.voce {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 14px;
+  overflow: hidden;
+  background: none;
+  cursor: pointer;
+}
+
+.voce img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.voce:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 3px;
+}
+
+/* telefono: la galleria un po' meno alta, così si raggiunge il resto della pagina */
+@media (max-width: 768px) {
+  .palco {
+    height: clamp(420px, 68svh, 700px);
+  }
+}
+
+/* schermi grandi: il titolo sta a sinistra e le card a destra, quindi la galleria sale accanto
+   al titolo e la card in alto non viene tagliata. 10rem = circa l'altezza di etichetta e titolo */
+@media (min-width: 1100px) {
+  .palco {
+    --galleria-sopra: 10rem;
+  }
+}

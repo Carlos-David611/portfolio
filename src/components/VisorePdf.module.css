@@ -1,0 +1,242 @@
+/* ==========================================================
+   VISORE DEL PDF: la finestra con il certificato
+   ========================================================== */
+
+/* a visore aperto la pagina dietro non scorre */
+:global(html):has(.visore[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+/* [open]: display va deciso solo da aperto, altrimenti il visore resterebbe sempre visibile */
+.visore[open] {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.visore::backdrop {
+  background: transparent;
+}
+
+/* il fondo scuro e sfocato dietro il certificato */
+.fondo {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.72);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  animation: visore-entra 0.25s ease-out both;
+}
+
+/* il pannello: entra salendo un poco e ingrandendosi */
+.pannello {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* la larghezza che fa stare il foglio intero anche in altezza (90px = l'intestazione) */
+  width: min(1040px, 94vw, calc((92dvh - 90px) * 1.34));
+  max-height: 92dvh;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(155deg, #34302d, #1a1816);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 2px 0 #24211f,
+    0 4px 0 #1c1a18,
+    0 6px 0 #151312,
+    0 8px 0 #0f0e0d,
+    0 50px 90px rgba(0, 0, 0, 0.7);
+  animation: pannello-entra 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes visore-entra {
+  from { opacity: 0; }
+}
+
+@keyframes pannello-entra {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.94);
+  }
+}
+
+/* in chiusura: tutto sfuma */
+.inChiusura .fondo,
+.inChiusura .pannello {
+  animation: visore-esce 0.22s ease-in both;
+}
+
+@keyframes visore-esce {
+  to {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+.pannelloTesta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1rem 0.85rem 1.5rem;
+}
+
+.pannelloTitoli {
+  min-width: 0;
+}
+
+.pannelloEnte {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ffd0c4;
+}
+
+.pannelloNome {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.chiudi {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.chiudi svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.chiudi:hover {
+  border-color: rgba(255, 90, 54, 0.6);
+  background: rgba(255, 90, 54, 0.14);
+}
+
+.chiudi:focus-visible,
+.apriFile:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 2px;
+}
+
+/* il foglio bianco del certificato, con le proporzioni degli attestati */
+.foglio {
+  position: relative;
+  aspect-ratio: 1600 / 1190;
+  width: 100%;
+  min-height: 0;
+  background: #fff;
+}
+
+/* qui pdf.js mette le pagine: centrate, e se sono più di una si scorrono */
+.pagine {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow: auto;
+}
+
+/* la pagina entra con una dissolvenza, e resta intera nel foglio a qualsiasi grandezza */
+.pdf {
+  display: block;
+  flex-shrink: 0;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+  animation: visore-entra 0.4s ease-out;
+}
+
+/* "Caricamento…" o il messaggio di errore, al centro del foglio */
+.avviso {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 1.5rem;
+  color: #1a1512;
+  text-align: center;
+}
+
+.avviso p {
+  margin: 0;
+}
+
+/* l'aspetto (vetro fumé con il neon sotto) viene da .vetro-neon in vetro-neon.css */
+.apriFile {
+  padding: 0.75rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fondo,
+  .pannello,
+  .pdf,
+  .inChiusura .fondo,
+  .inChiusura .pannello {
+    animation: none;
+  }
+}
+
+/* tema giorno */
+:global(:root[data-tema="giorno"]) .fondo {
+  background: rgba(90, 60, 45, 0.45);
+}
+
+:global(:root[data-tema="giorno"]) .pannello {
+  background: linear-gradient(155deg, #fffaf5, #f0e2d6);
+  border-color: rgba(255, 255, 255, 0.8);
+  color: var(--testo);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 2px 0 #dfcdbf,
+    0 4px 0 #d5c1b2,
+    0 6px 0 #cab5a5,
+    0 8px 0 #bfa998,
+    0 50px 90px rgba(60, 30, 20, 0.45);
+}
+
+:global(:root[data-tema="giorno"]) .pannelloEnte {
+  color: #9c2a0c;
+}
+
+:global(:root[data-tema="giorno"]) .chiudi {
+  border-color: rgba(60, 30, 20, 0.25);
+  background: rgba(60, 30, 20, 0.05);
+}
