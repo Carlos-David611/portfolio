@@ -67,6 +67,7 @@ export const strumenti = [
   "HTML",
   "CSS",
   "JavaScript",
+  "Next.js",
   "Wordpress",
   "Elementor",
   "Framer"
