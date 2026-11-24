@@ -14,8 +14,12 @@ import styles from "./Navbar.module.css";
 const MENU_BURGER = "(max-width: 768px)";
 // il giro delle lettere della voce toccata (come nel CSS): quanto dura il giro di una lettera,
 // e quanto aspetta ogni lettera dopo la precedente. La pagina si apre quando finisce l'ultima
-const DURATA_LETTERA = 450;
-const RITARDO_LETTERA = 30;
+const DURATA_LETTERA = 300;
+const RITARDO_LETTERA = 12;
+
+// la galleria 3D di Certificazioni è il pezzo più pesante del sito: si prepara appena sembra che
+// serva (mouse sulla voce, menu del telefono aperto). Se la rete manca, la pagina riproverà da sola
+const preparaGalleria = () => import("./three-galleria").catch(() => {});
 
 export default function Navbar() {
   const { lingua, t } = useLingua();
@@ -58,6 +62,7 @@ export default function Navbar() {
 
   function apriChiudi() {
     setSfondoPronto(true);
+    if (!aperto) preparaGalleria();
     setAperto(!aperto);
   }
 
@@ -104,8 +109,9 @@ export default function Navbar() {
     evento.preventDefault();
     if (girando) return;
     setGirando(href);
+    // la pagina si apre subito, dietro il menu: quando le lettere hanno finito è già pronta
+    router.push(href);
     setTimeout(() => {
-      router.push(href);
       setAperto(false);
       setGirando(null);
     }, DURATA_LETTERA + (label.length - 1) * RITARDO_LETTERA);
@@ -157,6 +163,10 @@ export default function Navbar() {
           <Link
             key={link.href}
             href={link.href}
+            // prefetch: le pagine si scaricano intere in anticipo, così al clic si aprono subito
+            prefetch
+            onPointerEnter={link.href.endsWith("/certificazioni") ? preparaGalleria : undefined}
+            onFocus={link.href.endsWith("/certificazioni") ? preparaGalleria : undefined}
             // vetro-neon-latente: il vetro col neon delle CTA, che compare solo avvicinando il cursore
             className="vetro-neon vetro-neon-latente"
             style={{ "--posizione": indice }}

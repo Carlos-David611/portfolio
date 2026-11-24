@@ -40,7 +40,7 @@ export default async function Footer() {
           <ul className={styles.elenco}>
             {PAGINE.map((pagina) => (
               <li key={pagina}>
-                <Link href={percorso(lingua, pagina)} className={styles.link}>
+                <Link href={percorso(lingua, pagina)} prefetch className={styles.link}>
                   {t(`menu.${pagina || "home"}`)}
                 </Link>
               </li>
