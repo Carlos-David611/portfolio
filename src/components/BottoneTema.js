@@ -88,7 +88,7 @@ export default function BottoneTema() {
       // role="switch" dice agli screen reader che è un interruttore acceso/spento
       role="switch"
       aria-checked={giorno}
-      aria-label={t(giorno ? "Passa al tema notte" : "Passa al tema giorno")}
+      aria-label={t(giorno ? "tema.notte" : "tema.giorno")}
     >
       <span className="tema-pallino" aria-hidden="true">
         {/* la luna */}

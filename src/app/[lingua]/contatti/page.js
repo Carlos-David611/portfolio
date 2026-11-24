@@ -1,12 +1,11 @@
-import T from "@/i18n/T";
+import { leggiLinguaPagina } from "@/i18n/server";
+import { metadati } from "@/i18n/seo";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { contatti } from "@/data/contatti";
 import styles from "./contatti.module.css";
 
-export const metadata = {
-  title: "Contatti | Carlos David",
-};
+export const generateMetadata = () => metadati("contatti");
 
 // a ogni "tipo" dei dati corrisponde un'icona
 const ICONE = {
@@ -15,12 +14,14 @@ const ICONE = {
   github: FaGithub,
 };
 
-export default function Contatti() {
+export default async function Contatti() {
+  const { t } = await leggiLinguaPagina();
+
   return (
     // le classi del box della home: stesso vetro, stessa inclinazione
     <section className="competenze">
       {/* il titolo grande, come quello del box Competenze in home */}
-      <h1 className="competenze-titolo"><T>Contatti</T></h1>
+      <h1 className="competenze-titolo">{t("contatti.titolo")}</h1>
 
       <ul className={styles.lista}>
         {contatti.map((contatto) => {

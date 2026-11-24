@@ -1,0 +1,102 @@
+{
+  "seo": {
+    "homeTitolo": "Carlos David · UX/UI Designer & Web Designer",
+    "homeDescrizione": "Portfolio von Carlos David, UX/UI Designer & Web Designer in Italien: sorgfältige Weboberflächen, Figma-Prototypen und responsive Websites, vom Design zum Code.",
+    "progettiTitolo": "Projekte",
+    "progettiDescrizione": "Projekte von Carlos David: Website-Redesigns, responsive Oberflächen und komplette Plattformen, vom Design zum Code.",
+    "esperienzeTitolo": "Erfahrung",
+    "esperienzeDescrizione": "Der Werdegang von Carlos David: Erfahrung als UX/UI Designer, Webdesigner und Entwickler in zeitlicher Reihenfolge.",
+    "certificazioniTitolo": "Zertifikate",
+    "certificazioniDescrizione": "Zertifikate von Carlos David in UX/UI-Design, Full-Stack-Entwicklung und KI-Werkzeugen, mit Nachweisen als PDF.",
+    "contattiTitolo": "Kontakt",
+    "contattiDescrizione": "Kontakt zu Carlos David, UX/UI Designer & Web Designer: E-Mail, LinkedIn und GitHub."
+  },
+  "menu": {
+    "home": "Home",
+    "progetti": "Projekte",
+    "esperienze": "Erfahrung",
+    "certificazioni": "Zertifikate",
+    "contatti": "Kontakt",
+    "tornaHome": "Zurück zur Startseite",
+    "apri": "Menü öffnen",
+    "chiudi": "Menü schließen"
+  },
+  "tema": {
+    "notte": "Zum dunklen Design wechseln",
+    "giorno": "Zum hellen Design wechseln"
+  },
+  "lingua": {
+    "cambia": "Sprache ändern"
+  },
+  "home": {
+    "saluto": "Hallo, ich bin",
+    "descrizione": "Ich gestalte und entwickle sorgfältige Weboberflächen, die einfach zu bedienen und schön anzusehen sind. Ich verwandle gern Ideen in konkrete digitale Produkte, ausgehend vom Design.",
+    "luogo": "Italien",
+    "foto": "Foto von {nome}",
+    "competenzeEtichetta": "Was ich kann",
+    "competenzeTitolo": "Kompetenzen",
+    "prototipiEtichetta": "Vom Design zum Bildschirm",
+    "prototipiTitolo": "Prototypen",
+    "prototipiTesto": "Oberflächen für jedes Gerät: Desktop, Tablet und Smartphone.",
+    "video": "Video der Prototypen auf Desktop, Tablet und Smartphone"
+  },
+  "progetti": {
+    "etichetta": "Meine Arbeiten",
+    "titolo": "Projekte"
+  },
+  "esperienze": {
+    "etichetta": "Mein Werdegang",
+    "titolo": "Erfahrung",
+    "sottotitolo": "Rollen, Unternehmen und Kapitel in zeitlicher Reihenfolge."
+  },
+  "timeline": {
+    "elenco": "Meine Erfahrung",
+    "precedente": "Vorherige Station",
+    "successiva": "Nächste Station",
+    "mese1": "Jan",
+    "mese2": "Feb",
+    "mese3": "Mär",
+    "mese4": "Apr",
+    "mese5": "Mai",
+    "mese6": "Jun",
+    "mese7": "Jul",
+    "mese8": "Aug",
+    "mese9": "Sep",
+    "mese10": "Okt",
+    "mese11": "Nov",
+    "mese12": "Dez"
+  },
+  "certificazioni": {
+    "etichetta": "Meine Nachweise",
+    "titolo": "Zertifikate"
+  },
+  "galleria": {
+    "ruolo": "Galerie",
+    "istruzioni": "Zertifikate: mit den Pfeiltasten blättern und mit Enter das Zertifikat öffnen",
+    "posizione": "Zertifikat {n} von {tot}: {nome}, {ente}",
+    "suggerimento": "Scrollen oder ziehen zum Entdecken",
+    "apri": "Zertifikat öffnen"
+  },
+  "visore": {
+    "titolo": "Zertifikat: {nome}",
+    "pagina": "{titolo}, Seite {n} von {tot}",
+    "chiudi": "Zertifikat schließen",
+    "caricamento": "Zertifikat wird geladen…",
+    "errore": "Das Zertifikat kann hier nicht angezeigt werden.",
+    "apriPdf": "PDF öffnen"
+  },
+  "contatti": {
+    "titolo": "Kontakt"
+  },
+  "footer": {
+    "disponibile": "Verfügbar für neue Projekte",
+    "pagineSito": "Seiten der Website",
+    "pagine": "Seiten",
+    "contatti": "Kontakt",
+    "tornaSu": "Nach oben ↑"
+  },
+  "errore": {
+    "titolo": "Seite nicht gefunden",
+    "testo": "Diese Seite existiert nicht oder wurde verschoben."
+  }
+}

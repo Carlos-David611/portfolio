@@ -1,51 +1,21 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
-import { LINGUE, cambiaLingua, useLingua } from "@/i18n/lingua";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useSelectedLayoutSegments } from "next/navigation";
+import { LINGUE, PAGINE, percorso } from "@/i18n/config";
+import { useLingua } from "@/i18n/lingua";
 import Bandiera from "./Bandiera";
 import styles from "./SelettoreLingua.module.css";
-
-// il titolo della scheda del browser, pagina per pagina
-const TITOLI = {
-  "/progetti": "Progetti",
-  "/esperienze": "Esperienze",
-  "/certificazioni": "Certificazioni",
-  "/contatti": "Contatti",
-};
 
 export default function SelettoreLingua() {
   const { lingua, t } = useLingua();
   const [aperto, setAperto] = useState(false);
   const radice = useRef(null);
   const bottone = useRef(null);
-  const pathname = usePathname();
-
-  // i testi erano nascosti in attesa della lingua salvata (script in layout.js): ora si mostrano
-  useLayoutEffect(() => {
-    let salvata = null;
-    try {
-      salvata = localStorage.getItem("lingua");
-    } catch {}
-    // al primo disegno lingua è ancora "it": si aspetta quella salvata
-    if (salvata && salvata !== lingua && LINGUE.some((l) => l.codice === salvata)) return;
-    document.documentElement.lang = lingua;
-    delete document.documentElement.dataset.linguaAttesa;
-  }, [lingua]);
-
-  // il titolo della scheda: Next lo riscrive in italiano a ogni pagina, qui si rimette quello tradotto
-  useEffect(() => {
-    const titolo = TITOLI[pathname];
-    if (!titolo) return;
-    const voluto = `${t(titolo)} | Carlos David`;
-    const applica = () => {
-      if (document.title !== voluto) document.title = voluto;
-    };
-    applica();
-    const osservatore = new MutationObserver(applica);
-    osservatore.observe(document.head, { childList: true, subtree: true, characterData: true });
-    return () => osservatore.disconnect();
-  }, [pathname, t]);
+  // la pagina in cui siamo ("progetti"...): le lingue portano alla stessa pagina tradotta
+  const [segmento = ""] = useSelectedLayoutSegments();
+  const pagina = PAGINE.includes(segmento) ? segmento : "";
 
   // si chiude toccando fuori o con Esc
   useEffect(() => {
@@ -66,6 +36,14 @@ export default function SelettoreLingua() {
     };
   }, [aperto]);
 
+  // la scelta si ricorda: tornando sull'indirizzo italiano si apre questa lingua (script in layout.js)
+  function ricorda(codice) {
+    try {
+      localStorage.setItem("lingua", codice);
+    } catch {}
+    setAperto(false);
+  }
+
   return (
     <div
       ref={radice}
@@ -79,7 +57,7 @@ export default function SelettoreLingua() {
         ref={bottone}
         type="button"
         className={styles.bottone}
-        aria-label={`${t("Cambia lingua")}: ${LINGUE.find((l) => l.codice === lingua).nome}`}
+        aria-label={`${t("lingua.cambia")}: ${LINGUE.find((l) => l.codice === lingua).nome}`}
         aria-expanded={aperto}
         aria-controls="elenco-lingue"
         onClick={() => setAperto(!aperto)}
@@ -91,23 +69,24 @@ export default function SelettoreLingua() {
         </svg>
       </button>
 
+      {/* sono link veri: anche Google li segue e trova le altre lingue */}
       <ul id="elenco-lingue" className={`${styles.elenco} ${aperto ? styles.aperto : ""}`}>
         {LINGUE.map((l) => (
           <li key={l.codice}>
-            <button
-              type="button"
+            <Link
+              href={percorso(l.codice, pagina)}
+              hrefLang={l.codice}
               lang={l.codice}
+              // si scarica solo se la scegli; e la pagina resta al punto in cui eri
+              prefetch={false}
+              scroll={false}
               className={styles.voce}
               aria-current={l.codice === lingua || undefined}
-              onClick={() => {
-                cambiaLingua(l.codice);
-                setAperto(false);
-                bottone.current.focus();
-              }}
+              onClick={() => ricorda(l.codice)}
             >
               <Bandiera codice={l.codice} className={styles.bandiera} />
               {l.nome}
-            </button>
+            </Link>
           </li>
         ))}
       </ul>

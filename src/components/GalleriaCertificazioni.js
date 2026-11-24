@@ -10,7 +10,7 @@
 import { useEffect, useRef, useState } from "react";
 import VisorePdf, { caricaLettore, preparaPdf } from "./VisorePdf";
 import { useLingua } from "@/i18n/lingua";
-import styles from "@/app/certificazioni/GalleriaCertificazioni.module.css";
+import styles from "@/app/[lingua]/certificazioni/GalleriaCertificazioni.module.css";
 
 // ---------- le misure della specifica ----------
 const LARGHEZZA = 4.492; // la larghezza di una card (unità della scena)
@@ -484,8 +484,8 @@ export default function GalleriaCertificazioni({ certificazioni }) {
             <li key={c.pdf}>
               <button type="button" className={styles.voce} onClick={() => apri.current(i)}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={urlImmagine(c.anteprima)} alt={`${t(c.nome)}, ${c.ente}`} loading="lazy" />
-                <span className={styles.srOnly}>{t("Apri il certificato")}</span>
+                <img src={urlImmagine(c.anteprima)} alt={`${c.nome}, ${c.ente}`} loading="lazy" />
+                <span className={styles.srOnly}>{t("galleria.apri")}</span>
               </button>
             </li>
           ))}
@@ -495,23 +495,32 @@ export default function GalleriaCertificazioni({ certificazioni }) {
           ref={palco}
           className={styles.palco}
           tabIndex={0}
-          aria-roledescription={t("galleria")}
-          aria-label={t("Certificazioni: usa le frecce per scorrere e Invio per aprire il certificato")}
+          aria-roledescription={t("galleria.ruolo")}
+          aria-label={t("galleria.istruzioni")}
         >
           <canvas ref={tela} className={styles.tela} aria-hidden="true" />
           <p className={styles.srOnly} aria-live="polite">
-            {t("Certificato {n} di {tot}: {nome}, {ente}", {
+            {t("galleria.posizione", {
               n: attuale + 1,
               tot: certificazioni.length,
-              nome: t(cert.nome),
+              nome: cert.nome,
               ente: cert.ente,
             })}
           </p>
           <p className={styles.suggerimento} aria-hidden="true">
-            {t("Scorri o trascina per esplorare")}
+            {t("galleria.suggerimento")}
           </p>
         </section>
       )}
+
+      {/* la galleria è un disegno: questo elenco, invisibile, la racconta a Google e agli screen reader */}
+      <ul className={styles.srOnly}>
+        {certificazioni.map((c) => (
+          <li key={c.pdf}>
+            {c.nome}, {c.ente}: {c.descrizione}
+          </li>
+        ))}
+      </ul>
 
       <VisorePdf cert={aperta} alChiudere={() => setAperta(null)} />
     </>

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useLingua } from "@/i18n/lingua";
 import Sfondo from "@/components/Sfondo";
 import styles from "./Badge.module.css";
 
@@ -14,9 +13,9 @@ export default function Badge({
   intestazione = "Portfolio 2026",
   colore = "#e5321c",
   foto = "/immagini/foto.jpg",
+  descrizioneFoto = "",
   aspettaScroll = false,
 }) {
-  const { t } = useLingua();
   const [visibile, setVisibile] = useState(!aspettaScroll);
 
   useEffect(() => {
@@ -84,7 +83,7 @@ export default function Badge({
             </div>
 
             <div className={styles.foto}>
-              <Image src={foto} alt={t("Foto di {nome}", { nome: `${nome} ${cognome}` })} fill sizes="260px" preload />
+              <Image src={foto} alt={descrizioneFoto} fill sizes="260px" preload />
             </div>
 
             <p className={styles.nome}>
@@ -96,7 +95,7 @@ export default function Badge({
 
           <div className={styles.basso}>
             <p className={styles.ruolo}>{ruolo}</p>
-            <p className={styles.luogo}>{t(luogo)}</p>
+            <p className={styles.luogo}>{luogo}</p>
           </div>
         </div>
         </div>

@@ -1,0 +1,102 @@
+{
+  "seo": {
+    "homeTitolo": "Carlos David · UX/UI Designer & Web Designer",
+    "homeDescrizione": "Portfolio of Carlos David, UX/UI Designer & Web Designer in Italy: polished web interfaces, Figma prototypes and responsive sites, from design to code.",
+    "progettiTitolo": "Projects",
+    "progettiDescrizione": "Projects by Carlos David: website redesigns, responsive interfaces and complete platforms, from design to code.",
+    "esperienzeTitolo": "Experience",
+    "esperienzeDescrizione": "Carlos David's journey: experience as a UX/UI designer, web designer and developer, in chronological order.",
+    "certificazioniTitolo": "Certifications",
+    "certificazioniDescrizione": "Carlos David's certifications in UX/UI design, full stack development and AI tools, with PDF certificates.",
+    "contattiTitolo": "Contact",
+    "contattiDescrizione": "Contact Carlos David, UX/UI Designer & Web Designer: email, LinkedIn and GitHub."
+  },
+  "menu": {
+    "home": "Home",
+    "progetti": "Projects",
+    "esperienze": "Experience",
+    "certificazioni": "Certifications",
+    "contatti": "Contact",
+    "tornaHome": "Back to home",
+    "apri": "Open menu",
+    "chiudi": "Close menu"
+  },
+  "tema": {
+    "notte": "Switch to dark theme",
+    "giorno": "Switch to light theme"
+  },
+  "lingua": {
+    "cambia": "Change language"
+  },
+  "home": {
+    "saluto": "Hi, I'm",
+    "descrizione": "I design and build polished web interfaces that are easy to use and beautiful to look at. I enjoy turning ideas into real digital products, starting from design.",
+    "luogo": "Italy",
+    "foto": "Photo of {nome}",
+    "competenzeEtichetta": "What I do",
+    "competenzeTitolo": "Skills",
+    "prototipiEtichetta": "From design to screen",
+    "prototipiTitolo": "Prototypes",
+    "prototipiTesto": "Interfaces designed for every device: desktop, tablet and mobile.",
+    "video": "Video of the prototypes on desktop, tablet and phone"
+  },
+  "progetti": {
+    "etichetta": "My work",
+    "titolo": "Projects"
+  },
+  "esperienze": {
+    "etichetta": "My journey",
+    "titolo": "Experience",
+    "sottotitolo": "Roles, companies and chapters, in chronological order."
+  },
+  "timeline": {
+    "elenco": "My experience",
+    "precedente": "Previous experience",
+    "successiva": "Next experience",
+    "mese1": "Jan",
+    "mese2": "Feb",
+    "mese3": "Mar",
+    "mese4": "Apr",
+    "mese5": "May",
+    "mese6": "Jun",
+    "mese7": "Jul",
+    "mese8": "Aug",
+    "mese9": "Sep",
+    "mese10": "Oct",
+    "mese11": "Nov",
+    "mese12": "Dec"
+  },
+  "certificazioni": {
+    "etichetta": "My certificates",
+    "titolo": "Certifications"
+  },
+  "galleria": {
+    "ruolo": "gallery",
+    "istruzioni": "Certifications: use the arrow keys to browse and Enter to open the certificate",
+    "posizione": "Certificate {n} of {tot}: {nome}, {ente}",
+    "suggerimento": "Scroll or drag to explore",
+    "apri": "Open the certificate"
+  },
+  "visore": {
+    "titolo": "Certificate: {nome}",
+    "pagina": "{titolo}, page {n} of {tot}",
+    "chiudi": "Close the certificate",
+    "caricamento": "Loading the certificate…",
+    "errore": "The certificate can't be shown here.",
+    "apriPdf": "Open the PDF"
+  },
+  "contatti": {
+    "titolo": "Contact"
+  },
+  "footer": {
+    "disponibile": "Available for new projects",
+    "pagineSito": "Site pages",
+    "pagine": "Pages",
+    "contatti": "Contact",
+    "tornaSu": "Back to top ↑"
+  },
+  "errore": {
+    "titolo": "Page not found",
+    "testo": "This page doesn't exist or has been moved."
+  }
+}

@@ -106,7 +106,8 @@ function Pillola() {
       const k = d > 0 ? Math.min(d / GUADAGNO_SGUARDO, 1) / d : 0;
       const ox = (gx * k * corsa).toFixed(2);
       const oy = (gy * k * corsa).toFixed(2);
-      for (const p of pupille.current) p.style.transform = `translate(${ox}px, ${oy}px)`;
+      // filter: cambiando lingua la pillola si ricrea, e per un istante questi elementi non ci sono
+      for (const p of pupille.current.filter(Boolean)) p.style.transform = `translate(${ox}px, ${oy}px)`;
 
       // si ferma quando è tutto fermo: niente lavoro inutile per il computer
       const fermo = Math.abs(mx - x) < 0.1 && Math.abs(my - y) < 0.1 && Math.abs(vx) + Math.abs(vy) < 0.05;
@@ -175,9 +176,9 @@ function Pillola() {
     function prossimoBattito() {
       const attesa = BATTITO_OGNI * (1 + (Math.random() * 2 - 1) * CASUALITA);
       timerBattito = setTimeout(() => {
-        for (const o of occhi.current) o.dataset.chiuso = "";
+        for (const o of occhi.current.filter(Boolean)) o.dataset.chiuso = "";
         timerApri = setTimeout(() => {
-          for (const o of occhi.current) delete o.dataset.chiuso;
+          for (const o of occhi.current.filter(Boolean)) delete o.dataset.chiuso;
           prossimoBattito();
         }, BATTITO_DURATA / 2); // metà per chiudersi, metà per riaprirsi
       }, attesa);

@@ -64,7 +64,7 @@ function FoglioPdf({ pdf, titolo }) {
           tela.style.width = `${Math.floor(originale.width * adatta)}px`;
           tela.className = styles.pdf;
           tela.setAttribute("role", "img");
-          tela.setAttribute("aria-label", t("{titolo}, pagina {n} di {tot}", { titolo, n: numero, tot: documento.numPages }));
+          tela.setAttribute("aria-label", t("visore.pagina", { titolo, n: numero, tot: documento.numPages }));
 
           await pagina.render({ canvas: tela, viewport: vista }).promise;
           if (annullato) return;
@@ -91,14 +91,14 @@ function FoglioPdf({ pdf, titolo }) {
       <div ref={contenitore} className={styles.pagine} />
       {stato === "carica" && (
         <p className={styles.avviso} role="status">
-          {t("Caricamento del certificato…")}
+          {t("visore.caricamento")}
         </p>
       )}
       {stato === "errore" && (
         <div className={styles.avviso} role="alert">
-          <p>{t("Non riesco a mostrare il certificato qui.")}</p>
+          <p>{t("visore.errore")}</p>
           <a className={`${styles.apriFile} vetro-neon`} href={pdf} target="_blank" rel="noopener">
-            {t("Apri il PDF")}
+            {t("visore.apriPdf")}
           </a>
         </div>
       )}
@@ -157,10 +157,10 @@ export default function VisorePdf({ cert, alChiudere }) {
             <div className={styles.pannelloTitoli}>
               <p className={styles.pannelloEnte}>{cert.ente}</p>
               <h2 id={idTitolo} className={styles.pannelloNome}>
-                {t(cert.nome)}
+                {cert.nome}
               </h2>
             </div>
-            <button type="button" className={styles.chiudi} onClick={chiudi} aria-label={t("Chiudi il certificato")}>
+            <button type="button" className={styles.chiudi} onClick={chiudi} aria-label={t("visore.chiudi")}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" />
               </svg>
@@ -169,7 +169,7 @@ export default function VisorePdf({ cert, alChiudere }) {
 
           <div className={styles.foglio}>
             {/* key: cambiando certificato il foglio riparte da zero */}
-            <FoglioPdf key={cert.pdf} pdf={cert.pdf} titolo={t("Certificato: {nome}", { nome: t(cert.nome) })} />
+            <FoglioPdf key={cert.pdf} pdf={cert.pdf} titolo={t("visore.titolo", { nome: cert.nome })} />
           </div>
         </div>
       )}

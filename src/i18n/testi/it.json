@@ -1,0 +1,102 @@
+{
+  "seo": {
+    "homeTitolo": "Carlos David · UX/UI Designer & Web Designer",
+    "homeDescrizione": "Portfolio di Carlos David, UX/UI Designer & Web Designer in Italia: interfacce web curate, prototipi in Figma e siti responsive, dal design al codice.",
+    "progettiTitolo": "Progetti",
+    "progettiDescrizione": "I progetti di Carlos David: redesign di siti web, interfacce responsive e piattaforme complete, dal design al codice.",
+    "esperienzeTitolo": "Esperienze",
+    "esperienzeDescrizione": "Il percorso di Carlos David: esperienze come UX/UI designer, web designer e sviluppatore, in ordine di tempo.",
+    "certificazioniTitolo": "Certificazioni",
+    "certificazioniDescrizione": "Le certificazioni di Carlos David in UX/UI design, sviluppo full stack e strumenti AI, con gli attestati in PDF.",
+    "contattiTitolo": "Contatti",
+    "contattiDescrizione": "Contatta Carlos David, UX/UI Designer & Web Designer: email, LinkedIn e GitHub."
+  },
+  "menu": {
+    "home": "Home",
+    "progetti": "Progetti",
+    "esperienze": "Esperienze",
+    "certificazioni": "Certificazioni",
+    "contatti": "Contatti",
+    "tornaHome": "Torna alla home",
+    "apri": "Apri il menu",
+    "chiudi": "Chiudi il menu"
+  },
+  "tema": {
+    "notte": "Passa al tema notte",
+    "giorno": "Passa al tema giorno"
+  },
+  "lingua": {
+    "cambia": "Cambia lingua"
+  },
+  "home": {
+    "saluto": "Ciao, sono",
+    "descrizione": "Progetto e sviluppo interfacce web curate, semplici da usare e belle da vedere. Mi piace trasformare idee in prodotti digitali concreti, partendo dal design.",
+    "luogo": "Italia",
+    "foto": "Foto di {nome}",
+    "competenzeEtichetta": "Cosa so fare",
+    "competenzeTitolo": "Competenze",
+    "prototipiEtichetta": "Dal design allo schermo",
+    "prototipiTitolo": "Prototipi",
+    "prototipiTesto": "Interfacce progettate per ogni dispositivo: desktop, tablet e mobile.",
+    "video": "Video dei prototipi su desktop, tablet e telefono"
+  },
+  "progetti": {
+    "etichetta": "I miei lavori",
+    "titolo": "Progetti"
+  },
+  "esperienze": {
+    "etichetta": "Il mio percorso",
+    "titolo": "Esperienze",
+    "sottotitolo": "Ruoli, aziende e capitoli, in ordine di tempo."
+  },
+  "timeline": {
+    "elenco": "Le mie esperienze",
+    "precedente": "Esperienza precedente",
+    "successiva": "Esperienza successiva",
+    "mese1": "gen",
+    "mese2": "feb",
+    "mese3": "mar",
+    "mese4": "apr",
+    "mese5": "mag",
+    "mese6": "giu",
+    "mese7": "lug",
+    "mese8": "ago",
+    "mese9": "set",
+    "mese10": "ott",
+    "mese11": "nov",
+    "mese12": "dic"
+  },
+  "certificazioni": {
+    "etichetta": "I miei attestati",
+    "titolo": "Certificazioni"
+  },
+  "galleria": {
+    "ruolo": "galleria",
+    "istruzioni": "Certificazioni: usa le frecce per scorrere e Invio per aprire il certificato",
+    "posizione": "Certificato {n} di {tot}: {nome}, {ente}",
+    "suggerimento": "Scorri o trascina per esplorare",
+    "apri": "Apri il certificato"
+  },
+  "visore": {
+    "titolo": "Certificato: {nome}",
+    "pagina": "{titolo}, pagina {n} di {tot}",
+    "chiudi": "Chiudi il certificato",
+    "caricamento": "Caricamento del certificato…",
+    "errore": "Non riesco a mostrare il certificato qui.",
+    "apriPdf": "Apri il PDF"
+  },
+  "contatti": {
+    "titolo": "Contatti"
+  },
+  "footer": {
+    "disponibile": "Disponibile per nuovi progetti",
+    "pagineSito": "Pagine del sito",
+    "pagine": "Pagine",
+    "contatti": "Contatti",
+    "tornaSu": "Torna su ↑"
+  },
+  "errore": {
+    "titolo": "Pagina non trovata",
+    "testo": "Questa pagina non esiste o è stata spostata."
+  }
+}

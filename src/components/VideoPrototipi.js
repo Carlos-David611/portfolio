@@ -1,10 +1,8 @@
 "use client";
 
-import { useLingua } from "@/i18n/lingua";
 import { useEffect, useRef, useState } from "react";
 
-export default function VideoPrototipi({ src, poster }) {
-  const { t } = useLingua();
+export default function VideoPrototipi({ src, poster, descrizione }) {
   const videoRef = useRef(null);
   // diventa true quando il video si avvicina: solo allora si scaricano video e anteprima
   const [caricato, setCaricato] = useState(false);
@@ -63,7 +61,7 @@ export default function VideoPrototipi({ src, poster }) {
       loop
       playsInline
       disablePictureInPicture
-      aria-label={t("Video dei prototipi su desktop, tablet e telefono")}
+      aria-label={descrizione}
     />
   );
 }

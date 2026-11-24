@@ -4,18 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import SelettoreLingua from "@/components/SelettoreLingua";
+import { PAGINE, percorso } from "@/i18n/config";
 import { useLingua } from "@/i18n/lingua";
 import BottoneTema from "@/components/BottoneTema";
 import Sfondo from "@/components/Sfondo";
 import styles from "./Navbar.module.css";
-
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/progetti", label: "Progetti" },
-  { href: "/esperienze", label: "Esperienze" },
-  { href: "/certificazioni", label: "Certificazioni" },
-  { href: "/contatti", label: "Contatti" },
-];
 
 // quando il menu è quello del telefono e del tablet (burger): la stessa misura del CSS
 const MENU_BURGER = "(max-width: 768px)";
@@ -25,7 +18,12 @@ const DURATA_LETTERA = 450;
 const RITARDO_LETTERA = 30;
 
 export default function Navbar() {
-  const { t } = useLingua();
+  const { lingua, t } = useLingua();
+  // le voci del menu, con gli indirizzi nella lingua della pagina (es. /en/progetti)
+  const links = PAGINE.map((pagina) => ({
+    href: percorso(lingua, pagina),
+    label: t(`menu.${pagina || "home"}`),
+  }));
   // il menu burger si vede solo su telefono e tablet: su computer questo stato non cambia nulla
   const [aperto, setAperto] = useState(false);
   // lo sfondo animato dentro il menu si prepara quando la pagina ha finito di caricarsi:
@@ -116,9 +114,9 @@ export default function Navbar() {
   return (
     <header className={styles.navbar} ref={navbar}>
       <Link
-        href="/"
+        href={percorso(lingua)}
         className={styles.logo}
-        title={t("Torna alla home")}
+        title={t("menu.tornaHome")}
         onClick={() => setAperto(false)}
       >
 
@@ -130,7 +128,7 @@ export default function Navbar() {
         <button
           type="button"
           className={styles.burger}
-          aria-label={t(aperto ? "Chiudi il menu" : "Apri il menu")}
+          aria-label={t(aperto ? "menu.chiudi" : "menu.apri")}
           aria-expanded={aperto}
           aria-controls="navbar-menu"
           onClick={apriChiudi}
@@ -163,11 +161,11 @@ export default function Navbar() {
             className="vetro-neon vetro-neon-latente"
             style={{ "--posizione": indice }}
             data-gira={girando === link.href || undefined}
-            onClick={(evento) => vai(evento, link.href, t(link.label))}
+            onClick={(evento) => vai(evento, link.href, link.label)}
             // le lettere sono separate per farle girare: chi usa lo screen reader sente la parola intera
-            aria-label={t(link.label)}
+            aria-label={link.label}
           >
-            {[...t(link.label)].map((lettera, i) => (
+            {[...link.label].map((lettera, i) => (
               <span key={i} className={styles.lettera} style={{ "--i": i }} aria-hidden="true">
                 {lettera}
               </span>

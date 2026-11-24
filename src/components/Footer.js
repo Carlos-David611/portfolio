@@ -1,10 +1,9 @@
 
-"use client";
-
 import Link from "next/link";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
-import { useLingua } from "@/i18n/lingua";
+import { PAGINE, percorso } from "@/i18n/config";
+import { leggiLingua } from "@/i18n/server";
 import { contatti } from "@/data/contatti";
 import styles from "./Footer.module.css";
 
@@ -14,16 +13,8 @@ const ICONE = {
   github: FaGithub,
 };
 
-const PAGINE = [
-  { href: "/", nome: "Home" },
-  { href: "/progetti", nome: "Progetti" },
-  { href: "/esperienze", nome: "Esperienze" },
-  { href: "/certificazioni", nome: "Certificazioni" },
-  { href: "/contatti", nome: "Contatti" },
-];
-
-export default function Footer() {
-  const { t } = useLingua();
+export default async function Footer() {
+  const { lingua, t } = await leggiLingua();
   const email = contatti.find((contatto) => contatto.tipo === "email");
 
   return (
@@ -36,21 +27,21 @@ export default function Footer() {
       <div className={styles.griglia}>
        
         <div>
-          <Link href="/" className={styles.nome}>
+          <Link href={percorso(lingua)} className={styles.nome}>
             Carlos David
           </Link>
           <p className={styles.ruolo}>UX/UI Designer & Web Designer</p>
-          <p className={styles.disponibile}>{t("Disponibile per nuovi progetti")}</p>
+          <p className={styles.disponibile}>{t("footer.disponibile")}</p>
         </div>
 
         
-        <nav aria-label={t("Pagine del sito")}>
-          <p className={styles.titoletto}>{t("Pagine")}</p>
+        <nav aria-label={t("footer.pagineSito")}>
+          <p className={styles.titoletto}>{t("footer.pagine")}</p>
           <ul className={styles.elenco}>
             {PAGINE.map((pagina) => (
-              <li key={pagina.href}>
-                <Link href={pagina.href} className={styles.link}>
-                  {t(pagina.nome)}
+              <li key={pagina}>
+                <Link href={percorso(lingua, pagina)} className={styles.link}>
+                  {t(`menu.${pagina || "home"}`)}
                 </Link>
               </li>
             ))}
@@ -59,7 +50,7 @@ export default function Footer() {
 
         
         <div>
-          <p className={styles.titoletto}>{t("Contatti")}</p>
+          <p className={styles.titoletto}>{t("footer.contatti")}</p>
           <ul className={styles.social}>
             {contatti.map((contatto) => {
               const Icona = ICONE[contatto.tipo];
@@ -91,7 +82,7 @@ export default function Footer() {
       <div className={styles.fondo}>
        
         <a href="#" className={styles.suSu}>
-          {t("Torna su ↑")}
+          {t("footer.tornaSu")}
         </a>
       </div>
     </footer>

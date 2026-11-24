@@ -1,0 +1,102 @@
+{
+  "seo": {
+    "homeTitolo": "Carlos David · UX/UI Designer & Web Designer",
+    "homeDescrizione": "Portfolio de Carlos David, UX/UI Designer & Web Designer en Italia: interfaces web cuidadas, prototipos en Figma y sitios responsive, del diseño al código.",
+    "progettiTitolo": "Proyectos",
+    "progettiDescrizione": "Proyectos de Carlos David: rediseño de sitios web, interfaces responsive y plataformas completas, del diseño al código.",
+    "esperienzeTitolo": "Experiencia",
+    "esperienzeDescrizione": "La trayectoria de Carlos David: experiencia como diseñador UX/UI, diseñador web y desarrollador, en orden cronológico.",
+    "certificazioniTitolo": "Certificados",
+    "certificazioniDescrizione": "Certificados de Carlos David en diseño UX/UI, desarrollo full stack y herramientas de IA, con los títulos en PDF.",
+    "contattiTitolo": "Contacto",
+    "contattiDescrizione": "Contacta con Carlos David, UX/UI Designer & Web Designer: correo, LinkedIn y GitHub."
+  },
+  "menu": {
+    "home": "Home",
+    "progetti": "Proyectos",
+    "esperienze": "Experiencia",
+    "certificazioni": "Certificados",
+    "contatti": "Contacto",
+    "tornaHome": "Volver al inicio",
+    "apri": "Abrir el menú",
+    "chiudi": "Cerrar el menú"
+  },
+  "tema": {
+    "notte": "Cambiar al tema oscuro",
+    "giorno": "Cambiar al tema claro"
+  },
+  "lingua": {
+    "cambia": "Cambiar idioma"
+  },
+  "home": {
+    "saluto": "Hola, soy",
+    "descrizione": "Diseño y desarrollo interfaces web cuidadas, fáciles de usar y agradables a la vista. Me gusta transformar ideas en productos digitales concretos, partiendo del diseño.",
+    "luogo": "Italia",
+    "foto": "Foto de {nome}",
+    "competenzeEtichetta": "Lo que sé hacer",
+    "competenzeTitolo": "Competencias",
+    "prototipiEtichetta": "Del diseño a la pantalla",
+    "prototipiTitolo": "Prototipos",
+    "prototipiTesto": "Interfaces diseñadas para cada dispositivo: escritorio, tableta y móvil.",
+    "video": "Vídeo de los prototipos en escritorio, tableta y móvil"
+  },
+  "progetti": {
+    "etichetta": "Mis trabajos",
+    "titolo": "Proyectos"
+  },
+  "esperienze": {
+    "etichetta": "Mi trayectoria",
+    "titolo": "Experiencia",
+    "sottotitolo": "Puestos, empresas y capítulos, en orden cronológico."
+  },
+  "timeline": {
+    "elenco": "Mi experiencia",
+    "precedente": "Experiencia anterior",
+    "successiva": "Experiencia siguiente",
+    "mese1": "ene",
+    "mese2": "feb",
+    "mese3": "mar",
+    "mese4": "abr",
+    "mese5": "may",
+    "mese6": "jun",
+    "mese7": "jul",
+    "mese8": "ago",
+    "mese9": "sep",
+    "mese10": "oct",
+    "mese11": "nov",
+    "mese12": "dic"
+  },
+  "certificazioni": {
+    "etichetta": "Mis títulos",
+    "titolo": "Certificados"
+  },
+  "galleria": {
+    "ruolo": "galería",
+    "istruzioni": "Certificados: usa las flechas para recorrerlos e Intro para abrir el certificado",
+    "posizione": "Certificado {n} de {tot}: {nome}, {ente}",
+    "suggerimento": "Desplaza o arrastra para explorar",
+    "apri": "Abrir el certificado"
+  },
+  "visore": {
+    "titolo": "Certificado: {nome}",
+    "pagina": "{titolo}, página {n} de {tot}",
+    "chiudi": "Cerrar el certificado",
+    "caricamento": "Cargando el certificado…",
+    "errore": "No se puede mostrar el certificado aquí.",
+    "apriPdf": "Abrir el PDF"
+  },
+  "contatti": {
+    "titolo": "Contacto"
+  },
+  "footer": {
+    "disponibile": "Disponible para nuevos proyectos",
+    "pagineSito": "Páginas del sitio",
+    "pagine": "Páginas",
+    "contatti": "Contacto",
+    "tornaSu": "Volver arriba ↑"
+  },
+  "errore": {
+    "titolo": "Página no encontrada",
+    "testo": "Esta página no existe o se ha movido."
+  }
+}

@@ -1,0 +1,608 @@
+{
+ "certificazioni.etichetta": {
+  "it": "4436eeac",
+  "en": "acae4416",
+  "de": "c459fb2f",
+  "es": "173f3cb6"
+ },
+ "certificazioni.titolo": {
+  "it": "ab623863",
+  "en": "b65e36f7",
+  "de": "47187745",
+  "es": "80310967"
+ },
+ "contatti.titolo": {
+  "it": "1afd65f4",
+  "en": "b37456c4",
+  "de": "a92b9bcb",
+  "es": "d8a53e1f"
+ },
+ "data/certificazioni[/certificazioni/betacom.pdf].descrizione": {
+  "it": "7c7da608",
+  "en": "460fa574",
+  "de": "2f4a25fd",
+  "es": "33034b43"
+ },
+ "data/certificazioni[/certificazioni/certificazione-ux.pdf].descrizione": {
+  "it": "d7210b72",
+  "en": "c6180184",
+  "de": "641098eb",
+  "es": "bacf14cf"
+ },
+ "data/certificazioni[/certificazioni/certificazione-ux.pdf].nome": {
+  "it": "6d856e15",
+  "en": "133d460a",
+  "de": "dd33a98a",
+  "es": "ed77fe9a"
+ },
+ "data/certificazioni[/certificazioni/code-agent.pdf].descrizione": {
+  "it": "ed46c152",
+  "en": "b739df19",
+  "de": "e2730b69",
+  "es": "9831d340"
+ },
+ "data/certificazioni[/certificazioni/design-con-chat.pdf].descrizione": {
+  "it": "595d2488",
+  "en": "8caa20c6",
+  "de": "e89e4978",
+  "es": "f397d026"
+ },
+ "data/certificazioni[/certificazioni/design-con-chat.pdf].nome": {
+  "it": "135145b5",
+  "en": "3bb1516d",
+  "de": "52062e21",
+  "es": "b329dfe6"
+ },
+ "data/certificazioni[/certificazioni/ux-ui.pdf].descrizione": {
+  "it": "10aa9a2d",
+  "en": "c9a75420",
+  "de": "8b441c44",
+  "es": "b7c024c1"
+ },
+ "data/competenze[Branding].descrizione": {
+  "it": "54a537c9",
+  "en": "d6f7f40e",
+  "de": "12be9921",
+  "es": "ac58400c"
+ },
+ "data/competenze[Front-end].descrizione": {
+  "it": "b4d17d51",
+  "en": "ee8b4d78",
+  "de": "850ad351",
+  "es": "534a1bd9"
+ },
+ "data/competenze[Prototipazione].descrizione": {
+  "it": "c139c456",
+  "en": "3884d6a9",
+  "de": "4bd4dd6c",
+  "es": "360b6642"
+ },
+ "data/competenze[Prototipazione].nome": {
+  "it": "bfd39b45",
+  "en": "f653b51c",
+  "de": "f653b51c",
+  "es": "1af3f7a6"
+ },
+ "data/competenze[UI Design].descrizione": {
+  "it": "21ed3627",
+  "en": "a2a29986",
+  "de": "00c20baa",
+  "es": "10782169"
+ },
+ "data/competenze[UX Design].descrizione": {
+  "it": "5e063303",
+  "en": "12ba5f95",
+  "de": "61065db5",
+  "es": "bd402f25"
+ },
+ "data/competenze[Web Design].descrizione": {
+  "it": "f97d6de7",
+  "en": "377fb7b2",
+  "de": "72b4f46c",
+  "es": "1ea4f5e6"
+ },
+ "data/esperienze[Betacom - Academy 2026-01-19].descrizione": {
+  "it": "0661bb90",
+  "en": "ecd62719",
+  "de": "0fb013b0",
+  "es": "87bce0b4"
+ },
+ "data/esperienze[Betacom - Academy 2026-01-19].luogo": {
+  "it": "ff91b693",
+  "en": "5380bceb",
+  "de": "efb9124c",
+  "es": "837c6b24"
+ },
+ "data/esperienze[Betacom - Academy 2026-01-19].ruolo": {
+  "it": "b6501923",
+  "en": "05e0d38a",
+  "de": "c6c14126",
+  "es": "246fccdf"
+ },
+ "data/esperienze[Mediafarm 2025-09-01].descrizione": {
+  "it": "10c1a37b",
+  "en": "4f0cb2ff",
+  "de": "90050829",
+  "es": "c9bfe6c7"
+ },
+ "data/esperienze[Questit S.R.L 2025-04-01].descrizione": {
+  "it": "785293a1",
+  "en": "7666f784",
+  "de": "d83cd5ec",
+  "es": "f019fa2f"
+ },
+ "data/esperienze[Questit S.R.L 2025-04-01].ruolo": {
+  "it": "c0e2f2a3",
+  "en": "7e08ebec",
+  "de": "7387991e",
+  "es": "1c2bcf5e"
+ },
+ "data/esperienze[Traipler 2026-05-01].descrizione": {
+  "it": "69a2aa5f",
+  "en": "479181d3",
+  "de": "e48e68c2",
+  "es": "651d0796"
+ },
+ "data/progetti[primo-progetto].descrizione": {
+  "it": "caaae594",
+  "en": "898fb1a3",
+  "de": "541d8bdf",
+  "es": "c0db59e8"
+ },
+ "data/progetti[secondo-progetto].descrizione": {
+  "it": "eb2afb47",
+  "en": "9b172dea",
+  "de": "5134c1d7",
+  "es": "cefdd7e6"
+ },
+ "data/progetti[secondo-progetto].tecnologie[0]": {
+  "it": "857c6b59",
+  "en": "741fd6f7",
+  "de": "4ec5b1f1",
+  "es": "491a70b7"
+ },
+ "data/progetti[secondo-progetto].tecnologie[1]": {
+  "it": "d1fbc46b",
+  "en": "2f334c25",
+  "de": "62e18084",
+  "es": "2bc3c887"
+ },
+ "data/progetti[secondo-progetto].tecnologie[2]": {
+  "it": "4c3465a0",
+  "en": "bbfb45f6",
+  "de": "b8c931eb",
+  "es": "e62d953d"
+ },
+ "data/progetti[secondo-progetto].tecnologie[3]": {
+  "it": "0cc054e6",
+  "en": "44ecbe40",
+  "de": "3b46dcbb",
+  "es": "7639e684"
+ },
+ "data/progetti[secondo-progetto].tecnologie[4]": {
+  "it": "7a4eca4d",
+  "en": "a0eafab7",
+  "de": "f40f493f",
+  "es": "e241233b"
+ },
+ "data/progetti[secondo-progetto].tecnologie[5]": {
+  "it": "22c4d67a",
+  "en": "f1771293",
+  "de": "3cf743b0",
+  "es": "2d4862d4"
+ },
+ "errore.testo": {
+  "it": "5161fd62",
+  "en": "2b329a32",
+  "de": "b6a23062",
+  "es": "c7dc7de0"
+ },
+ "errore.titolo": {
+  "it": "dbb05125",
+  "en": "bc3023b3",
+  "de": "4db8f9fc",
+  "es": "df194d3a"
+ },
+ "esperienze.etichetta": {
+  "it": "02c265b6",
+  "en": "5cc65c78",
+  "de": "aa48994d",
+  "es": "418a7db3"
+ },
+ "esperienze.sottotitolo": {
+  "it": "88feabbb",
+  "en": "002f47aa",
+  "de": "c7c7dce9",
+  "es": "fa526d66"
+ },
+ "esperienze.titolo": {
+  "it": "a417a5bc",
+  "en": "5b5aafe6",
+  "de": "d5d2affb",
+  "es": "fbb04c1a"
+ },
+ "footer.contatti": {
+  "it": "1afd65f4",
+  "en": "b37456c4",
+  "de": "a92b9bcb",
+  "es": "d8a53e1f"
+ },
+ "footer.disponibile": {
+  "it": "a3bd40d5",
+  "en": "c07e8e95",
+  "de": "51a50f25",
+  "es": "2332ba26"
+ },
+ "footer.pagine": {
+  "it": "a46c4d06",
+  "en": "600584c2",
+  "de": "88b125a9",
+  "es": "351ec3c0"
+ },
+ "footer.pagineSito": {
+  "it": "a13efd5b",
+  "en": "a76fb11f",
+  "de": "de094f2e",
+  "es": "f1af0ec0"
+ },
+ "footer.tornaSu": {
+  "it": "c68e4482",
+  "en": "73b4aa6f",
+  "de": "e1c30b16",
+  "es": "defe6f58"
+ },
+ "galleria.apri": {
+  "it": "9d7a720e",
+  "en": "07039ab4",
+  "de": "20c97fd0",
+  "es": "85d15834"
+ },
+ "galleria.istruzioni": {
+  "it": "df6b6de7",
+  "en": "f53929fe",
+  "de": "7f23572a",
+  "es": "75d654cf"
+ },
+ "galleria.posizione": {
+  "it": "41e63c7c",
+  "en": "463ed491",
+  "de": "ff9c805f",
+  "es": "febbf45d"
+ },
+ "galleria.ruolo": {
+  "it": "4f4e8be1",
+  "en": "5b47b903",
+  "de": "1e88ec32",
+  "es": "6175499b"
+ },
+ "galleria.suggerimento": {
+  "it": "f043bdf5",
+  "en": "a6ae2a7e",
+  "de": "56ec6dda",
+  "es": "26b8d8d9"
+ },
+ "home.competenzeEtichetta": {
+  "it": "b109e57c",
+  "en": "74911f37",
+  "de": "c1a98853",
+  "es": "b61a934f"
+ },
+ "home.competenzeTitolo": {
+  "it": "293a0b8a",
+  "en": "e09212c7",
+  "de": "dca1f1df",
+  "es": "cff6fa94"
+ },
+ "home.descrizione": {
+  "it": "d2fd7653",
+  "en": "361a373e",
+  "de": "d4acf945",
+  "es": "3fcbb01f"
+ },
+ "home.foto": {
+  "it": "a5138d87",
+  "en": "3042e161",
+  "de": "293c3e9d",
+  "es": "be917513"
+ },
+ "home.luogo": {
+  "it": "102fe674",
+  "en": "ad79ef0f",
+  "de": "1a2387f8",
+  "es": "102fe674"
+ },
+ "home.prototipiEtichetta": {
+  "it": "33eeccba",
+  "en": "fa7876e1",
+  "de": "14f04823",
+  "es": "50386ee7"
+ },
+ "home.prototipiTesto": {
+  "it": "8982f297",
+  "en": "09040102",
+  "de": "72fb8470",
+  "es": "d0e9c577"
+ },
+ "home.prototipiTitolo": {
+  "it": "ee1ce098",
+  "en": "4ae98c95",
+  "de": "cb21227b",
+  "es": "f03de11a"
+ },
+ "home.saluto": {
+  "it": "1f72103d",
+  "en": "9b9d9134",
+  "de": "5b17eb0d",
+  "es": "a41bd1ff"
+ },
+ "home.video": {
+  "it": "795efdb6",
+  "en": "138be5a8",
+  "de": "de95401b",
+  "es": "10581158"
+ },
+ "lingua.cambia": {
+  "it": "0c07066d",
+  "en": "789b14df",
+  "de": "5d1900f2",
+  "es": "74604f5f"
+ },
+ "menu.apri": {
+  "it": "2fa0b1a7",
+  "en": "197101e9",
+  "de": "7241c630",
+  "es": "fbc7a670"
+ },
+ "menu.certificazioni": {
+  "it": "ab623863",
+  "en": "b65e36f7",
+  "de": "47187745",
+  "es": "80310967"
+ },
+ "menu.chiudi": {
+  "it": "01c58900",
+  "en": "6c9fc990",
+  "de": "82332f74",
+  "es": "f285f91e"
+ },
+ "menu.contatti": {
+  "it": "1afd65f4",
+  "en": "b37456c4",
+  "de": "a92b9bcb",
+  "es": "d8a53e1f"
+ },
+ "menu.esperienze": {
+  "it": "a417a5bc",
+  "en": "5b5aafe6",
+  "de": "d5d2affb",
+  "es": "fbb04c1a"
+ },
+ "menu.home": {
+  "it": "70f8bb9a",
+  "en": "70f8bb9a",
+  "de": "70f8bb9a",
+  "es": "70f8bb9a"
+ },
+ "menu.progetti": {
+  "it": "0d26e168",
+  "en": "53e890d5",
+  "de": "3930f79f",
+  "es": "8541c187"
+ },
+ "menu.tornaHome": {
+  "it": "686d7aa7",
+  "en": "34ac37f5",
+  "de": "fa1f73e7",
+  "es": "1afb1193"
+ },
+ "progetti.etichetta": {
+  "it": "aff1e522",
+  "en": "57a12534",
+  "de": "3d09d8aa",
+  "es": "5af9601d"
+ },
+ "progetti.titolo": {
+  "it": "0d26e168",
+  "en": "53e890d5",
+  "de": "3930f79f",
+  "es": "8541c187"
+ },
+ "seo.certificazioniDescrizione": {
+  "it": "81a1a7ee",
+  "en": "4003f5fa",
+  "de": "c7742ea2",
+  "es": "1c6d7612"
+ },
+ "seo.certificazioniTitolo": {
+  "it": "ab623863",
+  "en": "b65e36f7",
+  "de": "47187745",
+  "es": "80310967"
+ },
+ "seo.contattiDescrizione": {
+  "it": "5bfb8723",
+  "en": "87a1c394",
+  "de": "120d8526",
+  "es": "99f59513"
+ },
+ "seo.contattiTitolo": {
+  "it": "1afd65f4",
+  "en": "b37456c4",
+  "de": "a92b9bcb",
+  "es": "d8a53e1f"
+ },
+ "seo.esperienzeDescrizione": {
+  "it": "c1cc83c9",
+  "en": "d4ae4ec8",
+  "de": "c146202a",
+  "es": "18ad0e67"
+ },
+ "seo.esperienzeTitolo": {
+  "it": "a417a5bc",
+  "en": "5b5aafe6",
+  "de": "d5d2affb",
+  "es": "fbb04c1a"
+ },
+ "seo.homeDescrizione": {
+  "it": "1c357644",
+  "en": "4242050f",
+  "de": "8b4a65b6",
+  "es": "2a9efc79"
+ },
+ "seo.homeTitolo": {
+  "it": "e99b1250",
+  "en": "e99b1250",
+  "de": "e99b1250",
+  "es": "e99b1250"
+ },
+ "seo.progettiDescrizione": {
+  "it": "d5166948",
+  "en": "2f717656",
+  "de": "ba015e0a",
+  "es": "46788a68"
+ },
+ "seo.progettiTitolo": {
+  "it": "0d26e168",
+  "en": "53e890d5",
+  "de": "3930f79f",
+  "es": "8541c187"
+ },
+ "tema.giorno": {
+  "it": "d72f3196",
+  "en": "f90085fe",
+  "de": "5816acc4",
+  "es": "2a6aeb74"
+ },
+ "tema.notte": {
+  "it": "7e3d2cb0",
+  "en": "5ec71e47",
+  "de": "9e2f57ae",
+  "es": "19ea06d2"
+ },
+ "timeline.elenco": {
+  "it": "3a0914b1",
+  "en": "18767de0",
+  "de": "a124dd51",
+  "es": "917fcea4"
+ },
+ "timeline.mese1": {
+  "it": "4739319a",
+  "en": "efed3690",
+  "de": "efed3690",
+  "es": "101b086a"
+ },
+ "timeline.mese10": {
+  "it": "326ed324",
+  "en": "51327aef",
+  "de": "45071a11",
+  "es": "483f645b"
+ },
+ "timeline.mese11": {
+  "it": "33bea6ef",
+  "en": "bb9bfefd",
+  "de": "bb9bfefd",
+  "es": "33bea6ef"
+ },
+ "timeline.mese12": {
+  "it": "69eefb24",
+  "en": "997f59bc",
+  "de": "99ae802e",
+  "es": "69eefb24"
+ },
+ "timeline.mese2": {
+  "it": "7245d592",
+  "en": "dc8415cc",
+  "de": "dc8415cc",
+  "es": "7245d592"
+ },
+ "timeline.mese3": {
+  "it": "1418c402",
+  "en": "c4ba0822",
+  "de": "365b0a14",
+  "es": "1418c402"
+ },
+ "timeline.mese4": {
+  "it": "a16438e8",
+  "en": "befde54a",
+  "de": "befde54a",
+  "es": "6d90efc2"
+ },
+ "timeline.mese5": {
+  "it": "3368585c",
+  "en": "c94f4798",
+  "de": "afe526a6",
+  "es": "f458ef05"
+ },
+ "timeline.mese6": {
+  "it": "5a4fb9c0",
+  "en": "6d90df3b",
+  "de": "6d90df3b",
+  "es": "5bbdd777"
+ },
+ "timeline.mese7": {
+  "it": "48e08203",
+  "en": "b7375584",
+  "de": "b7375584",
+  "es": "18a6de6a"
+ },
+ "timeline.mese8": {
+  "it": "f03c0a59",
+  "en": "75629af5",
+  "de": "75629af5",
+  "es": "f03c0a59"
+ },
+ "timeline.mese9": {
+  "it": "65c10dc3",
+  "en": "fdd289e3",
+  "de": "fdd289e3",
+  "es": "9162e870"
+ },
+ "timeline.precedente": {
+  "it": "a2b21838",
+  "en": "8d2d9b8d",
+  "de": "8c7a3c74",
+  "es": "df634c0b"
+ },
+ "timeline.successiva": {
+  "it": "e23b211c",
+  "en": "b318edb8",
+  "de": "03670c01",
+  "es": "9dd917d9"
+ },
+ "visore.apriPdf": {
+  "it": "d1ec64c9",
+  "en": "2dad68cf",
+  "de": "f54e6760",
+  "es": "22c49feb"
+ },
+ "visore.caricamento": {
+  "it": "fb356593",
+  "en": "9ca845c3",
+  "de": "6f53e03d",
+  "es": "42b95748"
+ },
+ "visore.chiudi": {
+  "it": "483ae6ce",
+  "en": "a8ed8bb2",
+  "de": "99f1c953",
+  "es": "5e986730"
+ },
+ "visore.errore": {
+  "it": "bdef5001",
+  "en": "b136e13e",
+  "de": "b6de0120",
+  "es": "e9f32135"
+ },
+ "visore.pagina": {
+  "it": "47a51e8d",
+  "en": "69f345f8",
+  "de": "1c12bf92",
+  "es": "8f0d6dd3"
+ },
+ "visore.titolo": {
+  "it": "469d3f36",
+  "en": "6381447d",
+  "de": "b0ca2d6d",
+  "es": "75216e94"
+ }
+}

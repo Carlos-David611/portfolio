@@ -13,6 +13,22 @@ const nextConfig = {
     // un'immagine sostituita con lo stesso nome si aggiorna dopo un minuto (invece di 4 ore)
     minimumCacheTTL: 60,
   },
+  // l'italiano non ha prefisso: /progetti mostra la pagina interna /it/progetti
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { source: "/", destination: "/it" },
+        { source: "/:pagina(progetti|esperienze|certificazioni|contatti)", destination: "/it/:pagina" },
+      ],
+    };
+  },
+  // /it/progetti porta a /progetti: una pagina sola, un indirizzo solo (Google penalizza i doppioni)
+  async redirects() {
+    return [
+      { source: "/it", destination: "/", permanent: true },
+      { source: "/it/:pagina*", destination: "/:pagina*", permanent: true },
+    ];
+  },
   // per provare il sito dal telefono, collegato allo stesso Wi-Fi: senza questa riga, aprendo
   // l'indirizzo di rete del computer (192.168...) Next.js blocca i suoi file di sviluppo e la
   // pagina non risponde ai tocchi. Vale solo mentre sviluppi, non sul sito pubblicato.
