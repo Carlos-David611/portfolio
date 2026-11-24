@@ -27,8 +27,9 @@
     rgba(255, 255, 255, 0.03)
   );
 
-  -webkit-backdrop-filter: blur(28px) saturate(110%);
-  backdrop-filter: blur(28px) saturate(110%);
+  /* la riga -webkit- deve restare prima. Più è alta la sfocatura, più pesa scorrendo */
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 
   border: 1px solid rgba(255, 255, 255, 0.14);
 
@@ -328,6 +329,11 @@
     display: none;
   }
 
+  /* a menu chiuso l'animazione dentro è ferma: non si vede, e non pesa */
+  .links:not(.aperto) .fondoMenu :global(:is(.blob, .arco)) {
+    animation-play-state: paused;
+  }
+
   .fondoMenu :global(.blob) {
     opacity: 0.55;
   }
@@ -417,20 +423,20 @@
 /* ---------- Tema giorno ----------
    :global serve perché data-tema sta su <html>, fuori da questo modulo */
 :global(:root[data-tema="giorno"]) .navbar {
-  /* il vetro bianco latte, come i box: più chiaro dello sfondo albicocca */
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.18));
+  /* vetro #f4f5f6, come i box */
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(244, 245, 246, 0.6));
   /* la sfocatura: più è bassa, più si legge cosa passa sotto (la riga -webkit- deve restare prima) */
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  backdrop-filter: blur(14px) saturate(140%);
-  border-color: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-color: rgba(17, 19, 21, 0.1);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    inset 0 -1px 0 rgba(60, 30, 20, 0.12),
-    0 3px 0 #e7d9cd,
-    0 5px 0 #ddccbe,
-    0 7px 0 #d3c0b0,
-    0 18px 30px rgba(90, 50, 35, 0.2),
-    0 30px 60px rgba(90, 50, 35, 0.12);
+    inset 0 1px 0 #fff,
+    inset 0 -1px 0 rgba(17, 19, 21, 0.12),
+    0 3px 0 #e9ebee,
+    0 5px 0 #e1e4e8,
+    0 7px 0 #d8dce1,
+    0 18px 30px rgba(30, 58, 95, 0.12),
+    0 30px 60px rgba(30, 58, 95, 0.08);
 }
 
 /* il riflesso sulla metà alta del vetro: di giorno più leggero, o la navbar torna bianca */
@@ -468,18 +474,23 @@
     box-shadow: 0 0 4px rgba(255, 255, 255, 0.95);
   }
 
-  /* il pannello del menu: vetro chiaro e caldo, con lo sfondo di giorno che ci scorre sotto */
+  /* il pannello del menu: vetro chiaro, con lo sfondo di giorno che ci scorre sotto */
   :global(:root[data-tema="giorno"]) .links {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.25)),
-      rgba(255, 244, 236, 0.45);
-    border-color: rgba(255, 255, 255, 0.7);
+      rgba(244, 245, 246, 0.6);
+    border-color: rgba(17, 19, 21, 0.1);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.95),
-      inset 0 -1px 0 rgba(229, 50, 28, 0.18),
-      0 24px 50px rgba(90, 50, 35, 0.22);
+      inset 0 -1px 0 rgba(30, 58, 95, 0.18),
+      0 24px 50px rgba(30, 58, 95, 0.22);
   }
 
   :global(:root[data-tema="giorno"]) .links::after {
     background: linear-gradient(170deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.08) 30%, transparent 50%);
   }
+}
+
+/* l'alone sotto la navbar */
+:global(:root[data-tema="giorno"]) .navbar::after {
+  background: radial-gradient(ellipse at 50% 0%, rgba(30, 58, 95, 0.28) 0%, rgba(30, 58, 95, 0.1) 45%, transparent 75%);
 }

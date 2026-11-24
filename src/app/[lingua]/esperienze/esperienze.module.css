@@ -413,8 +413,8 @@
 
 /* qui background-image e non background: l'altro azzererebbe il ritaglio sulle lettere */
 :global(:root[data-tema="giorno"]) .annoGrande {
-  background-image: linear-gradient(180deg, #1a1512 30%, #c2330f 100%);
-  filter: drop-shadow(0 6px 18px rgba(194, 51, 15, 0.2));
+  background-image: linear-gradient(180deg, #111315 30%, #1e3a5f 100%);
+  filter: drop-shadow(0 6px 18px rgba(30, 58, 95, 0.2));
 }
 
 :global(:root[data-tema="giorno"]) .descrizione {
@@ -433,8 +433,8 @@
   background: linear-gradient(
     var(--direzione-linea),
     transparent,
-    rgba(60, 30, 20, 0.35) 10%,
-    rgba(60, 30, 20, 0.35) 90%,
+    rgba(17, 19, 21, 0.35) 10%,
+    rgba(17, 19, 21, 0.35) 90%,
     transparent
   );
 }
@@ -445,9 +445,16 @@
 
 :global(:root[data-tema="giorno"]) .attivo .pallino {
   background: var(--accento);
+  box-shadow:
+    0 0 0 4px rgba(30, 58, 95, 0.15),
+    0 0 18px rgba(30, 58, 95, 0.45);
 }
 
 :global(:root[data-tema="giorno"]) .punto:hover .etichetta,
 :global(:root[data-tema="giorno"]) .attivo .etichetta {
   color: var(--testo);
+}
+
+:global(:root[data-tema="giorno"]) .attivo .pallino::before {
+  background: radial-gradient(ellipse at 50% 100%, rgba(30, 58, 95, 0.4) 0%, rgba(30, 58, 95, 0.15) 45%, transparent 70%);
 }

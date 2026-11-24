@@ -62,9 +62,7 @@
   /* 1. il vetro fumé, leggermente opaco */
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015)),
-    rgba(16, 13, 12, 0.38);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  backdrop-filter: blur(14px) saturate(140%);
+    rgba(16, 13, 12, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.12);
   /* bordi: sottili riflessi di luce in alto e sui lati, e un alone esterno solo quando si accende */
   box-shadow:
@@ -106,7 +104,7 @@
       transparent 16%
     );
   /* l'alone morbido: più è alto il blur, più la luce è sfumata */
-  filter: blur(10px) saturate(130%);
+  filter: blur(13px) saturate(130%);
   /* a riposo è una brace; avvicinandosi si accende e si allarga */
   opacity: calc(0.4 + 0.55 * var(--forza));
   transform: scale(calc(0.85 + 0.5 * var(--forza)));
@@ -127,8 +125,6 @@
     linear-gradient(180deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.02) 45%, transparent 60%),
     /* un velo fumé che smorza il neon: senza, sembrerebbe colore stampato sopra */
     rgba(18, 14, 13, 0.22);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
 }
 
 /* focus da tastiera e dito premuto: acceso al massimo */
@@ -163,50 +159,50 @@
 }
 
 /* ---------- tema giorno ----------
-   Sul chiaro il neon corallo da solo si confondeva col fondo rosato, e il rosso pieno
-   sul bianco abbagliava. Qui il neon usa i colori della pagina (rosso-arancio) più il loro
-   complementare, un verde acqua: rosso-arancio dove sta il cursore, verde acqua nell'angolo opposto.
-   Vetro caldo e poco bianco, velo leggero sopra, alone esterno tenue */
+   Le CTA sono blu navy, con il testo bianco e un neon azzurro che si accende dentro il vetro */
 :root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte) {
-  /* i colori della pagina */
-  --neon-1: #ff5a36;
-  --neon-2: #e5321c;
-  /* il terzo, solo di giorno: il complementare del rosso-arancio */
-  --neon-complementare: #1fb5c4;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08)),
-    rgba(244, 230, 222, 0.26);
-  border-color: rgba(255, 255, 255, 0.6);
+  --neon-1: #5fa8ff;
+  --neon-2: #2f78e0;
+  --neon-3: #7fe0ff;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)), #1e3a5f;
+  border-color: rgba(30, 58, 95, 0.9);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    inset 0 -1px 0 rgba(229, 50, 28, calc(0.12 + 0.2 * var(--forza))),
-    0 2px 8px rgba(90, 50, 35, 0.1),
-    0 0 calc(18px * var(--forza)) rgba(229, 50, 28, calc(0.12 * var(--forza)));
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 2px 8px rgba(30, 58, 95, 0.22),
+    0 0 calc(20px * var(--forza)) rgba(47, 120, 224, calc(0.4 * var(--forza)));
 }
 
-/* i due neon: rosso-arancio che segue il cursore, verde acqua nell'angolo opposto */
+/* il gradiente di luce: acceso come di notte, azzurro e ciano */
 :root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte)::before {
+  /* le luci sono più larghe che di notte: sul blu pieno quelle piccole si perderebbero */
   background:
     radial-gradient(
       circle at calc(22% + var(--mx) * 0.556) calc(22% + var(--my) * 0.556),
       var(--neon-1) 0%,
-      color-mix(in srgb, var(--neon-2) 70%, transparent) 9%,
-      transparent 24%
+      color-mix(in srgb, var(--neon-2) 75%, transparent) 16%,
+      transparent 36%
     ),
     radial-gradient(
-      circle at calc(72% - var(--mx) * 0.2) calc(38% - var(--my) * 0.08),
-      color-mix(in srgb, var(--neon-complementare) 80%, transparent) 0%,
-      color-mix(in srgb, var(--neon-complementare) 30%, transparent) 9%,
-      transparent 20%
+      circle at calc(70% - var(--mx) * 0.2) calc(36% - var(--my) * 0.08),
+      color-mix(in srgb, var(--neon-3) 85%, transparent) 0%,
+      transparent 26%
     );
-  filter: blur(11px) saturate(120%);
+  opacity: calc(0.75 + 0.25 * var(--forza));
+  filter: blur(7px) saturate(130%);
 }
 
-/* il velo lattiginoso: più è alto l'ultimo numero, più il neon resta tenue sotto il vetro */
+/* il velo blu che smorza il neon */
 :root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte)::after {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.06) 50%, transparent 65%),
-    rgba(250, 240, 233, 0.18);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 45%, transparent 60%),
+    rgba(20, 42, 74, 0.1);
+}
+
+:root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte):disabled {
+  background: #8a97a8;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 /* ==========================================================
@@ -247,19 +243,38 @@
 }
 
 :root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte).vetro-neon-latente {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, calc(0.28 * var(--forza))),
-      rgba(255, 255, 255, calc(0.08 * var(--forza)))
-    ),
-    rgba(244, 230, 222, calc(0.26 * var(--forza)));
-  border-color: rgba(255, 255, 255, calc(0.6 * var(--forza)));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, calc(0.8 * var(--forza))),
-    inset 0 -1px 0 rgba(229, 50, 28, calc(0.32 * var(--forza))),
-    0 2px 8px rgba(90, 50, 35, calc(0.1 * var(--forza))),
-    0 0 calc(18px * var(--forza)) rgba(229, 50, 28, calc(0.12 * var(--forza)));
+  /* nella navbar il testo resta scuro: il vetro si tinge appena di blu */
+  color: var(--testo);
+  background: rgba(30, 58, 95, calc(0.1 * var(--forza)));
+  border-color: rgba(30, 58, 95, calc(0.3 * var(--forza)));
+  box-shadow: 0 2px 8px rgba(30, 58, 95, calc(0.12 * var(--forza)));
+}
+
+:root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte).vetro-neon-latente::before {
+  opacity: calc(0.6 * var(--forza));
+}
+
+:root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte).vetro-neon-latente::after {
+  background: linear-gradient(180deg, rgba(255, 255, 255, calc(0.4 * var(--forza))), transparent 60%);
+}
+
+/* ---------- .vetro-neon-piena, insieme a .vetro-neon-latente ("Torna su") ----------
+   a riposo è solo testo; col cursore sopra si riempie del gradiente delle CTA */
+.vetro-neon.vetro-neon.vetro-neon-latente.vetro-neon-piena::before {
+  opacity: calc(0.35 * var(--forza) + 0.65 * var(--sopra));
+}
+
+:root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte).vetro-neon-latente.vetro-neon-piena {
+  color: color-mix(in srgb, #fff calc(100% * var(--sopra)), var(--testo));
+  background: rgba(30, 58, 95, max(var(--sopra), 0.1 * var(--forza)));
+}
+
+:root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte).vetro-neon-latente.vetro-neon-piena::before {
+  opacity: calc(0.35 * var(--forza) + 0.65 * var(--sopra));
+}
+
+:root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte).vetro-neon-latente.vetro-neon-piena::after {
+  background: linear-gradient(180deg, rgba(255, 255, 255, calc(0.16 * var(--forza))), transparent 60%);
 }
 
 /* ==========================================================

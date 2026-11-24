@@ -81,7 +81,7 @@ export default async function Footer() {
 
       <div className={styles.fondo}>
        
-        <a href="#" className={styles.suSu}>
+        <a href="#" className={`${styles.suSu} vetro-neon vetro-neon-latente vetro-neon-piena`}>
           {t("footer.tornaSu")}
         </a>
       </div>

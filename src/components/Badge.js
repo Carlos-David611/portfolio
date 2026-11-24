@@ -74,7 +74,7 @@ export default function Badge({
         <div className={styles.card}>
           <div className={styles.alto}>
             {/* lo sfondo animato della home anche dentro la card */}
-            <div className={styles.fondoCard} aria-hidden="true">
+            <div className={`${styles.fondoCard} sfondo-badge`} aria-hidden="true">
               {sfondoPronto && <Sfondo />}
             </div>
             <div className={styles.testata}>

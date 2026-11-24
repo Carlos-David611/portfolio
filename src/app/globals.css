@@ -50,7 +50,6 @@ article {
   border-radius: 16px;
   background: var(--card);
   color: var(--testo);
-  backdrop-filter: blur(10px);
 }
 
 /* i link delle card */
@@ -303,7 +302,6 @@ article a {
   left: -45vw;
   border-bottom-color: rgba(255, 90, 40, 0.95);
   border-right-color: rgba(255, 90, 40, 0.45);
-  filter: drop-shadow(0 0 8px rgba(255, 80, 30, 0.8));
   animation: oscilla-1 14s ease-in-out infinite alternate;
 }
 
@@ -313,7 +311,6 @@ article a {
   top: -20vw;
   left: 20vw;
   border-bottom-color: rgba(255, 80, 30, 0.8);
-  filter: drop-shadow(0 0 6px rgba(255, 135, 30, 0.5));
   animation: oscilla-2 17s ease-in-out infinite alternate;
 }
 
@@ -325,6 +322,37 @@ article a {
   border-top-color: rgba(255, 255, 255, 0.3);
   border-right-color: rgba(255, 255, 255, 0.15);
   animation: oscilla-1 20s ease-in-out infinite alternate-reverse;
+}
+
+/* l'alone degli archi: due bordi larghi e trasparenti. Non drop-shadow: su cerchi così grandi
+   e sempre in movimento pesava a ogni fotogramma */
+.arco-1::before,
+.arco-1::after,
+.arco-2::before,
+.arco-2::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 8px solid transparent;
+  border-bottom-color: var(--alone-arco, rgba(255, 80, 30, 0.14));
+}
+
+.arco-1::after,
+.arco-2::after {
+  inset: -8px;
+  border-width: 14px;
+  opacity: 0.5;
+}
+
+.arco-1::before,
+.arco-1::after {
+  border-right-color: var(--alone-arco, rgba(255, 80, 30, 0.14));
+}
+
+.arco-2::before,
+.arco-2::after {
+  opacity: 0.4;
 }
 
 /* i gradi dicono quanto ruotano le linee: più sono distanti, più ampio è il movimento */
@@ -372,8 +400,8 @@ article a {
 .grana {
   position: absolute;
   inset: 0;
-  opacity: 0.14;
-  mix-blend-mode: overlay;
+  /* senza mix-blend-mode: fonderla con lo sfondo obbligava a ridisegnare tutto lo schermo */
+  opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -387,7 +415,9 @@ article a {
 
 /* ---------- Competenze ---------- */
 .competenze {
-  background: #0000005b;
+  /* niente backdrop-filter: sfocare lo sfondo animato dietro un box così grande, a ogni
+     fotogramma, era la causa principale degli scatti. Al suo posto un fondo più pieno */
+  background: rgba(9, 8, 8, 0.74);
   color: #fff;
   border-radius: 28px;
   /* la larghezza del contenitore: esce dalla colonna centrale della pagina */
@@ -398,7 +428,6 @@ article a {
   padding: clamp(2rem, 5vw, 4rem);
   /* la luce sulla superficie, sopra il colore di fondo */
   background-image: linear-gradient(155deg, rgba(255, 255, 255, 0.12), transparent 45%);
-  backdrop-filter: blur(10px);
   /* l'inclinazione: più è alto rotateX, più il contenitore sembra coricato */
   transform: perspective(1600px) rotateX(3deg);
   transform-origin: center bottom;
@@ -805,10 +834,10 @@ article a {
   transform: rotate(-90deg) scale(0.5);
 }
 
-/* di giorno il pallino va a destra e diventa arancione */
+/* di giorno il pallino va a destra e prende il colore d'accento */
 :root[data-tema="giorno"] .tema-pallino {
   transform: translateX(30px);
-  background: linear-gradient(160deg, #ffb347, #ff5a36);
+  background: linear-gradient(160deg, #35588a, #1e3a5f);
 }
 
 :root[data-tema="giorno"] .icona-sole {
@@ -835,84 +864,101 @@ article a {
    (Navbar.module.css e Badge.module.css), le card di Progetti in progetti.module.css
    ========================================================== */
 :root[data-tema="giorno"] {
-  --testo: #1a1512;
-  --grigio: #5f534c;
-  --bordo: rgba(0, 0, 0, 0.12);
-  /* un po' più scuro che di notte, per leggersi bene sul chiaro */
-  --accento: #c2330f;
-  /* box di Esperienze e Certificazioni: vetro bianco latte, più chiaro dello sfondo */
-  --card: rgba(255, 255, 255, 0.3);
+  --testo: #111315;
+  --grigio: #5a6068;
+  --bordo: rgba(17, 19, 21, 0.12);
+  --accento: #1e3a5f;
+  --card: #f4f5f6;
 }
 
 :root[data-tema="giorno"] body {
-  background: #efd8c8;
+  background: #ffffff;
 }
 
 /* --- sfondo ---
-   il vetro si vede solo se dietro c'è qualcosa da sfocare: di giorno lo sfondo era quasi tutto
-   crema, uguale ai box, e il vetro spariva. Qui è una sfumatura albicocca: crema al centro,
-   rosa terracotta verso i bordi, con le macchie di luce più presenti.
-   I box di vetro, bianco latte, si staccano e sfocano i colori che hanno dietro */
-:root[data-tema="giorno"] .sfondo {
-  background: radial-gradient(ellipse at 50% 30%, #fff2e8 0%, #f4d9c7 42%, #e8bea8 78%, #dcaa92 100%);
+   bianco puro; le animazioni sono le stesse della notte, nelle tinte del blu navy.
+   .sfondo-badge: lo sfondo dentro il badge, scuro anche di giorno (colori in Badge.module.css) */
+:root[data-tema="giorno"] .sfondo:not(.sfondo-badge *) {
+  background: #ffffff;
 }
 
-/* quanto si vede il rosso dello sfondo di giorno */
-:root[data-tema="giorno"] .blob {
-  opacity: 0.5;
+/* le macchie di luce: opacity dice quanto si vedono */
+:root[data-tema="giorno"] .blob:not(.sfondo-badge *) {
+  opacity: 0.55;
+  background: radial-gradient(
+    circle,
+    rgba(30, 58, 95, 0.42) 0%,
+    rgba(30, 58, 95, 0.34) 20%,
+    rgba(30, 58, 95, 0.2) 40%,
+    rgba(30, 58, 95, 0.08) 57%,
+    transparent 71%
+  );
 }
 
-:root[data-tema="giorno"] .arco-3 {
-  border-top-color: rgba(60, 30, 20, 0.25);
-  border-right-color: rgba(60, 30, 20, 0.12);
+:root[data-tema="giorno"] .blob-3:not(.sfondo-badge *) {
+  opacity: 0.2;
+}
+
+/* le linee curve */
+:root[data-tema="giorno"] .arco-1:not(.sfondo-badge *) {
+  border-bottom-color: rgba(30, 58, 95, 0.75);
+  border-right-color: rgba(30, 58, 95, 0.35);
+  --alone-arco: rgba(30, 58, 95, 0.06);
+}
+
+:root[data-tema="giorno"] .arco-2:not(.sfondo-badge *) {
+  border-bottom-color: rgba(30, 58, 95, 0.6);
+  --alone-arco: rgba(30, 58, 95, 0.06);
+}
+
+:root[data-tema="giorno"] .arco-3:not(.sfondo-badge *) {
+  border-top-color: rgba(17, 19, 21, 0.25);
+  border-right-color: rgba(17, 19, 21, 0.12);
 }
 
 /* la scritta gigante: l'ultimo numero è la sua forza, più è basso meno si vede */
-:root[data-tema="giorno"] .sfondo-scritta {
-  color: rgba(90, 50, 35, 0.1);
+:root[data-tema="giorno"] .sfondo-scritta:not(.sfondo-badge *) {
+  color: rgba(17, 19, 21, 0.14);
 }
 
 /* --- pulsante giorno/notte --- */
 :root[data-tema="giorno"] .tema-bottone {
-  border-color: rgba(60, 30, 20, 0.25);
-  background: rgba(60, 30, 20, 0.08);
-  box-shadow: inset 0 1px 3px rgba(60, 30, 20, 0.2);
+  border-color: rgba(17, 19, 21, 0.25);
+  background: rgba(17, 19, 21, 0.08);
+  box-shadow: inset 0 1px 3px rgba(17, 19, 21, 0.2);
 }
 
 /* --- competenze e prototipi --- */
 :root[data-tema="giorno"] .competenze {
-  /* vetro bianco latte: più chiaro dello sfondo albicocca, così si vede come una lastra */
-  background-color: rgba(255, 255, 255, 0.28);
+  /* #f4f5f6 appena trasparente: lo sfondo animato si intravede dietro */
+  background-color: rgba(244, 245, 246, 0.92);
   /* il riflesso di luce nell'angolo */
-  background-image: linear-gradient(155deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.06) 45%);
-  /* di giorno la sfocatura è più forte: trasforma i colori dietro in una luce morbida */
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  backdrop-filter: blur(18px) saturate(140%);
+  background-image: linear-gradient(155deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 45%);
   color: var(--testo);
-  border-color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(17, 19, 21, 0.08);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.9),
-    inset 0 -2px 4px rgba(60, 30, 20, 0.08),
-    0 2px 0 #eadfd5,
-    0 4px 0 #e4d7cb,
-    0 6px 0 #ddcec1,
-    0 8px 0 #d6c5b7,
-    0 10px 0 #cfbcad,
-    0 40px 70px rgba(90, 50, 35, 0.22);
+    inset 0 -2px 4px rgba(17, 19, 21, 0.08),
+    0 2px 0 #eceef0,
+    0 4px 0 #e6e9ec,
+    0 6px 0 #e0e3e7,
+    0 8px 0 #d9dde2,
+    0 10px 0 #d2d7dd,
+    0 40px 70px rgba(30, 58, 95, 0.14);
 }
 
 :root[data-tema="giorno"] .competenze-griglia,
 :root[data-tema="giorno"] .competenza,
 :root[data-tema="giorno"] .prototipi-cornice {
-  border-color: rgba(60, 30, 20, 0.15);
+  border-color: rgba(17, 19, 21, 0.15);
 }
 
 :root[data-tema="giorno"] .competenza:hover {
-  background: rgba(60, 30, 20, 0.05);
+  background: rgba(17, 19, 21, 0.05);
 }
 
 :root[data-tema="giorno"] .competenza-numero {
-  color: rgba(60, 30, 20, 0.6);
+  color: var(--grigio);
 }
 
 :root[data-tema="giorno"] .competenza-descrizione,
@@ -925,7 +971,7 @@ article a {
 }
 
 :root[data-tema="giorno"] .strumento {
-  border-color: rgba(60, 30, 20, 0.3);
+  border-color: rgba(17, 19, 21, 0.3);
 }
 
 :root[data-tema="giorno"] .strumento:hover {
@@ -936,6 +982,6 @@ article a {
 
 :root[data-tema="giorno"] .prototipi-video {
   box-shadow:
-    0 0 0 1px rgba(60, 30, 20, 0.12),
-    0 20px 40px rgba(90, 50, 35, 0.25);
+    0 0 0 1px rgba(17, 19, 21, 0.12),
+    0 20px 40px rgba(30, 58, 95, 0.25);
 }

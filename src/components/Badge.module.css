@@ -499,8 +499,33 @@
   to   { clip-path: inset(100% 0 0 0); }
 }
 
-/* di giorno lo sfondo copiato dentro la card è chiaro: il velo è più scuro e caldo,
-   così il badge resta un oggetto scuro e l'animazione ci passa sotto appena velata */
-:global(:root[data-tema="giorno"]) .fondoCard::after {
-  background: linear-gradient(160deg, rgba(48, 36, 32, 0.7), rgba(18, 13, 11, 0.85) 65%);
+/* la parte rossa è un poco trasparente: senza un fondo scuro, sul bianco della pagina
+   sbiadirebbe. Così il badge ha gli stessi colori della notte */
+:global(:root[data-tema="giorno"]) .card {
+  background: #0e0b0a;
+}
+
+/* l'animazione dentro la card: di giorno ha il blu della pagina.
+   Un blu più chiaro del navy, che sul nero del badge non si vedrebbe */
+:global(:root[data-tema="giorno"]) .fondoCard :global(.blob) {
+  background: radial-gradient(
+    circle,
+    #4f86cf 0%,
+    #3a69ab 16%,
+    #274c82 34%,
+    rgba(39, 76, 130, 0.5) 50%,
+    rgba(39, 76, 130, 0.18) 61%,
+    transparent 71%
+  );
+}
+
+:global(:root[data-tema="giorno"]) .fondoCard :global(.arco-1) {
+  border-bottom-color: rgba(120, 170, 235, 0.95);
+  border-right-color: rgba(120, 170, 235, 0.45);
+  --alone-arco: rgba(90, 145, 220, 0.14);
+}
+
+:global(:root[data-tema="giorno"]) .fondoCard :global(.arco-2) {
+  border-bottom-color: rgba(120, 170, 235, 0.85);
+  --alone-arco: rgba(90, 145, 220, 0.14);
 }

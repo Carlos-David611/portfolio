@@ -35,16 +35,29 @@ export default function VideoPrototipi({ src, poster, descrizione }) {
     video.muted = true;
     video.defaultMuted = true;
 
+    // gira sempre quando si vede; lontano dallo schermo si ferma, perché decodificarlo
+    // rallenta lo scorrimento di tutta la pagina. Riparte 300px prima di comparire
+    let vicino = true;
     const riparti = () => {
       // con la scheda nascosta il browser lo ferma per risparmiare: riparte quando torni
-      if (!document.hidden) video.play().catch(() => {});
+      if (vicino && !document.hidden) video.play().catch(() => {});
     };
+    const osservatore = new IntersectionObserver(
+      ([elemento]) => {
+        vicino = elemento.isIntersecting;
+        if (vicino) riparti();
+        else video.pause();
+      },
+      { rootMargin: "300px 0px" }
+    );
+    osservatore.observe(video);
 
     riparti();
     // se il browser lo mette in pausa da solo (es. per risparmiare batteria), riparte
     video.addEventListener("pause", riparti);
     document.addEventListener("visibilitychange", riparti);
     return () => {
+      osservatore.disconnect();
       video.removeEventListener("pause", riparti);
       document.removeEventListener("visibilitychange", riparti);
     };
