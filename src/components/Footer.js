@@ -1,7 +1,10 @@
 
+"use client";
+
 import Link from "next/link";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
+import { useLingua } from "@/i18n/lingua";
 import { contatti } from "@/data/contatti";
 import styles from "./Footer.module.css";
 
@@ -20,6 +23,7 @@ const PAGINE = [
 ];
 
 export default function Footer() {
+  const { t } = useLingua();
   const email = contatti.find((contatto) => contatto.tipo === "email");
 
   return (
@@ -36,17 +40,17 @@ export default function Footer() {
             Carlos David
           </Link>
           <p className={styles.ruolo}>UX/UI Designer & Web Designer</p>
-          <p className={styles.disponibile}>Disponibile per nuovi progetti</p>
+          <p className={styles.disponibile}>{t("Disponibile per nuovi progetti")}</p>
         </div>
 
         
-        <nav aria-label="Pagine del sito">
-          <p className={styles.titoletto}>Pagine</p>
+        <nav aria-label={t("Pagine del sito")}>
+          <p className={styles.titoletto}>{t("Pagine")}</p>
           <ul className={styles.elenco}>
             {PAGINE.map((pagina) => (
               <li key={pagina.href}>
                 <Link href={pagina.href} className={styles.link}>
-                  {pagina.nome}
+                  {t(pagina.nome)}
                 </Link>
               </li>
             ))}
@@ -55,7 +59,7 @@ export default function Footer() {
 
         
         <div>
-          <p className={styles.titoletto}>Contatti</p>
+          <p className={styles.titoletto}>{t("Contatti")}</p>
           <ul className={styles.social}>
             {contatti.map((contatto) => {
               const Icona = ICONE[contatto.tipo];
@@ -87,7 +91,7 @@ export default function Footer() {
       <div className={styles.fondo}>
        
         <a href="#" className={styles.suSu}>
-          Torna su ↑
+          {t("Torna su ↑")}
         </a>
       </div>
     </footer>

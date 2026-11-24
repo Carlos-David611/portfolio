@@ -5,6 +5,7 @@
 // (preparaPdf), così all'apertura il PDF è già pronto o quasi.
 
 import { useEffect, useId, useRef, useState } from "react";
+import { useLingua } from "@/i18n/lingua";
 import styles from "./VisorePdf.module.css";
 
 // ---------- PDF pronti in anticipo ----------
@@ -36,6 +37,7 @@ export function preparaPdf(url) {
 
 // ---------- il foglio con le pagine del PDF ----------
 function FoglioPdf({ pdf, titolo }) {
+  const { t } = useLingua();
   const contenitore = useRef(null);
   const [stato, setStato] = useState("carica"); // "carica" | "pronto" | "errore"
 
@@ -62,7 +64,7 @@ function FoglioPdf({ pdf, titolo }) {
           tela.style.width = `${Math.floor(originale.width * adatta)}px`;
           tela.className = styles.pdf;
           tela.setAttribute("role", "img");
-          tela.setAttribute("aria-label", `${titolo}, pagina ${numero} di ${documento.numPages}`);
+          tela.setAttribute("aria-label", t("{titolo}, pagina {n} di {tot}", { titolo, n: numero, tot: documento.numPages }));
 
           await pagina.render({ canvas: tela, viewport: vista }).promise;
           if (annullato) return;
@@ -82,21 +84,21 @@ function FoglioPdf({ pdf, titolo }) {
       annullato = true;
       dove.replaceChildren();
     };
-  }, [pdf, titolo]);
+  }, [pdf, titolo, t]);
 
   return (
     <>
       <div ref={contenitore} className={styles.pagine} />
       {stato === "carica" && (
         <p className={styles.avviso} role="status">
-          Caricamento del certificato…
+          {t("Caricamento del certificato…")}
         </p>
       )}
       {stato === "errore" && (
         <div className={styles.avviso} role="alert">
-          <p>Non riesco a mostrare il certificato qui.</p>
+          <p>{t("Non riesco a mostrare il certificato qui.")}</p>
           <a className={`${styles.apriFile} vetro-neon`} href={pdf} target="_blank" rel="noopener">
-            Apri il PDF
+            {t("Apri il PDF")}
           </a>
         </div>
       )}
@@ -107,6 +109,7 @@ function FoglioPdf({ pdf, titolo }) {
 // ---------- la finestra ----------
 // cert: il certificato da mostrare (null = chiuso). alChiudere: lo chiama quando la finestra si chiude
 export default function VisorePdf({ cert, alChiudere }) {
+  const { t } = useLingua();
   const visore = useRef(null);
   const idTitolo = useId();
   const [chiusura, setChiusura] = useState(false);
@@ -154,10 +157,10 @@ export default function VisorePdf({ cert, alChiudere }) {
             <div className={styles.pannelloTitoli}>
               <p className={styles.pannelloEnte}>{cert.ente}</p>
               <h2 id={idTitolo} className={styles.pannelloNome}>
-                {cert.nome}
+                {t(cert.nome)}
               </h2>
             </div>
-            <button type="button" className={styles.chiudi} onClick={chiudi} aria-label="Chiudi il certificato">
+            <button type="button" className={styles.chiudi} onClick={chiudi} aria-label={t("Chiudi il certificato")}>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" />
               </svg>
@@ -166,7 +169,7 @@ export default function VisorePdf({ cert, alChiudere }) {
 
           <div className={styles.foglio}>
             {/* key: cambiando certificato il foglio riparte da zero */}
-            <FoglioPdf key={cert.pdf} pdf={cert.pdf} titolo={`Certificato: ${cert.nome}`} />
+            <FoglioPdf key={cert.pdf} pdf={cert.pdf} titolo={t("Certificato: {nome}", { nome: t(cert.nome) })} />
           </div>
         </div>
       )}

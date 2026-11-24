@@ -1,3 +1,4 @@
+import T from "@/i18n/T";
 import GalleriaCertificazioni from "@/components/GalleriaCertificazioni";
 import { certificazioni } from "@/data/certificazioni";
 // la stessa intestazione della pagina Progetti: etichetta e titolo con gli stessi stili
@@ -17,8 +18,8 @@ export default function Certificazioni() {
           Sopra la galleria (che sugli schermi grandi gli sale accanto) e largo solo quanto il testo:
           il mouse sul titolo non muove le card, accanto sì */}
       <header style={{ position: "relative", zIndex: 2, width: "fit-content" }}>
-        <p className={intestazione.etichetta}>I miei attestati</p>
-        <h1 className={intestazione.titoloPagina}>Certificazioni</h1>
+        <p className={intestazione.etichetta}><T>I miei attestati</T></p>
+        <h1 className={intestazione.titoloPagina}><T>Certificazioni</T></h1>
       </header>
 
       <GalleriaCertificazioni certificazioni={ordinate} />

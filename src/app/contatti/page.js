@@ -1,3 +1,4 @@
+import T from "@/i18n/T";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { contatti } from "@/data/contatti";
@@ -19,7 +20,7 @@ export default function Contatti() {
     // le classi del box della home: stesso vetro, stessa inclinazione
     <section className="competenze">
       {/* il titolo grande, come quello del box Competenze in home */}
-      <h1 className="competenze-titolo">Contatti</h1>
+      <h1 className="competenze-titolo"><T>Contatti</T></h1>
 
       <ul className={styles.lista}>
         {contatti.map((contatto) => {

@@ -35,10 +35,15 @@
 }
 
 .visibile .pendolo {
-  /* prima l'oscillazione, poi un movimento continuo */
-  animation:
-    badge-oscilla 3s ease-out 0.6s,
-    badge-respiro 6s ease-in-out 3.6s infinite;
+  /* prima l'oscillazione... */
+  animation: badge-oscilla 3s ease-out 0.6s;
+}
+
+/* ...poi un movimento continuo: questa classe la mette Badge.js quando l'oscillazione finisce.
+   Non vanno elencate insieme: con due animazioni su transform Chrome le muove col processore
+   invece che con la scheda grafica, e la home resta pesante anche da ferma */
+.visibile .respira {
+  animation: badge-respiro 6s ease-in-out infinite;
 }
 
 @keyframes badge-oscilla {
@@ -369,7 +374,8 @@
 /* per chi ha chiesto al sistema di ridurre i movimenti */
 @media (prefers-reduced-motion: reduce) {
   .visibile,
-  .visibile .pendolo {
+  .visibile .pendolo,
+  .visibile .respira {
     animation: none;
   }
 

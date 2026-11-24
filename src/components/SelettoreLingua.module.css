@@ -1,0 +1,167 @@
+/* ==========================================================
+   SELETTORE DELLA LINGUA, nella navbar accanto a giorno/notte
+   ========================================================== */
+
+.selettore {
+  position: relative;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+/* stessa altezza e stesso vetro dell'interruttore giorno/notte */
+.bottone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 58px;
+  height: 34px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+  color: var(--testo);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.freccia {
+  width: 11px;
+  height: 11px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.25s ease;
+}
+
+.bottone[aria-expanded="true"] .freccia {
+  transform: rotate(180deg);
+}
+
+.bottone:focus-visible,
+.voce:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 2px;
+}
+
+/* quasi pieno: dentro la navbar, che è già vetro, una seconda sfocatura non si vedrebbe */
+.elenco {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 5;
+  min-width: 150px;
+  margin: 0;
+  padding: 0.4rem;
+  list-style: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(48, 40, 37, 0.97), rgba(20, 17, 16, 0.97));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 18px 36px rgba(0, 0, 0, 0.55);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.2s ease, transform 0.25s ease, visibility 0.2s;
+}
+
+.aperto {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+}
+
+.voce {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  min-height: 42px;
+  padding: 0 0.75rem;
+  border: none;
+  border-radius: 11px;
+  background: none;
+  color: var(--testo);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bandiera {
+  flex: none;
+  width: 24px;
+  height: 16px;
+  border-radius: 4px;
+  /* il bordino stacca il bianco e il nero delle bandiere dallo sfondo */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+/* la bandiera della lingua scelta, nel pulsante */
+.scelta {
+  animation: bandiera 0.4s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+@keyframes bandiera {
+  from {
+    opacity: 0;
+    transform: scale(0.4) rotate(-15deg);
+  }
+}
+
+.voce:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.voce[aria-current] {
+  color: var(--accento);
+}
+
+/* sul telefono, scorrendo in basso, sparisce insieme all'interruttore giorno/notte */
+@media (max-width: 768px) {
+  :global(.tema-nascosto) ~ .selettore {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scelta {
+    animation: none;
+  }
+
+  .selettore,
+  .elenco,
+  .freccia {
+    transition: none;
+  }
+}
+
+:global(:root[data-tema="giorno"]) .bottone {
+  border-color: rgba(60, 30, 20, 0.25);
+  background: rgba(60, 30, 20, 0.08);
+  box-shadow: inset 0 1px 3px rgba(60, 30, 20, 0.2);
+}
+
+:global(:root[data-tema="giorno"]) .bandiera {
+  box-shadow: 0 0 0 1px rgba(60, 30, 20, 0.25);
+}
+
+:global(:root[data-tema="giorno"]) .elenco {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: linear-gradient(180deg, rgba(255, 250, 245, 0.98), rgba(246, 230, 218, 0.98));
+  box-shadow: 0 18px 36px rgba(90, 50, 35, 0.28);
+}
+
+:global(:root[data-tema="giorno"]) .voce:hover {
+  background: rgba(60, 30, 20, 0.07);
+}

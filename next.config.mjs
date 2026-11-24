@@ -10,6 +10,8 @@ const nextConfig = {
   images: {
     // AVIF pesa meno di WebP; i browser che non lo conoscono ricevono WebP
     formats: ["image/avif", "image/webp"],
+    // un'immagine sostituita con lo stesso nome si aggiorna dopo un minuto (invece di 4 ore)
+    minimumCacheTTL: 60,
   },
   // per provare il sito dal telefono, collegato allo stesso Wi-Fi: senza questa riga, aprendo
   // l'indirizzo di rete del computer (192.168...) Next.js blocca i suoi file di sviluppo e la

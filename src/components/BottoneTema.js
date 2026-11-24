@@ -1,8 +1,10 @@
 "use client";
 
+import { useLingua } from "@/i18n/lingua";
 import { useEffect, useState } from "react";
 
 export default function BottoneTema() {
+  const { t } = useLingua();
   // il tema di partenza è la notte, perché il sito nasce scuro
   const [tema, setTema] = useState("notte");
   // sul telefono il bottone si nasconde scrollando verso il basso (vedi .tema-nascosto nel CSS)
@@ -86,7 +88,7 @@ export default function BottoneTema() {
       // role="switch" dice agli screen reader che è un interruttore acceso/spento
       role="switch"
       aria-checked={giorno}
-      aria-label={giorno ? "Passa al tema notte" : "Passa al tema giorno"}
+      aria-label={t(giorno ? "Passa al tema notte" : "Passa al tema giorno")}
     >
       <span className="tema-pallino" aria-hidden="true">
         {/* la luna */}

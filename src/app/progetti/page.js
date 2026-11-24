@@ -1,11 +1,12 @@
+import T from "@/i18n/T";
 import { progetti } from "@/data/progetti";
 import styles from "./progetti.module.css";
 
 export default function ProgettiPage() {
   return (
     <section>
-      <p className={styles.etichetta}>I miei lavori</p>
-      <h1 className={styles.titoloPagina}>Progetti</h1>
+      <p className={styles.etichetta}><T>I miei lavori</T></p>
+      <h1 className={styles.titoloPagina}><T>Progetti</T></h1>
 
       <div className={styles.griglia}>
         {progetti.map((p, i) => (
@@ -22,23 +23,23 @@ export default function ProgettiPage() {
 
             <div className={styles.cardTesta}>
               <span className={styles.numero}>{String(i + 1).padStart(2, "0")}</span>
-              {p.categoria && <span className={styles.categoria}>{p.categoria}</span>}
+              {p.categoria && <span className={styles.categoria}><T>{p.categoria}</T></span>}
             </div>
 
-            <h2 className={styles.titolo}>{p.titolo}</h2>
-            <p className={styles.descrizione}>{p.descrizione}</p>
+            <h2 className={styles.titolo}><T>{p.titolo}</T></h2>
+            <p className={styles.descrizione}><T>{p.descrizione}</T></p>
 
             {p.obiettivi && (
               <ul className={styles.obiettivi}>
                 {p.obiettivi.map((obiettivo) => (
-                  <li key={obiettivo}>{obiettivo}</li>
+                  <li key={obiettivo}><T>{obiettivo}</T></li>
                 ))}
               </ul>
             )}
 
             <div className={styles.tecnologie}>
               {p.tecnologie.map((t) => (
-                <span key={t} className={styles.tag}>{t}</span>
+                <span key={t} className={styles.tag}><T>{t}</T></span>
               ))}
             </div>
 

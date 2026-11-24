@@ -148,6 +148,8 @@
 /* il contenitore a destra: pulsante giorno/notte + burger */
 .azioni {
   position: relative;
+  /* il menu delle lingue si apre sopra le voci */
+  z-index: 3;
   grid-column: 3;
   grid-row: 1;
   justify-self: end;

@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import SelettoreLingua from "@/components/SelettoreLingua";
+import { useLingua } from "@/i18n/lingua";
 import BottoneTema from "@/components/BottoneTema";
 import Sfondo from "@/components/Sfondo";
 import styles from "./Navbar.module.css";
@@ -23,6 +25,7 @@ const DURATA_LETTERA = 450;
 const RITARDO_LETTERA = 30;
 
 export default function Navbar() {
+  const { t } = useLingua();
   // il menu burger si vede solo su telefono e tablet: su computer questo stato non cambia nulla
   const [aperto, setAperto] = useState(false);
   // lo sfondo animato dentro il menu si prepara quando la pagina ha finito di caricarsi:
@@ -115,7 +118,7 @@ export default function Navbar() {
       <Link
         href="/"
         className={styles.logo}
-        title="Torna alla home"
+        title={t("Torna alla home")}
         onClick={() => setAperto(false)}
       >
 
@@ -123,10 +126,11 @@ export default function Navbar() {
 
       <div className={styles.azioni}>
         <BottoneTema />
+        <SelettoreLingua />
         <button
           type="button"
           className={styles.burger}
-          aria-label={aperto ? "Chiudi il menu" : "Apri il menu"}
+          aria-label={t(aperto ? "Chiudi il menu" : "Apri il menu")}
           aria-expanded={aperto}
           aria-controls="navbar-menu"
           onClick={apriChiudi}
@@ -159,11 +163,11 @@ export default function Navbar() {
             className="vetro-neon vetro-neon-latente"
             style={{ "--posizione": indice }}
             data-gira={girando === link.href || undefined}
-            onClick={(evento) => vai(evento, link.href, link.label)}
+            onClick={(evento) => vai(evento, link.href, t(link.label))}
             // le lettere sono separate per farle girare: chi usa lo screen reader sente la parola intera
-            aria-label={link.label}
+            aria-label={t(link.label)}
           >
-            {[...link.label].map((lettera, i) => (
+            {[...t(link.label)].map((lettera, i) => (
               <span key={i} className={styles.lettera} style={{ "--i": i }} aria-hidden="true">
                 {lettera}
               </span>

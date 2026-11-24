@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLingua } from "@/i18n/lingua";
 import styles from "@/app/esperienze/esperienze.module.css";
 
 // i mesi li scriviamo noi: così il risultato è identico
@@ -19,6 +20,7 @@ function leggiData(testo) {
 
 // il contenuto di una singola esperienza
 function Dettagli({ esperienza }) {
+  const { t } = useLingua();
   const inizio = leggiData(esperienza.inizio);
   const fine = leggiData(esperienza.fine);
 
@@ -28,7 +30,7 @@ function Dettagli({ esperienza }) {
         <div>
           <h2 className={styles.azienda}>{esperienza.azienda}</h2>
           {/* && = mostra la riga solo se luogo non è vuoto */}
-          {esperienza.luogo && <p className={styles.luogo}>{esperienza.luogo}</p>}
+          {esperienza.luogo && <p className={styles.luogo}>{t(esperienza.luogo)}</p>}
         </div>
         <p className={styles.periodo}>
           <time dateTime={esperienza.inizio}>{inizio.data}</time>
@@ -37,8 +39,8 @@ function Dettagli({ esperienza }) {
         </p>
       </div>
 
-      <h3 className={styles.ruolo}>{esperienza.ruolo}</h3>
-      <p className={styles.descrizione}>{esperienza.descrizione}</p>
+      <h3 className={styles.ruolo}>{t(esperienza.ruolo)}</h3>
+      <p className={styles.descrizione}>{t(esperienza.descrizione)}</p>
 
       <ul className={styles.tecnologie}>
         {esperienza.tecnologie.map((tecnologia) => (
@@ -50,6 +52,7 @@ function Dettagli({ esperienza }) {
 }
 
 export default function TimelineEsperienze({ esperienze }) {
+  const { t } = useLingua();
   // si parte dall'ultima esperienza, la più recente
   const [attiva, setAttiva] = useState(esperienze.length - 1);
   const linea = useRef(null);
@@ -81,7 +84,7 @@ export default function TimelineEsperienze({ esperienze }) {
   const ultimaEsperienza = attiva === esperienze.length - 1;
 
   return (
-    <section className={styles.timeline} aria-label="Le mie esperienze">
+    <section className={styles.timeline} aria-label={t("Le mie esperienze")}>
       <div className={styles.corpo}>
         {/* le frecce: disabled = non cliccabili quando non c'è altro */}
         <div className={styles.frecce}>
@@ -90,7 +93,7 @@ export default function TimelineEsperienze({ esperienze }) {
             className={`${styles.freccia} vetro-neon`}
             onClick={() => setAttiva(attiva - 1)}
             disabled={primaEsperienza}
-            aria-label="Esperienza precedente"
+            aria-label={t("Esperienza precedente")}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6 15l6-6 6 6" />
@@ -101,7 +104,7 @@ export default function TimelineEsperienze({ esperienze }) {
             className={`${styles.freccia} vetro-neon`}
             onClick={() => setAttiva(attiva + 1)}
             disabled={ultimaEsperienza}
-            aria-label="Esperienza successiva"
+            aria-label={t("Esperienza successiva")}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6 9l6 6 6-6" />
@@ -113,7 +116,7 @@ export default function TimelineEsperienze({ esperienze }) {
         <div className={styles.anni} aria-hidden="true">
           <p className={styles.annoPiccolo}>
             <span className={styles.lineetta} />
-            {stessoAnno ? `${inizio.mese} — ${fine.mese}` : inizio.anno}
+            {stessoAnno ? `${t(inizio.mese)} — ${t(fine.mese)}` : inizio.anno}
           </p>
           <p className={styles.annoGrande}>{fine.anno}</p>
         </div>
@@ -149,11 +152,11 @@ export default function TimelineEsperienze({ esperienze }) {
                 onClick={() => setAttiva(posizione)}
                 // aria-current: dice agli screen reader quale è quella selezionata
                 aria-current={selezionata ? "step" : undefined}
-                aria-label={`${voce.azienda}, ${data.mese} ${data.anno}`}
+                aria-label={`${voce.azienda}, ${t(data.mese)} ${data.anno}`}
               >
                 <span className={styles.pallino} />
                 <span className={styles.etichetta}>
-                  {data.mese} {data.anno}
+                  {t(data.mese)} {data.anno}
                 </span>
               </button>
             </li>

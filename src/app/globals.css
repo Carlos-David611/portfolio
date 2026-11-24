@@ -15,6 +15,11 @@
   box-sizing: border-box;
 }
 
+/* lingua diversa dall'italiano: i testi compaiono già tradotti (layout.js e SelettoreLingua.js) */
+html[data-lingua-attesa] :is(header, main, footer) {
+  visibility: hidden;
+}
+
 /* la pagina non scorre mai di lato: se un elemento animato (il badge che oscilla, gli archi
    dello sfondo, le card che girano) sporge per un istante oltre il bordo, viene tagliato.
    clip e non hidden: hidden romperebbe la navbar che resta in alto (position: sticky) */

@@ -1,3 +1,4 @@
+import T, { TestoScorri } from "@/i18n/T";
 import Badge from "@/components/Badge";
 import { competenze, strumenti } from "@/data/competenze";
 import VideoPrototipi from "@/components/VideoPrototipi";
@@ -8,12 +9,14 @@ export default function Home() {
     <>
       <section className="home-hero">
         <TestoRitardato className="home-testo">
-          <p className="hero-saluto">Ciao, sono</p>
+          <p className="hero-saluto"><T>Ciao, sono</T></p>
           <h1 className="hero-nome">Carlos David</h1>
           <p className="hero-ruolo">UX/UI Designer & Web Designer</p>
           <h3 className="hero-descrizione">
-            Progetto e sviluppo interfacce web curate, semplici da usare e belle da vedere.
-            Mi piace trasformare idee in prodotti digitali concreti, partendo dal design.
+            <T>
+              Progetto e sviluppo interfacce web curate, semplici da usare e belle da vedere.
+              Mi piace trasformare idee in prodotti digitali concreti, partendo dal design.
+            </T>
           </h3>
         </TestoRitardato>
 
@@ -31,8 +34,8 @@ export default function Home() {
       </section>
 
       <section className="competenze">
-        <p className="competenze-etichetta">Cosa so fare</p>
-        <h2 className="competenze-titolo">Competenze</h2>
+        <p className="competenze-etichetta"><T>Cosa so fare</T></p>
+        <h2 className="competenze-titolo"><T>Competenze</T></h2>
 
         <div className="competenze-griglia">
           {competenze.map((c, i) => (
@@ -42,14 +45,10 @@ export default function Home() {
               </span>
 
               <h3 className="competenza-nome">
-                <span className="scorri">
-                  <span className="scorri-interno" data-testo={c.nome}>
-                    {c.nome}
-                  </span>
-                </span>
+                <TestoScorri>{c.nome}</TestoScorri>
               </h3>
 
-              <p className="competenza-descrizione">{c.descrizione}</p>
+              <p className="competenza-descrizione"><T>{c.descrizione}</T></p>
               <span className="competenza-freccia">→</span>
             </div>
           ))}
@@ -66,11 +65,11 @@ export default function Home() {
       <section className="competenze">
         <div className="prototipi-intestazione">
           <div>
-            <p className="competenze-etichetta">Dal design allo schermo</p>
-            <h2 className="competenze-titolo">Prototipi</h2>
+            <p className="competenze-etichetta"><T>Dal design allo schermo</T></p>
+            <h2 className="competenze-titolo"><T>Prototipi</T></h2>
           </div>
           <p className="prototipi-testo">
-            Interfacce progettate per ogni dispositivo: desktop, tablet e mobile.
+            <T>Interfacce progettate per ogni dispositivo: desktop, tablet e mobile.</T>
           </p>
         </div>
 

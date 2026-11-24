@@ -9,6 +9,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import VisorePdf, { caricaLettore, preparaPdf } from "./VisorePdf";
+import { useLingua } from "@/i18n/lingua";
 import styles from "@/app/certificazioni/GalleriaCertificazioni.module.css";
 
 // ---------- le misure della specifica ----------
@@ -44,6 +45,7 @@ const smoothstep = (a, b, x) => {
 const urlImmagine = (src) => `/_next/image?url=${encodeURIComponent(src)}&w=1080&q=75`;
 
 export default function GalleriaCertificazioni({ certificazioni }) {
+  const { t } = useLingua();
   const palco = useRef(null);
   const tela = useRef(null);
   const [aperta, setAperta] = useState(null);
@@ -58,15 +60,19 @@ export default function GalleriaCertificazioni({ certificazioni }) {
     setAperta(cert);
   };
 
-  // il lettore dei PDF si carica appena la pagina è libera: all'apertura è già pronto
+  // il lettore dei PDF è pesante: si carica appena tocchi la galleria (o ci passi il mouse),
+  // e comunque dopo qualche secondo. Così non rallenta la comparsa della pagina,
+  // ma all'apertura del certificato è già pronto
   useEffect(() => {
-    const carica = () => caricaLettore();
-    if ("requestIdleCallback" in window) {
-      const id = requestIdleCallback(carica, { timeout: 3000 });
-      return () => cancelIdleCallback(id);
-    }
-    const id = setTimeout(carica, 1500);
-    return () => clearTimeout(id);
+    const elPalco = palco.current;
+    const carica = () => caricaLettore().catch(() => {});
+    const eventi = ["pointerenter", "pointerdown", "focusin"];
+    eventi.forEach((nome) => elPalco.addEventListener(nome, carica, { once: true, passive: true }));
+    const id = setTimeout(carica, 6000);
+    return () => {
+      clearTimeout(id);
+      eventi.forEach((nome) => elPalco.removeEventListener(nome, carica));
+    };
   }, []);
 
   useEffect(() => {
@@ -74,7 +80,7 @@ export default function GalleriaCertificazioni({ certificazioni }) {
     let pulizia = () => {};
 
     // Three.js si scarica solo qui: non pesa sulle altre pagine
-    import("three")
+    import("./three-galleria")
       .then((THREE) => {
         if (annullato) return;
         try {
@@ -478,8 +484,8 @@ export default function GalleriaCertificazioni({ certificazioni }) {
             <li key={c.pdf}>
               <button type="button" className={styles.voce} onClick={() => apri.current(i)}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={urlImmagine(c.anteprima)} alt={`${c.nome}, ${c.ente}`} loading="lazy" />
-                <span className={styles.srOnly}>Apri il certificato</span>
+                <img src={urlImmagine(c.anteprima)} alt={`${t(c.nome)}, ${c.ente}`} loading="lazy" />
+                <span className={styles.srOnly}>{t("Apri il certificato")}</span>
               </button>
             </li>
           ))}
@@ -489,15 +495,20 @@ export default function GalleriaCertificazioni({ certificazioni }) {
           ref={palco}
           className={styles.palco}
           tabIndex={0}
-          aria-roledescription="galleria"
-          aria-label="Certificazioni: usa le frecce per scorrere e Invio per aprire il certificato"
+          aria-roledescription={t("galleria")}
+          aria-label={t("Certificazioni: usa le frecce per scorrere e Invio per aprire il certificato")}
         >
           <canvas ref={tela} className={styles.tela} aria-hidden="true" />
           <p className={styles.srOnly} aria-live="polite">
-            {`Certificato ${attuale + 1} di ${certificazioni.length}: ${cert.nome}, ${cert.ente}`}
+            {t("Certificato {n} di {tot}: {nome}, {ente}", {
+              n: attuale + 1,
+              tot: certificazioni.length,
+              nome: t(cert.nome),
+              ente: cert.ente,
+            })}
           </p>
           <p className={styles.suggerimento} aria-hidden="true">
-            Scorri o trascina per esplorare
+            {t("Scorri o trascina per esplorare")}
           </p>
         </section>
       )}

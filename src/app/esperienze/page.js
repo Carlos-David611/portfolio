@@ -1,3 +1,4 @@
+import T from "@/i18n/T";
 import TimelineEsperienze from "@/components/TimelineEsperienze";
 import { esperienze } from "@/data/esperienze";
 
@@ -9,10 +10,10 @@ export default function Esperienze() {
   return (
     <>
       <header className="esperienze-intestazione">
-        <p className="competenze-etichetta">Il mio percorso</p>
-        <h1 className="pagina-titolo">Esperienze</h1>
+        <p className="competenze-etichetta"><T>Il mio percorso</T></p>
+        <h1 className="pagina-titolo"><T>Esperienze</T></h1>
         <p className="esperienze-sottotitolo">
-          Ruoli, aziende e capitoli, in ordine di tempo.
+          <T>Ruoli, aziende e capitoli, in ordine di tempo.</T>
         </p>
       </header>
 

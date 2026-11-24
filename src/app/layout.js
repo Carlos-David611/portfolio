@@ -19,10 +19,11 @@ export default function RootLayout({ children }) {
     // suppressHydrationWarning: lo script qui sotto può aggiungere data-tema prima che React parta
     <html lang="it" suppressHydrationWarning>
       <head>
-        {/* rimette il tema salvato prima che la pagina si veda: niente lampo scuro di giorno */}
+        {/* rimette il tema salvato prima che la pagina si veda: niente lampo scuro di giorno.
+            Con una lingua diversa dall'italiano, nasconde i testi finché non sono tradotti (globals.css) */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("tema");if(t)document.documentElement.dataset.tema=t}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem("tema");if(t)document.documentElement.dataset.tema=t;var l=localStorage.getItem("lingua");if(l==="en"||l==="de"||l==="es"){var h=document.documentElement;h.lang=l;h.dataset.linguaAttesa="";setTimeout(function(){delete h.dataset.linguaAttesa},2500)}}catch(e){}})()`,
           }}
         />
       </head>

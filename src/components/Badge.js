@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useLingua } from "@/i18n/lingua";
 import Sfondo from "@/components/Sfondo";
 import styles from "./Badge.module.css";
 
@@ -15,6 +16,7 @@ export default function Badge({
   foto = "/immagini/foto.jpg",
   aspettaScroll = false,
 }) {
+  const { t } = useLingua();
   const [visibile, setVisibile] = useState(!aspettaScroll);
 
   useEffect(() => {
@@ -32,6 +34,9 @@ export default function Badge({
     window.addEventListener("scroll", controllaScroll);
     return () => window.removeEventListener("scroll", controllaScroll);
   }, [aspettaScroll]);
+
+  // diventa true quando il badge ha finito di oscillare: da lì si muove piano in continuo
+  const [respira, setRespira] = useState(false);
 
   // lo sfondo animato dentro la card arriva solo quando il browser ha finito il lavoro importante:
   // così non rallenta la prima comparsa della pagina
@@ -54,7 +59,11 @@ export default function Badge({
       className={`${styles.lanyard} ${visibile ? styles.visibile : ""}`}
       style={{ "--colore-badge": colore }}
     >
-      <div className={styles.pendolo}>
+      <div
+        className={`${styles.pendolo} ${respira ? styles.respira : ""}`}
+        // le animazioni degli elementi dentro arrivano fin qui: conta solo quella del pendolo
+        onAnimationEnd={(e) => e.target === e.currentTarget && setRespira(true)}
+      >
         <div className={styles.laccio}>
           <span>Portfolio</span>
         </div>
@@ -75,7 +84,7 @@ export default function Badge({
             </div>
 
             <div className={styles.foto}>
-              <Image src={foto} alt={`Foto di ${nome} ${cognome}`} fill sizes="260px" preload />
+              <Image src={foto} alt={t("Foto di {nome}", { nome: `${nome} ${cognome}` })} fill sizes="260px" preload />
             </div>
 
             <p className={styles.nome}>
@@ -87,7 +96,7 @@ export default function Badge({
 
           <div className={styles.basso}>
             <p className={styles.ruolo}>{ruolo}</p>
-            <p className={styles.luogo}>{luogo}</p>
+            <p className={styles.luogo}>{t(luogo)}</p>
           </div>
         </div>
         </div>
