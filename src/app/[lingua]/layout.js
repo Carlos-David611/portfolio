@@ -22,7 +22,7 @@ export const metadata = {
 export const generateStaticParams = () => LINGUE.map((l) => ({ lingua: l.codice }));
 
 // le sezioni dei testi che servono ai componenti interattivi: le altre restano sul server
-const SEZIONI_BROWSER = ["menu", "tema", "lingua", "timeline", "galleria", "visore"];
+const SEZIONI_BROWSER = ["menu", "tema", "lingua", "timeline", "galleria", "visore", "cursore"];
 
 // chi sei, in un formato che Google capisce (dati strutturati schema.org)
 const persona = {

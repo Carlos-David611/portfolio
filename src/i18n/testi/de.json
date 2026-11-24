@@ -95,6 +95,9 @@
     "contatti": "Kontakt",
     "tornaSu": "Nach oben ↑"
   },
+  "cursore": {
+    "etichetta": "Entdecken"
+  },
   "errore": {
     "titolo": "Seite nicht gefunden",
     "testo": "Diese Seite existiert nicht oder wurde verschoben."

@@ -22,7 +22,9 @@
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  width: var(--w);
+  /* si allarga se la parola è lunga (es. in tedesco) */
+  width: max-content;
+  min-width: var(--w);
   height: var(--h);
   padding-left: calc(var(--h) * 0.33);
   border-radius: var(--h);
@@ -89,6 +91,7 @@
 .etichetta {
   flex: 1;
   text-align: center;
+  padding-left: calc(var(--h) * 0.2);
   /* lo stesso spazio del padding a sinistra, così il testo non tocca il bordo destro */
   padding-right: calc(var(--h) * 0.33);
   transition: transform 0.25s ease;

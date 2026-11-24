@@ -95,6 +95,9 @@
     "contatti": "Contact",
     "tornaSu": "Back to top ↑"
   },
+  "cursore": {
+    "etichetta": "Explore"
+  },
   "errore": {
     "titolo": "Page not found",
     "testo": "This page doesn't exist or has been moved."

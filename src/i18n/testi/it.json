@@ -95,6 +95,9 @@
     "contatti": "Contatti",
     "tornaSu": "Torna su ↑"
   },
+  "cursore": {
+    "etichetta": "Esplora"
+  },
   "errore": {
     "titolo": "Pagina non trovata",
     "testo": "Questa pagina non esiste o è stata spostata."

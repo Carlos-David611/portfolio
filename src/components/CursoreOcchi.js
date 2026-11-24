@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLingua } from "@/i18n/lingua";
 import styles from "./CursoreOcchi.module.css";
 
 // ---------- le regolazioni ----------
-const ETICHETTA = "Explore";
-
 const OCCHIO = 0.42; // occhio = 0.42 × altezza
 const PUPILLA = 0.42; // pupilla = 0.42 × occhio
 const CORSA_PUPILLA = 0.75; // quanto la pupilla può spostarsi verso il bordo dell'occhio (1 = fino al bordo)
@@ -37,6 +36,7 @@ export default function CursoreOcchi() {
 }
 
 function Pillola() {
+  const { t } = useLingua();
   const pillola = useRef(null);
   const occhi = useRef([]);
   const pupille = useRef([]);
@@ -226,7 +226,7 @@ function Pillola() {
           </span>
         ))}
       </span>
-      <span className={styles.etichetta}>{ETICHETTA}</span>
+      <span className={styles.etichetta}>{t("cursore.etichetta")}</span>
     </div>
   );
 }
