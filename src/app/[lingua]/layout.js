@@ -3,6 +3,7 @@ import Sfondo from "@/components/Sfondo";
 import "../globals.css";
 import "../vetro-neon.css";
 import Footer from "@/components/Footer";
+import ScriptIniziale from "@/components/ScriptIniziale";
 import CursoreOcchi from "@/components/CursoreOcchi";
 import VetroNeon from "@/components/VetroNeon";
 import { LINGUA_BASE, LINGUE, SITO } from "@/i18n/config";
@@ -51,8 +52,8 @@ export default async function RootLayout({ children }) {
     // suppressHydrationWarning: lo script qui sotto può aggiungere data-tema prima che React parta
     <html lang={lingua} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: SCRIPT_TEMA }} />
-        {valida && lingua === LINGUA_BASE && <script dangerouslySetInnerHTML={{ __html: SCRIPT_LINGUA }} />}
+        <ScriptIniziale codice={SCRIPT_TEMA} />
+        {valida && lingua === LINGUA_BASE && <ScriptIniziale codice={SCRIPT_LINGUA} />}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(persona) }} />
       </head>
       <body>
