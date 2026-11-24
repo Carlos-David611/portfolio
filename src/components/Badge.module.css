@@ -359,6 +359,8 @@
 
 .ruolo {
   margin: 0;
+  /* righe di lunghezza simile: nessuna parola resta sola a capo */
+  text-wrap: balance;
   font-size: 20px;
   font-weight: 900;
   line-height: 1.05;

@@ -64,7 +64,7 @@ export default function Badge({
         onAnimationEnd={(e) => e.target === e.currentTarget && setRespira(true)}
       >
         <div className={styles.laccio}>
-          <span>Portfolio</span>
+          <span>{intestazione}</span>
         </div>
         <div className={styles.fibbia} />
         <div className={styles.laccioCorto} />

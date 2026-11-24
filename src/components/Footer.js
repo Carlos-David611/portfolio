@@ -30,7 +30,7 @@ export default async function Footer() {
           <Link href={percorso(lingua)} className={styles.nome}>
             Carlos David
           </Link>
-          <p className={styles.ruolo}>UX/UI Designer & Web Designer</p>
+          <p className={styles.ruolo}>{t("chiSono.ruolo")}</p>
           <p className={styles.disponibile}>{t("footer.disponibile")}</p>
         </div>
 

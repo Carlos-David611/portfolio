@@ -16,7 +16,7 @@ export default async function Home() {
         <TestoRitardato className="home-testo">
           <p className="hero-saluto">{t("home.saluto")}</p>
           <h1 className="hero-nome">Carlos David</h1>
-          <p className="hero-ruolo">UX/UI Designer & Web Designer</p>
+          <p className="hero-ruolo">{t("chiSono.ruolo")}</p>
           <h3 className="hero-descrizione">
             {t("home.descrizione")}
           </h3>
@@ -26,9 +26,9 @@ export default async function Home() {
           <Badge
             nome="Carlos"
             cognome="David"
-            ruolo="UX/UI Designer & Web Designer"
+            ruolo={t("chiSono.ruolo")}
             luogo={t("home.luogo")}
-            intestazione="Portfolio"
+            intestazione={t("chiSono.portfolio")}
             colore="#e5331cdd"
             foto="/immagini/foto.jpg"
             descrizioneFoto={t("home.foto", { nome: "Carlos David" })}
