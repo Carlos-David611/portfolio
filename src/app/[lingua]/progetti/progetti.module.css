@@ -17,7 +17,13 @@
 .griglia {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1.75rem;
+  gap: 2.25rem;
+}
+
+/* il posto della card: dà la prospettiva e legge il cursore (CardInclinata.js) */
+.posto {
+  /* più è basso, più la profondità è forte */
+  perspective: 1100px;
 }
 
 /* ---------- la card ----------
@@ -36,29 +42,87 @@
   /* la larghezza di una costa del vetro */
   --costa: 22px;
 
+  /* quanto sporgono i contenuti: 0 a riposo, 1 col cursore sopra */
+  --alza: 0;
+
   position: relative;
-  isolation: isolate;
   display: flex;
   flex-direction: column;
+  height: 100%;
   margin: 0;
   padding: 2.25rem;
-  overflow: hidden;
+  /* niente overflow: hidden: appiattirebbe il 3D. Il vetro si ritaglia da solo (.fractal) */
+  transform-style: preserve-3d;
+  /* la posa di riposo, un poco coricata come i box del sito. --rx e --ry: il cursore */
+  transform: rotateX(var(--rx, 5deg)) rotateY(var(--ry, 0deg)) translateZ(calc(14px * var(--alza)));
+  transform-origin: center 60%;
   border-radius: 28px;
   color: var(--f-testo);
   background: var(--f-fondo);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.3),
-    0 2px 0 #1a2236,
-    0 4px 0 #141a2a,
-    0 6px 0 #0e131f,
-    0 30px 50px rgba(0, 0, 0, 0.55);
-  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.5s, box-shadow 0.5s;
+    /* riflessi sui bordi */
+    inset 0 2px 1px rgba(255, 255, 255, 0.45),
+    inset 2px 0 2px rgba(255, 255, 255, 0.12),
+    inset -2px 0 2px rgba(0, 0, 0, 0.3),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.45),
+    /* lo spessore della lastra */
+    0 2px 0 #35466a,
+    0 4px 0 #2b3a5a,
+    0 6px 0 #22304c,
+    0 8px 0 #1a263f,
+    0 10px 0 #141d32,
+    0 12px 0 #0f1727,
+    0 14px 0 #0b111d,
+    /* l'ombra sulla pagina */
+    0 24px 24px var(--ombra-vicina),
+    0 50px 70px var(--ombra-lontana);
+  --ombra-vicina: rgba(0, 0, 0, 0.5);
+  --ombra-lontana: rgba(0, 0, 0, 0.6);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.5s;
 }
 
+:global(:root[data-tema="giorno"]) .card {
+  --ombra-vicina: rgba(30, 58, 95, 0.3);
+  --ombra-lontana: rgba(30, 58, 95, 0.38);
+}
+
+.posto:hover .card {
+  --alza: 1;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* i contenuti stanno sopra il vetro, ognuno alla sua altezza (--quota) */
 .card > :not(.fractal) {
+  --quota: 20px;
   position: relative;
   z-index: 1;
+  translate: 0 0 calc(var(--quota) * var(--alza));
+  transition: translate 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.card > .cardTesta {
+  --quota: 38px;
+}
+
+.card > .titolo {
+  --quota: 38px;
+}
+
+.card > .bottone {
+  --quota: 34px;
+}
+
+/* il riflesso che segue il cursore sulla lastra */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--luce-x, 25%) var(--luce-y, 0%), rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.05) 32%, transparent 55%);
+  opacity: calc(0.55 + 0.45 * var(--alza));
 }
 
 /* ---------- il vetro fractal ---------- */
@@ -133,11 +197,11 @@
   }
 }
 
-.card:nth-child(2n) .flusso {
+.posto:nth-child(2n) .flusso {
   animation-delay: -12s;
 }
 
-.card:nth-child(2n) .sfalsato {
+.posto:nth-child(2n) .sfalsato {
   animation-delay: -12.8s, -3.5s;
 }
 
@@ -186,12 +250,7 @@
   transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
 }
 
-.card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(255, 90, 54, 0.35);
-}
-
-.card:hover::after {
+.posto:hover .card::after {
   transform: scaleX(1);
 }
 
@@ -241,7 +300,7 @@
     radial-gradient(ellipse 60% 25% at 60% 98%, rgba(255, 255, 255, 0.22), transparent 80%);
 }
 
-.card:hover .simbolo {
+.posto:hover .simbolo {
   transform: perspective(420px) rotateX(0deg) rotateY(0deg) translateY(-3px) scale(1.08);
 }
 
@@ -262,7 +321,7 @@
   transition: -webkit-text-stroke-color 0.4s;
 }
 
-.card:hover .numero {
+.posto:hover .numero {
   -webkit-text-stroke-color: var(--accento);
 }
 
@@ -379,6 +438,15 @@
     padding: 1.75rem;
   }
 
+  /* sul telefono le card sono alte: con meno gradi non si stringono in cima */
+  .card {
+    transform: rotateX(var(--rx, 2deg)) rotateY(var(--ry, 0deg));
+  }
+
+  .griglia {
+    gap: 2.75rem;
+  }
+
   .simbolo {
     width: 84px;
     height: 84px;
@@ -387,16 +455,17 @@
 
 @media (prefers-reduced-motion: reduce) {
   .card,
-  .card:hover {
+  .posto:hover .card {
+    --alza: 0;
     transform: none;
     transition: none;
   }
 
-  .card:hover .simbolo,
+  .posto:hover .simbolo,
   .simbolo {
     transform: perspective(420px) rotateX(14deg) rotateY(-10deg);
     transition: none;
   }
 }
 
-/* niente tema giorno: le card hanno gli stessi colori di giorno e di notte, come le certificazioni */
+/* tema giorno: cambia solo l'ombra, le card hanno gli stessi colori di giorno e di notte */
