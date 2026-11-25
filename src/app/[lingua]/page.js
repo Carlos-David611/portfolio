@@ -1,5 +1,5 @@
-import { leggiLinguaPagina } from "@/i18n/server";
-import { metadati } from "@/i18n/seo";
+import { leggiLinguaPagina } from "@/gestione-lingua/server";
+import { metadati } from "@/gestione-lingua/seo";
 import Badge from "@/components/Badge";
 import { competenze, strumenti } from "@/data/competenze";
 import VideoPrototipi from "@/components/VideoPrototipi";

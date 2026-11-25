@@ -33,7 +33,6 @@
   initial-value: 85%;
 }
 
-/* 1 quando il cursore è sopra (o il dito preme): registrata anche lei, così si accende sfumando */
 @property --sopra {
   syntax: "<number>";
   inherits: true;
@@ -52,19 +51,16 @@
   --neon-1: #ff5a36;
   --neon-2: #e5321c;
   --neon-3: #ffb347;
-  /* quanto è acceso: il massimo tra la vicinanza del cursore e il passaggio sopra / il tocco */
   /* --accesa: sul telefono il neon è sempre acceso (vedi il blocco "Telefono e tablet") */
   --forza: max(var(--vicino), var(--sopra), var(--accesa, 0));
 
   isolation: isolate;
   overflow: hidden;
   color: var(--testo);
-  /* 1. il vetro fumé, leggermente opaco */
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015)),
     rgba(16, 13, 12, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  /* bordi: sottili riflessi di luce in alto e sui lati, e un alone esterno solo quando si accende */
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.32),
     inset 1px 0 0 rgba(255, 255, 255, 0.07),
@@ -121,13 +117,10 @@
   pointer-events: none;
   border-radius: inherit;
   background:
-    /* il riflesso freddo in alto, come su una lastra */
     linear-gradient(180deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.02) 45%, transparent 60%),
-    /* un velo fumé che smorza il neon: senza, sembrerebbe colore stampato sopra */
     rgba(18, 14, 13, 0.22);
 }
 
-/* focus da tastiera e dito premuto: acceso al massimo */
 .vetro-neon.vetro-neon:focus-visible,
 .vetro-neon.vetro-neon:active {
   --sopra: 1;
@@ -143,7 +136,6 @@
   }
 }
 
-/* disattivato: niente luce */
 .vetro-neon.vetro-neon:disabled {
   --sopra: 0;
   --vicino: 0;
@@ -173,9 +165,7 @@
     0 0 calc(20px * var(--forza)) rgba(47, 120, 224, calc(0.4 * var(--forza)));
 }
 
-/* il gradiente di luce: acceso come di notte, azzurro e ciano */
 :root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte)::before {
-  /* le luci sono più larghe che di notte: sul blu pieno quelle piccole si perderebbero */
   background:
     radial-gradient(
       circle at calc(22% + var(--mx) * 0.556) calc(22% + var(--my) * 0.556),
@@ -192,7 +182,6 @@
   filter: blur(7px) saturate(130%);
 }
 
-/* il velo blu che smorza il neon */
 :root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte)::after {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 45%, transparent 60%),
@@ -233,7 +222,6 @@
     0 0 calc(22px * var(--forza)) rgba(229, 50, 28, calc(0.28 * var(--forza)));
 }
 
-/* il neon nasce da spento invece che da brace */
 .vetro-neon.vetro-neon.vetro-neon-latente::before {
   opacity: calc(0.95 * var(--forza));
 }
@@ -243,7 +231,6 @@
 }
 
 :root[data-tema="giorno"] .vetro-neon.vetro-neon:not(.vetro-neon-notte).vetro-neon-latente {
-  /* nella navbar il testo resta scuro: il vetro si tinge appena di blu */
   color: var(--testo);
   background: rgba(30, 58, 95, calc(0.1 * var(--forza)));
   border-color: rgba(30, 58, 95, calc(0.3 * var(--forza)));
@@ -288,13 +275,10 @@
     --accesa: 0.75;
   }
 
-  /* la luce si sposta e pulsa piano. Si animano solo translate e opacity:
-     li muove la scheda grafica, il telefono non fatica */
   .vetro-neon.vetro-neon:not(.vetro-neon-latente)::before {
     animation: neon-vive 6s ease-in-out infinite alternate;
   }
 
-  /* il sollevamento: mentre il dito preme e per un attimo dopo (data-sollevata) */
   .vetro-neon.vetro-neon:not(.vetro-neon-latente):active,
   .vetro-neon.vetro-neon[data-sollevata] {
     --sopra: 1;
@@ -302,7 +286,6 @@
     border-color: rgba(255, 140, 110, 0.45);
   }
 
-  /* disattivata: spenta e ferma */
   .vetro-neon.vetro-neon:disabled {
     --accesa: 0;
   }
@@ -327,7 +310,6 @@
   }
 }
 
-/* chi ha chiesto meno movimento: la luce cambia, ma senza animazioni */
 @media (prefers-reduced-motion: reduce) {
   .vetro-neon.vetro-neon,
   .vetro-neon.vetro-neon::before,

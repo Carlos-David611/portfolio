@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import SelettoreLingua from "@/components/SelettoreLingua";
-import { PAGINE, percorso } from "@/i18n/config";
-import { useLingua } from "@/i18n/lingua";
+import { PAGINE, percorso } from "@/gestione-lingua/config";
+import { useLingua } from "@/gestione-lingua/lingua";
 import BottoneTema from "@/components/BottoneTema";
 import Sfondo from "@/components/Sfondo";
 import styles from "./Navbar.module.css";
@@ -13,7 +13,6 @@ import styles from "./Navbar.module.css";
 const MENU_BURGER = "(max-width: 768px)";
 const DURATA_LETTERA = 300;
 const RITARDO_LETTERA = 12;
-
 
 const preparaGalleria = () => import("./three-galleria").catch(() => {});
 
@@ -40,7 +39,6 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    // solo dove c'è il menu burger
     if (!window.matchMedia(MENU_BURGER).matches) return;
     const pronto = () => setSfondoPronto(true);
     if ("requestIdleCallback" in window) {
@@ -87,7 +85,6 @@ export default function Navbar() {
   function vai(evento, href, label) {
     const menuBurger = window.matchMedia(MENU_BURGER).matches;
     const menoMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // su computer, per chi riduce i movimenti, o aprendo in un'altra scheda: subito, senza giro
     if (!menuBurger || menoMovimento || evento.metaKey || evento.ctrlKey || evento.shiftKey) {
       setAperto(false);
       return;

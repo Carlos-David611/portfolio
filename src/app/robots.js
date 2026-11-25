@@ -1,5 +1,4 @@
-// /robots.txt: i motori di ricerca possono leggere tutto, e qui trovano la sitemap
-import { SITO } from "@/i18n/config";
+import { SITO } from "@/gestione-lingua/config";
 
 export default function robots() {
   return {

@@ -2,13 +2,9 @@
    TIMELINE ESPERIENZE
    ========================================================== */
 
-/* niente box: la timeline sta direttamente sullo sfondo della pagina */
 .timeline {
   position: relative;
-  /* sotto niente: lo spazio prima del footer lo danno pagina e footer, uguale per tutte le pagine */
   margin: 2rem 0 0;
-  /* due colonne: la linea del tempo a sinistra, il resto a destra.
-     auto = larga quanto serve alle date; gap = la distanza tra linea e contenuto */
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: clamp(2.5rem, 5vw, 4.5rem);
@@ -27,14 +23,12 @@
 
 /* ---------- Le tre colonne: frecce | anni | dettagli ---------- */
 .corpo {
-  /* nel codice viene prima della linea del tempo: qui decidiamo la colonna */
   grid-column: 2;
   grid-row: 1;
   display: grid;
   
   grid-template-columns: clamp(13rem, 20vw, 16rem) minmax(0, 1fr);
   gap: clamp(1.5rem, 3vw, 3rem);
-  /* altezza fissa minima: così cambiando esperienza la linea a fianco non "salta" */
   min-height: 380px;
 }
 
@@ -52,7 +46,6 @@
   }
 }
 
-/* l'aspetto (vetro fumé con il neon sotto) viene da .vetro-neon in vetro-neon.css */
 .freccia {
   display: grid;
   place-items: center;
@@ -73,7 +66,6 @@
   stroke-linejoin: round;
 }
 
-/* :not(:disabled): l'hover vale solo se la freccia si può usare */
 .freccia:hover:not(:disabled) {
   transform: translateY(-2px);
 }
@@ -99,7 +91,6 @@
   color: var(--grigio);
 }
 
-/* la lineetta prima dei mesi */
 .lineetta {
   display: inline-block;
   width: clamp(30px, 5vw, 70px);
@@ -109,7 +100,6 @@
 
 .annoGrande {
   margin: 0.5rem 0 0;
-  /* come "Carlos David" nella home */
   font-size: clamp(3.5rem, 7vw, 6.5rem);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -172,7 +162,6 @@
 }
 
 .descrizione {
-  /* come il testo di presentazione nella home */
   max-width: 600px;
   margin: 0 0 1.5rem;
   color: rgba(255, 255, 255, 0.7);
@@ -180,7 +169,6 @@
   line-height: 1.6;
 }
 
-/* l'elenco con i pallini arancioni, come gli obiettivi dei Progetti */
 .tecnologie {
   display: grid;
   gap: 0.4rem;
@@ -236,7 +224,6 @@
   );
 }
 
-/* ogni voce occupa lo stesso spazio: i pallini si distribuiscono da soli */
 .linea li {
   flex: 1;
   display: flex;
@@ -257,7 +244,6 @@
   cursor: pointer;
 }
 
-/* il contorno da tastiera: chi naviga con Tab deve vedere dove si trova */
 .punto:focus-visible,
 .freccia:focus-visible {
   outline: 2px solid var(--accento);
@@ -300,7 +286,6 @@
   color: #fff;
 }
 
-/* il cono di luce sopra il pallino attivo */
 .attivo .pallino::before {
   content: "";
   position: absolute;
@@ -346,7 +331,6 @@
     order: 2;
   }
 
-  /* le frecce in fila e girate: su = indietro (sinistra), giù = avanti (destra) */
   .frecce {
     order: 3;
     flex-direction: row;
@@ -358,7 +342,6 @@
     transform: rotate(-90deg);
   }
 
-  /* sul telefono la linea del tempo sta sotto e torna orizzontale */
   .timeline {
     display: flex;
     flex-direction: column;
@@ -373,7 +356,6 @@
     overflow-x: auto;
   }
 
-  /* top: 21px = metà del pallino + il padding del bottone */
   .linea::before {
     top: 21px;
     bottom: auto;
@@ -396,7 +378,6 @@
   }
 }
 
-/* per chi ha chiesto al sistema di ridurre i movimenti */
 @media (prefers-reduced-motion: reduce) {
   .attivo .pallino::before {
     animation: none;

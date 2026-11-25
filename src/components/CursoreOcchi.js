@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useLingua } from "@/i18n/lingua";
+import { useLingua } from "@/gestione-lingua/lingua";
 import styles from "./CursoreOcchi.module.css";
 
 // ---------- le regolazioni ----------
@@ -44,7 +44,6 @@ function Pillola() {
   useEffect(() => {
     const el = pillola.current;
 
-    // misure in px lette dal CSS: si ricalcolano se cambia la finestra (o lo zoom)
     let h = 36, w = 128, centroOcchiX = 0, corsa = 0;
     function misura() {
       const stile = getComputedStyle(el);
@@ -52,15 +51,12 @@ function Pillola() {
       w = el.offsetWidth || h * 3.556;
       const occhio = h * OCCHIO;
       const pupilla = occhio * PUPILLA;
-      // centro della coppia di occhi rispetto all'angolo della pillola (padding = 0.33h)
       centroOcchiX = h * 0.33 + occhio + 0.5;
       corsa = ((occhio - pupilla) / 2) * CORSA_PUPILLA;
     }
     misura();
 
-    // dove sta il puntatore, dove sta la pillola, la velocità del puntatore
     let px = -100, py = -100, x = -100, y = -100, vx = 0, vy = 0;
-    // "mouse" o "dito": cambia dove si mette la pillola rispetto al puntatore
     let modo = "mouse";
     let visto = false;
     let sopraInterattivo = false;
@@ -69,39 +65,32 @@ function Pillola() {
     function bersaglio() {
       let mx, my;
       if (modo === "mouse") {
-        // in basso a destra della freccia, così non copre quello che indichi
         mx = px + h * 0.5;
         my = py + h * 0.6;
       } else {
-        // sopra il dito, centrata (sotto il dito non si vedrebbe); vicino al bordo alto va sotto
         mx = px - w / 2;
         my = py - h * 2.4;
         if (my < MARGINE) my = py + h * 1.4;
       }
-      // sempre dentro lo schermo
       mx = Math.min(Math.max(mx, MARGINE), innerWidth - w - MARGINE);
       my = Math.min(Math.max(my, MARGINE), innerHeight - h - MARGINE);
       return [mx, my];
     }
 
     function passo() {
-      // la pillola insegue il puntatore con un ritardo (la "scia")
       const [mx, my] = bersaglio();
       x += (mx - x) * SCIA;
       y += (my - y) * SCIA;
-      // la velocità si smorza da sola quando il mouse si ferma
       vx *= 0.85;
       vy *= 0.85;
       el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
 
-      // lo sguardo: dal centro degli occhi verso il puntatore (+ dove si sta andando)
       let gx = px - (x + centroOcchiX);
       let gy = py - (y + h / 2);
       if (GUARDA_DOVE_VA) {
         gx += vx * 6;
         gy += vy * 6;
       }
-      // fino a GUADAGNO_SGUARDO px la pupilla si sposta in proporzione, poi resta in fondo
       const d = Math.hypot(gx, gy);
       const k = d > 0 ? Math.min(d / GUADAGNO_SGUARDO, 1) / d : 0;
       const ox = (gx * k * corsa).toFixed(2);
@@ -109,7 +98,6 @@ function Pillola() {
       // filter: cambiando lingua la pillola si ricrea, e per un istante questi elementi non ci sono
       for (const p of pupille.current.filter(Boolean)) p.style.transform = `translate(${ox}px, ${oy}px)`;
 
-      // si ferma quando è tutto fermo: niente lavoro inutile per il computer
       const fermo = Math.abs(mx - x) < 0.1 && Math.abs(my - y) < 0.1 && Math.abs(vx) + Math.abs(vy) < 0.05;
       fotogramma = fermo ? 0 : requestAnimationFrame(passo);
     }
@@ -123,7 +111,6 @@ function Pillola() {
       px = cx;
       py = cy;
       if (!visto || nuovoModo !== modo) {
-        // al primo movimento compare già al suo posto, senza volare dall'angolo
         modo = nuovoModo;
         visto = true;
         [x, y] = bersaglio();
@@ -144,7 +131,6 @@ function Pillola() {
       if (e.pointerType === "touch") return;
       segui(e.clientX, e.clientY, e.target, "mouse");
     }
-    // il mouse esce dalla finestra: la pillola sparisce, e ricompare al rientro
     function esci(e) {
       if (modo === "mouse" && !e.relatedTarget) {
         delete el.dataset.visibile;
@@ -152,7 +138,6 @@ function Pillola() {
       }
     }
 
-    // dito: segue mentre tocchi o scorri, poi resta un attimo e sfuma
     let timerNascondi = 0;
     function tocca(e) {
       const t = e.touches[0];
@@ -171,7 +156,6 @@ function Pillola() {
       }, RESTA_DOPO_TOCCO);
     }
 
-    // il battito di palpebre, a intervalli un po' casuali
     let timerBattito = 0, timerApri = 0;
     function prossimoBattito() {
       const attesa = BATTITO_OGNI * (1 + (Math.random() * 2 - 1) * CASUALITA);
@@ -180,12 +164,11 @@ function Pillola() {
         timerApri = setTimeout(() => {
           for (const o of occhi.current.filter(Boolean)) delete o.dataset.chiuso;
           prossimoBattito();
-        }, BATTITO_DURATA / 2); // metà per chiudersi, metà per riaprirsi
+        }, BATTITO_DURATA / 2);
       }, attesa);
     }
     prossimoBattito();
 
-    // passive: non bloccano mai lo scorrimento della pagina
     window.addEventListener("pointermove", muovi, { passive: true });
     document.addEventListener("pointerout", esci);
     window.addEventListener("touchstart", tocca, { passive: true });

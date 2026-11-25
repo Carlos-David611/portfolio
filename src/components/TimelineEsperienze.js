@@ -1,20 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useLingua } from "@/i18n/lingua";
+import { useLingua } from "@/gestione-lingua/lingua";
 import styles from "@/app/[lingua]/esperienze/esperienze.module.css";
 
-// da "2025-04-01" ricava i pezzi che ci servono
 function leggiData(testo) {
   const [anno, mese, giorno] = testo.split("-");
   return {
-    anno,                          // "2025"
-    mese: Number(mese),            // 4: il nome del mese sta nei testi (timeline.mese4)
-    data: `${giorno}.${mese}.${anno}`, // "01.04.2025"
+    anno,
+    mese: Number(mese),
+    data: `${giorno}.${mese}.${anno}`,
   };
 }
 
-// il contenuto di una singola esperienza
 function Dettagli({ esperienza }) {
   const inizio = leggiData(esperienza.inizio);
   const fine = leggiData(esperienza.fine);
@@ -24,7 +22,6 @@ function Dettagli({ esperienza }) {
       <div className={styles.intestazione}>
         <div>
           <h2 className={styles.azienda}>{esperienza.azienda}</h2>
-          {/* && = mostra la riga solo se luogo non è vuoto */}
           {esperienza.luogo && <p className={styles.luogo}>{esperienza.luogo}</p>}
         </div>
         <p className={styles.periodo}>
@@ -48,7 +45,6 @@ function Dettagli({ esperienza }) {
 
 export default function TimelineEsperienze({ esperienze }) {
   const { t } = useLingua();
-  // si parte dall'ultima esperienza, la più recente
   const [attiva, setAttiva] = useState(esperienze.length - 1);
   const linea = useRef(null);
   const primaVolta = useRef(true);
@@ -58,11 +54,10 @@ export default function TimelineEsperienze({ esperienze }) {
   // Si muove solo la linea (scrollTo sul suo contenitore), non la pagina
   useEffect(() => {
     const el = linea.current;
-    if (!el || el.scrollWidth <= el.clientWidth) return; // tutta in vista: non serve
+    if (!el || el.scrollWidth <= el.clientWidth) return;
     const voce = el.children[attiva];
     const centro = voce.offsetLeft - (el.clientWidth - voce.offsetWidth) / 2;
     const fermo = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // la prima volta senza animazione: la pagina si apre già con la data giusta in vista
     el.scrollTo({ left: centro, behavior: primaVolta.current || fermo ? "auto" : "smooth" });
     primaVolta.current = false;
   }, [attiva]);
@@ -71,8 +66,6 @@ export default function TimelineEsperienze({ esperienze }) {
   const inizio = leggiData(esperienza.inizio);
   const fine = leggiData(esperienza.fine);
 
-  // se inizia e finisce nello stesso anno, sopra mostriamo i mesi
-  // altrimenti l'anno di inizio (come nell'esempio: 2023 sopra, 2024 sotto)
   const stessoAnno = inizio.anno === fine.anno;
 
   const primaEsperienza = attiva === 0;
@@ -81,7 +74,6 @@ export default function TimelineEsperienze({ esperienze }) {
   return (
     <section className={styles.timeline} aria-label={t("timeline.elenco")}>
       <div className={styles.corpo}>
-        {/* le frecce: disabled = non cliccabili quando non c'è altro */}
         <div className={styles.frecce}>
           <button
             type="button"
@@ -107,7 +99,6 @@ export default function TimelineEsperienze({ esperienze }) {
           </button>
         </div>
 
-        {/* gli anni grandi: aria-hidden perché le date le legge già "periodo" */}
         <div className={styles.anni} aria-hidden="true">
           <p className={styles.annoPiccolo}>
             <span className={styles.lineetta} />
@@ -117,7 +108,6 @@ export default function TimelineEsperienze({ esperienze }) {
         </div>
 
         <div className={styles.dettagliPila}>
-          {/* aria-live: chi usa uno screen reader sente il nuovo contenuto quando cambia */}
           <div aria-live="polite">
             <Dettagli esperienza={esperienza} />
           </div>
@@ -133,7 +123,6 @@ export default function TimelineEsperienze({ esperienze }) {
         </div>
       </div>
 
-      {/* la linea del tempo: un pallino cliccabile per ogni esperienza */}
       <ol ref={linea} className={styles.linea}>
         {esperienze.map((voce, posizione) => {
           const data = leggiData(voce.inizio);
@@ -145,7 +134,6 @@ export default function TimelineEsperienze({ esperienze }) {
                 type="button"
                 className={`${styles.punto} ${selezionata ? styles.attivo : ""}`}
                 onClick={() => setAttiva(posizione)}
-                // aria-current: dice agli screen reader quale è quella selezionata
                 aria-current={selezionata ? "step" : undefined}
                 aria-label={`${voce.azienda}, ${t(`timeline.mese${data.mese}`)} ${data.anno}`}
               >

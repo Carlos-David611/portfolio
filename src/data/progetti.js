@@ -1,5 +1,5 @@
-// Aggiungi qui i tuoi progetti, ad esempio:
-// { titolo: "Nome progetto", descrizione: "...", tecnologie: "...", link: "https://..." },
+// Per aggiungere un progetto copia un blocco. Testi da tradurre: { it, en, de, es }.
+// simbolo è facoltativo: il logo quadrato nella lente di vetro (public/immagini/progetti)
 export const progetti = [
   {
     slug: "primo-progetto",

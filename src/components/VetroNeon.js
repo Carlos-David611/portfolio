@@ -1,7 +1,5 @@
 "use client";
 
-
-
 import { useEffect } from "react";
 
 // da quanti px di distanza il neon comincia ad accendersi
@@ -10,7 +8,6 @@ const RAGGIO = 140;
 export default function VetroNeon() {
   useEffect(() => {
     const mouse = window.matchMedia("(hover: hover) and (pointer: fine)");
-    // lista "viva": include anche le CTA che compaiono dopo
     const cta = document.getElementsByClassName("vetro-neon");
     let px = -1e4, py = -1e4, fotogramma = 0;
 
@@ -18,7 +15,6 @@ export default function VetroNeon() {
       fotogramma = 0;
       for (const el of cta) {
         const r = el.getBoundingClientRect();
-        // fuori dallo schermo o nascosta: spenta
         if (r.width === 0 || r.bottom < -RAGGIO || r.top > innerHeight + RAGGIO) {
           if ("neon" in el.dataset) {
             el.style.setProperty("--vicino", "0");
@@ -26,16 +22,13 @@ export default function VetroNeon() {
           }
           continue;
         }
-        // distanza dal bordo del pulsante (0 se il cursore è sopra)
         const dx = Math.max(r.left - px, 0, px - r.right);
         const dy = Math.max(r.top - py, 0, py - r.bottom);
         const d = Math.hypot(dx, dy);
         const lineare = Math.max(0, 1 - d / RAGGIO);
-        // curva: cresce piano da lontano e in fretta vicino
         const vicino = lineare * lineare;
         if (vicino === 0 && !("neon" in el.dataset)) continue;
 
-        // dove sta il cursore sul pulsante, anche un po' fuori dai bordi
         const mx = Math.min(Math.max(((px - r.left) / r.width) * 100, -20), 120);
         const my = Math.min(Math.max(((py - r.top) / r.height) * 100, -20), 120);
         el.style.setProperty("--vicino", vicino.toFixed(3));
@@ -55,7 +48,6 @@ export default function VetroNeon() {
       py = e.clientY;
       pianifica();
     }
-    // il mouse esce dalla finestra: si spegne tutto
     function esci(e) {
       if (!e.relatedTarget) {
         px = py = -1e4;
@@ -67,7 +59,6 @@ export default function VetroNeon() {
       scollega();
       if (!mouse.matches) return;
       window.addEventListener("pointermove", muovi, { passive: true });
-      // scorrendo la pagina i pulsanti si spostano sotto il cursore fermo
       window.addEventListener("scroll", pianifica, { passive: true });
       document.addEventListener("pointerout", esci);
     }
@@ -88,7 +79,6 @@ export default function VetroNeon() {
 
     function tocco(e) {
       if (!dito.matches || e.defaultPrevented || e.button !== 0) return;
-      // la CTA toccata: il pulsante stesso, o quella dentro il link toccato (es. il cerchio dei contatti)
       const link = e.target.closest("a[href]");
       const el =
         e.target.closest(".vetro-neon:not(.vetro-neon-latente)") ??

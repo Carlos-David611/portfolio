@@ -19,9 +19,6 @@ export default function TestoRitardato({ className, children }) {
     const box = contenitore.current;
     const elemento = testo.current;
 
-    // sul telefono il badge sta sotto il testo; chi riduce i movimenti non vede l'effetto.
-    // hover: hover = solo con il mouse: col dito (tablet) il testo resterebbe indietro
-    // durante lo scroll veloce e finirebbe sopra le sezioni sotto
     const attivo = window.matchMedia(
       "(min-width: 769px) and (hover: hover) and (prefers-reduced-motion: no-preference)"
     );
@@ -65,7 +62,6 @@ export default function TestoRitardato({ className, children }) {
       storia.push({ tempo: adesso, y });
       while (storia.length > 1 && storia[1].tempo <= adesso - RITARDO) storia.shift();
 
-      // il punto che il testo deve raggiungere è dove era la pagina poco fa
       const obiettivo = storia[0].tempo <= adesso - RITARDO ? storia[0].y : posizione;
       posizione += (obiettivo - posizione) * VELOCITA;
 

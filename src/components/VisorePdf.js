@@ -5,10 +5,9 @@
 // (preparaPdf), così all'apertura il PDF è già pronto o quasi.
 
 import { useEffect, useId, useRef, useState } from "react";
-import { useLingua } from "@/i18n/lingua";
+import { useLingua } from "@/gestione-lingua/lingua";
 import styles from "./VisorePdf.module.css";
 
-// ---------- PDF pronti in anticipo ----------
 let lettore = null;
 export function caricaLettore() {
   if (!lettore) {
@@ -35,11 +34,10 @@ export function preparaPdf(url) {
   return documenti.get(url);
 }
 
-// ---------- il foglio con le pagine del PDF ----------
 function FoglioPdf({ pdf, titolo }) {
   const { t } = useLingua();
   const contenitore = useRef(null);
-  const [stato, setStato] = useState("carica"); // "carica" | "pronto" | "errore"
+  const [stato, setStato] = useState("carica");
 
   useEffect(() => {
     const dove = contenitore.current;
@@ -51,10 +49,8 @@ function FoglioPdf({ pdf, titolo }) {
         for (let numero = 1; numero <= documento.numPages; numero++) {
           const pagina = await documento.getPage(numero);
           if (annullato) return;
-          // la grandezza che fa stare la pagina intera nel foglio
           const originale = pagina.getViewport({ scale: 1 });
           const adatta = Math.min(dove.clientWidth / originale.width, dove.clientHeight / originale.height);
-          // più punti sugli schermi nitidi (max 2 per non pesare)
           const nitidezza = Math.min(window.devicePixelRatio || 1, 2);
           const vista = pagina.getViewport({ scale: adatta * nitidezza });
 
@@ -79,7 +75,6 @@ function FoglioPdf({ pdf, titolo }) {
     }
 
     disegna();
-    // il documento resta in memoria (sono pochi e piccoli): riaprendolo è subito pronto
     return () => {
       annullato = true;
       dove.replaceChildren();
@@ -114,7 +109,6 @@ export default function VisorePdf({ cert, alChiudere }) {
   const idTitolo = useId();
   const [chiusura, setChiusura] = useState(false);
 
-  // si apre quando arriva un certificato
   useEffect(() => {
     if (cert && !visore.current.open) {
       setChiusura(false);
@@ -129,7 +123,6 @@ export default function VisorePdf({ cert, alChiudere }) {
       alChiudere();
       return;
     }
-    // breve dissolvenza in uscita, poi si chiude davvero
     setChiusura(true);
     setTimeout(() => {
       visore.current?.close();
@@ -148,7 +141,6 @@ export default function VisorePdf({ cert, alChiudere }) {
         chiudi();
       }}
     >
-      {/* il fondo scuro: toccandolo il visore si chiude */}
       <div className={styles.fondo} onClick={chiudi} />
 
       {cert && (
@@ -168,7 +160,6 @@ export default function VisorePdf({ cert, alChiudere }) {
           </header>
 
           <div className={styles.foglio}>
-            {/* key: cambiando certificato il foglio riparte da zero */}
             <FoglioPdf key={cert.pdf} pdf={cert.pdf} titolo={t("visore.titolo", { nome: cert.nome })} />
           </div>
         </div>

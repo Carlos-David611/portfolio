@@ -4,11 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 export default function VideoPrototipi({ src, poster, descrizione }) {
   const videoRef = useRef(null);
-  // diventa true quando il video si avvicina: solo allora si scaricano video e anteprima
   const [caricato, setCaricato] = useState(false);
 
-  // 1) si scarica in anticipo, quando mancano ancora 800px alla sezione:
-  //    così quando ci arrivi è già pronto e parte subito
   useEffect(() => {
     const video = videoRef.current;
     const osservatore = new IntersectionObserver(
@@ -24,9 +21,6 @@ export default function VideoPrototipi({ src, poster, descrizione }) {
     return () => osservatore.disconnect();
   }, []);
 
-  // 2) appena ha la sua sorgente parte e non si ferma più: gira in continuo, anche fuori schermo.
-  //    Gira solo dopo che il video ha la sua sorgente: prima, play() fallirebbe
-  //    (era il motivo per cui sul telefono non partiva)
   useEffect(() => {
     if (!caricato) return;
     const video = videoRef.current;
@@ -39,7 +33,6 @@ export default function VideoPrototipi({ src, poster, descrizione }) {
     // rallenta lo scorrimento di tutta la pagina. Riparte 300px prima di comparire
     let vicino = true;
     const riparti = () => {
-      // con la scheda nascosta il browser lo ferma per risparmiare: riparte quando torni
       if (vicino && !document.hidden) video.play().catch(() => {});
     };
     const osservatore = new IntersectionObserver(
@@ -53,7 +46,6 @@ export default function VideoPrototipi({ src, poster, descrizione }) {
     osservatore.observe(video);
 
     riparti();
-    // se il browser lo mette in pausa da solo (es. per risparmiare batteria), riparte
     video.addEventListener("pause", riparti);
     document.addEventListener("visibilitychange", riparti);
     return () => {

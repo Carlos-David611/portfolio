@@ -52,7 +52,6 @@ article {
   color: var(--testo);
 }
 
-/* i link delle card */
 article a {
   color: var(--accento);
 }
@@ -93,8 +92,6 @@ article a {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: 1.5rem;
-  /* nessuna altezza minima: alta quanto il suo contenuto. Con 100vh, sugli schermi
-     alti come i tablet in verticale, sotto il badge restava un grande vuoto */
 }
 
 .hero-saluto {
@@ -117,7 +114,6 @@ article a {
   margin: 0 0 2rem;
 }
 
-
 /* più è alto il numero, più il testo scende:
    con 11.125rem parte alla stessa altezza della card del badge (dipende dal laccio, Badge.module.css) */
 .home-testo {
@@ -132,7 +128,6 @@ article a {
 }
 
 .hero-descrizione {
-  /* è un h3, ma deve sembrare un testo normale: niente grassetto dei titoli */
   font-weight: 400;
   margin: 1.3rem 0;
   max-width: 600px;
@@ -140,7 +135,6 @@ article a {
   line-height: 1.6;
 }
 
-/* la colonna del badge parte da dietro la navbar e scorre con la pagina */
 .home-badge {
   align-self: start;
   display: flex;
@@ -149,7 +143,6 @@ article a {
   margin-top: calc(-2rem - 40px);
 }
 
-/* il badge sfuma mentre esce in alto (solo nei browser che lo supportano) */
 @supports (animation-timeline: view()) {
   .home-badge {
     animation: badge-esce linear both;
@@ -171,8 +164,6 @@ article a {
     grid-template-columns: 1fr;
   }
 
-  /* qui il badge sta sotto il testo: non serve allinearli.
-     padding-top è la distanza tra la navbar e la scritta */
   .home-testo {
     padding-top: 0.25rem;
   }
@@ -184,7 +175,6 @@ article a {
 
 }
 
-/* sui telefoni più stretti il badge da 290px non ci starebbe con i margini pieni */
 @media (max-width: 360px) {
   .contenuto {
     padding-inline: 1rem;
@@ -200,10 +190,6 @@ article a {
   background: radial-gradient(ellipse at 50% 35%, #1d1d1d 0%, #0b0b0b 55%, #050505 100%);
 }
 
-/* le macchie di luce.
-   Niente filter: blur: la sfumatura morbida la fa già il gradiente, con più passaggi verso il
-   trasparente. La sfocatura su macchie così grandi era la parte più lenta da disegnare
-   all'apertura del sito, soprattutto sui telefoni */
 .blob {
   position: absolute;
   border-radius: 50%;
@@ -262,8 +248,6 @@ article a {
   animation: muovi-3 13s ease-in-out infinite alternate;
 }
 
-/* sul telefono le macchie sono piccole: un po' più grandi e più tenui, così restano un alone
-   diffuso come prima (quando era la sfocatura ad allargarle) */
 @media (max-width: 768px) {
   .blob {
     opacity: 0.28;
@@ -287,7 +271,6 @@ article a {
   to   { transform: translate(-18vw, 12vw) scale(0.85); }
 }
 
-/* le linee curve */
 .arco {
   position: absolute;
   border-radius: 50%;
@@ -324,8 +307,6 @@ article a {
   animation: oscilla-1 20s ease-in-out infinite alternate-reverse;
 }
 
-/* l'alone degli archi: due bordi larghi e trasparenti. Non drop-shadow: su cerchi così grandi
-   e sempre in movimento pesava a ogni fotogramma */
 .arco-1::before,
 .arco-1::after,
 .arco-2::before,
@@ -389,14 +370,12 @@ article a {
 .riga-2 { font-size: 12vw; }
 .riga-3 { font-size: 6vw; letter-spacing: 0.05em; }
 
-/* sul telefono la scritta finisce dietro i testi: più tenue, così restano leggibili */
 @media (max-width: 768px) {
   .sfondo-scritta {
     opacity: 0.12;
   }
 }
 
-/* la grana */
 .grana {
   position: absolute;
   inset: 0;
@@ -405,7 +384,6 @@ article a {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* chi ha chiesto meno animazioni nel sistema operativo, le vede ferme */
 @media (prefers-reduced-motion: reduce) {
   .blob,
   .arco {
@@ -420,19 +398,16 @@ article a {
   background: rgba(9, 8, 8, 0.74);
   color: #fff;
   border-radius: 28px;
-  /* la larghezza del contenitore: esce dalla colonna centrale della pagina */
   --larghezza-competenze: min(1200px, 100vw - 3rem);
   box-sizing: border-box;
   width: var(--larghezza-competenze);
   margin: 4rem calc((100% - var(--larghezza-competenze)) / 2);
   padding: clamp(2rem, 5vw, 4rem);
-  /* la luce sulla superficie, sopra il colore di fondo */
   background-image: linear-gradient(155deg, rgba(255, 255, 255, 0.12), transparent 45%);
   /* l'inclinazione: più è alto rotateX, più il contenitore sembra coricato */
   transform: perspective(1600px) rotateX(3deg);
   transform-origin: center bottom;
   transition: transform 0.6s ease-out;
-  /* riflesso sul bordo, spessore del blocco e ombra sotto */
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.28),
     inset 0 -2px 4px rgba(0, 0, 0, 0.6),
@@ -445,20 +420,16 @@ article a {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* passando il mouse il contenitore si raddrizza e si solleva */
 .competenze:hover {
   transform: perspective(1600px) rotateX(0deg) translateY(-8px);
 }
 
-/* col dito non esiste il passaggio del mouse: dopo un tocco resterebbe bloccato sollevato */
 @media (hover: none) {
   .competenze:hover {
     transform: perspective(1600px) rotateX(3deg);
   }
 }
 
-/* sul telefono il box è molto alto: con 3 gradi la parte alta si abbasserebbe parecchio,
-   allargando lo spazio sotto il badge rispetto agli altri dispositivi */
 @media (max-width: 768px) {
   .competenze,
   .competenze:hover {
@@ -470,18 +441,14 @@ article a {
     margin-block: 2.5rem;
   }
 
-  /* l'ultima sezione non aggiunge spazio prima del footer (ci pensa il footer) */
   .competenze:last-child {
     margin-bottom: 0;
   }
 
-  /* se è la prima cosa della pagina (Contatti) parte subito sotto la navbar, come nelle altre pagine */
   .competenze:first-child {
     margin-top: 0;
   }
 
-  /* sotto il badge: l'ombra della card e l'inclinazione del box aggiungono già spazio,
-     qui ne basta meno perché la distanza sembri uguale alle altre */
   .home-hero + .competenze {
     margin-top: 1.75rem;
   }
@@ -503,13 +470,11 @@ article a {
     margin-top: 0;
   }
 
-  /* sotto il badge: ombra della card e inclinazione del box aggiungono già spazio */
   .home-hero + .competenze {
     margin-top: 1.5rem;
   }
 }
 
-/* per chi ha chiesto al sistema di ridurre i movimenti */
 @media (prefers-reduced-motion: reduce) {
   .competenze,
   .competenze:hover {
@@ -535,12 +500,10 @@ article a {
 
 .competenze-griglia {
   display: grid;
-  /* min() evita che le colonne escano dal contenitore sui telefoni */
   grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* ogni competenza */
 .competenza {
   position: relative;
   padding: 2rem 1.5rem;
@@ -549,7 +512,6 @@ article a {
   transition: background 0.4s;
 }
 
-/* la linea arancione che si allunga */
 .competenza::after {
   content: "";
   position: absolute;
@@ -581,7 +543,6 @@ article a {
   font-weight: 800;
 }
 
-/* il testo che scorre verso l'alto */
 .scorri {
   position: relative;
   display: inline-block;
@@ -619,7 +580,6 @@ article a {
   transform: translateX(6px);
 }
 
-/* la freccia che compare */
 .competenza-freccia {
   position: absolute;
   top: 2rem;
@@ -636,7 +596,6 @@ article a {
   transform: translate(0, 0) rotate(-45deg);
 }
 
-/* gli strumenti */
 .strumenti {
   display: flex;
   flex-wrap: wrap;
@@ -659,20 +618,16 @@ article a {
   transform: translateY(-3px);
 }
 
-
 /* ---------- Prototipi ----------
    il contenitore è lo stesso di Competenze (classe .competenze):
    qui c'è solo quello che riguarda il contenuto */
 .prototipi-intestazione {
   display: flex;
   justify-content: space-between;
-  /* il testo poggia sulla stessa linea della parola "Prototipi" */
   align-items: last baseline;
   gap: 2rem;
 }
 
-/* il blocco con etichetta e titolo non si stringe: "Dal design allo schermo" resta
-   su una riga, ed è il testo a destra ad andare a capo se manca spazio */
 .prototipi-intestazione > div {
   flex-shrink: 0;
 }
@@ -683,7 +638,6 @@ article a {
   font-size: 1.3rem;
 }
 
-/* la stessa linea che Competenze ha sopra la griglia */
 .prototipi-cornice {
   padding-top: 2.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
@@ -704,7 +658,6 @@ article a {
     0 20px 40px rgba(0, 0, 0, 0.5);
 }
 
-/* sul telefono il testo va sotto il titolo: meno spazio tra i due */
 @media (max-width: 768px) {
   .prototipi-intestazione {
     flex-wrap: wrap;
@@ -721,7 +674,6 @@ article a {
 }
 
 /* ---------- Pulsante giorno / notte ---------- */
-/* la "rotaia" dell'interruttore, di vetro come la navbar */
 .tema-bottone {
   position: relative;
   width: 64px;
@@ -750,9 +702,7 @@ article a {
 
   .tema-nascosto {
     opacity: 0;
-    /* si sposta verso l'alto mentre sparisce */
     transform: translateY(-12px);
-    /* visibility: da nascosto non si può premere per sbaglio */
     visibility: hidden;
   }
 }
@@ -802,7 +752,6 @@ article a {
   animation: none;
 }
 
-/* il pallino che scorre, con dentro l'icona */
 .tema-pallino {
   position: absolute;
   top: 3px;
@@ -820,7 +769,6 @@ article a {
   transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1);
 }
 
-/* le due icone stanno una sopra l'altra: se ne vede una alla volta */
 .tema-pallino svg {
   position: absolute;
   width: 16px;
@@ -828,13 +776,11 @@ article a {
   transition: opacity 0.4s, transform 0.5s;
 }
 
-/* di notte il sole è nascosto, girato e rimpicciolito */
 .icona-sole {
   opacity: 0;
   transform: rotate(-90deg) scale(0.5);
 }
 
-/* di giorno il pallino va a destra e prende il colore d'accento */
 :root[data-tema="giorno"] .tema-pallino {
   transform: translateX(30px);
   background: linear-gradient(160deg, #35588a, #1e3a5f);
@@ -899,7 +845,6 @@ article a {
   opacity: 0.2;
 }
 
-/* le linee curve */
 :root[data-tema="giorno"] .arco-1:not(.sfondo-badge *) {
   border-bottom-color: rgba(30, 58, 95, 0.75);
   border-right-color: rgba(30, 58, 95, 0.35);
@@ -930,9 +875,7 @@ article a {
 
 /* --- competenze e prototipi --- */
 :root[data-tema="giorno"] .competenze {
-  /* #f4f5f6 appena trasparente: lo sfondo animato si intravede dietro */
   background-color: rgba(244, 245, 246, 0.92);
-  /* il riflesso di luce nell'angolo */
   background-image: linear-gradient(155deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 45%);
   color: var(--testo);
   border-color: rgba(17, 19, 21, 0.08);

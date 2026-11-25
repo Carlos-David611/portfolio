@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { leggiLinguaPagina } from "@/i18n/server";
-import { metadati } from "@/i18n/seo";
+import { leggiLinguaPagina } from "@/gestione-lingua/server";
+import { metadati } from "@/gestione-lingua/seo";
 import { progetti } from "@/data/progetti";
 import styles from "./progetti.module.css";
 
@@ -17,9 +17,6 @@ export default async function ProgettiPage() {
       <div className={styles.griglia}>
         {dati(progetti).map((p, i) => (
           <article key={p.slug} className={styles.card}>
-            {/* il vetro "fractal": una fascia di colore che scorre dietro coste verticali.
-                La seconda copia, sfasata, si vede solo da una costa sì e una no: è lei che
-                fa sembrare la luce spezzata a gradini */}
             <span className={styles.fractal} aria-hidden="true">
               <span className={styles.flusso} />
               <span className={styles.strisce}>
@@ -29,8 +26,6 @@ export default async function ProgettiPage() {
 
             <div className={styles.cardTesta}>
               <span className={styles.numero}>{String(i + 1).padStart(2, "0")}</span>
-              {/* il simbolo del progetto, in una lente di vetro.
-                  alt vuoto: il nome del progetto è già scritto nel titolo */}
               {p.simbolo && (
                 <span className={styles.simbolo}>
                   <Image src={p.simbolo} alt="" width={100} height={100} />

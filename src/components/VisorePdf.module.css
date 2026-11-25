@@ -2,7 +2,6 @@
    VISORE DEL PDF: la finestra con il certificato
    ========================================================== */
 
-/* a visore aperto la pagina dietro non scorre */
 :global(html):has(.visore[open]) {
   overflow: hidden;
   scrollbar-gutter: stable;
@@ -28,7 +27,6 @@
   background: transparent;
 }
 
-/* il fondo scuro e sfocato dietro il certificato */
 .fondo {
   position: absolute;
   inset: 0;
@@ -38,7 +36,6 @@
   animation: visore-entra 0.25s ease-out both;
 }
 
-/* il pannello: entra salendo un poco e ingrandendosi */
 .pannello {
   position: relative;
   display: flex;
@@ -72,7 +69,6 @@
   }
 }
 
-/* in chiusura: tutto sfuma */
 .inChiusura .fondo,
 .inChiusura .pannello {
   animation: visore-esce 0.22s ease-in both;
@@ -149,7 +145,6 @@
   outline-offset: 2px;
 }
 
-/* il foglio bianco del certificato, con le proporzioni degli attestati */
 .foglio {
   position: relative;
   aspect-ratio: 1600 / 1190;
@@ -158,7 +153,6 @@
   background: #fff;
 }
 
-/* qui pdf.js mette le pagine: centrate, e se sono più di una si scorrono */
 .pagine {
   position: absolute;
   inset: 0;
@@ -168,7 +162,6 @@
   overflow: auto;
 }
 
-/* la pagina entra con una dissolvenza, e resta intera nel foglio a qualsiasi grandezza */
 .pdf {
   display: block;
   flex-shrink: 0;
@@ -178,7 +171,6 @@
   animation: visore-entra 0.4s ease-out;
 }
 
-/* "Caricamento…" o il messaggio di errore, al centro del foglio */
 .avviso {
   position: absolute;
   inset: 0;
@@ -196,7 +188,6 @@
   margin: 0;
 }
 
-/* l'aspetto (vetro fumé con il neon sotto) viene da .vetro-neon in vetro-neon.css */
 .apriFile {
   padding: 0.75rem 1.4rem;
   border-radius: 999px;

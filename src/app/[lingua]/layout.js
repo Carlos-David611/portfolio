@@ -6,9 +6,9 @@ import Footer from "@/components/Footer";
 import ScriptIniziale from "@/components/ScriptIniziale";
 import CursoreOcchi from "@/components/CursoreOcchi";
 import VetroNeon from "@/components/VetroNeon";
-import { LINGUA_BASE, LINGUE, SITO } from "@/i18n/config";
-import { ProviderLingua } from "@/i18n/lingua";
-import { leggiLingua } from "@/i18n/server";
+import { LINGUA_BASE, LINGUE, SITO } from "@/gestione-lingua/config";
+import { ProviderLingua } from "@/gestione-lingua/lingua";
+import { leggiLingua } from "@/gestione-lingua/server";
 import { contatti } from "@/data/contatti";
 
 export const metadata = {
@@ -18,13 +18,11 @@ export const metadata = {
   icons: { icon: "data:," },
 };
 
-// le lingue preparate in anticipo: ogni pagina è già pronta in tutte
 export const generateStaticParams = () => LINGUE.map((l) => ({ lingua: l.codice }));
 
 // le sezioni dei testi che servono ai componenti interattivi: le altre restano sul server
 const SEZIONI_BROWSER = ["menu", "tema", "lingua", "timeline", "galleria", "visore", "cursore"];
 
-// chi sei, in un formato che Google capisce (dati strutturati schema.org)
 const persona = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -62,9 +60,7 @@ export default async function RootLayout({ children }) {
           <Navbar />
           <main className="contenuto">{children}</main>
           <Footer />
-          {/* la pillola con gli occhi che segue il mouse (solo computer, si aggiunge alla freccia) */}
           <CursoreOcchi />
-          {/* accende il neon delle CTA quando il cursore si avvicina (vetro-neon.css) */}
           <VetroNeon />
         </ProviderLingua>
       </body>

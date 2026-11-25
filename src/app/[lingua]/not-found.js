@@ -1,7 +1,6 @@
-// la pagina per gli indirizzi che non esistono
 import Link from "next/link";
-import { percorso } from "@/i18n/config";
-import { leggiLingua } from "@/i18n/server";
+import { percorso } from "@/gestione-lingua/config";
+import { leggiLingua } from "@/gestione-lingua/server";
 
 export default async function NonTrovata() {
   const { lingua, t } = await leggiLingua();

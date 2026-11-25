@@ -1,5 +1,5 @@
-import { leggiLinguaPagina } from "@/i18n/server";
-import { metadati } from "@/i18n/seo";
+import { leggiLinguaPagina } from "@/gestione-lingua/server";
+import { metadati } from "@/gestione-lingua/seo";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { contatti } from "@/data/contatti";
@@ -18,16 +18,12 @@ export default async function Contatti() {
   const { t } = await leggiLinguaPagina();
 
   return (
-    // le classi del box della home: stesso vetro, stessa inclinazione
     <section className="competenze">
-      {/* il titolo grande, come quello del box Competenze in home */}
       <h1 className="competenze-titolo">{t("contatti.titolo")}</h1>
 
       <ul className={styles.lista}>
         {contatti.map((contatto) => {
-          // il nome comincia con la maiuscola: per React è un componente
           const Icona = ICONE[contatto.tipo];
-          // la mail apre il programma di posta, gli altri un nuovo sito
           const esterno = contatto.tipo !== "email";
 
           return (
@@ -35,9 +31,7 @@ export default async function Contatti() {
               <a
                 className={styles.contatto}
                 href={contatto.link}
-                // i siti esterni si aprono in una nuova scheda
                 target={esterno ? "_blank" : undefined}
-                // noopener noreferrer: la nuova scheda non può controllare il tuo sito
                 rel={esterno ? "noopener noreferrer" : undefined}
               >
                 <span className={`${styles.icona} vetro-neon`} aria-hidden="true">

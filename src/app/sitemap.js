@@ -1,5 +1,4 @@
-// /sitemap.xml: l'elenco di tutte le pagine in tutte le lingue, per i motori di ricerca
-import { LINGUE, PAGINE, SITO, percorso } from "@/i18n/config";
+import { LINGUE, PAGINE, SITO, percorso } from "@/gestione-lingua/config";
 
 export default function sitemap() {
   return PAGINE.flatMap((pagina) =>

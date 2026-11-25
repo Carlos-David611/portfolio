@@ -1,13 +1,11 @@
 "use client";
 
-import { useLingua } from "@/i18n/lingua";
+import { useLingua } from "@/gestione-lingua/lingua";
 import { useEffect, useState } from "react";
 
 export default function BottoneTema() {
   const { t } = useLingua();
-  // il tema di partenza è la notte, perché il sito nasce scuro
   const [tema, setTema] = useState("notte");
-  // sul telefono il bottone si nasconde scrollando verso il basso (vedi .tema-nascosto nel CSS)
   const [nascosto, setNascosto] = useState(false);
 
   useEffect(() => {
@@ -20,7 +18,6 @@ export default function BottoneTema() {
       const y = window.scrollY;
       const altezza = document.documentElement.scrollHeight;
 
-      // in cima alla pagina il bottone si vede sempre
       if (y <= 10) {
         setNascosto(false);
         ultimo = y;
@@ -40,8 +37,6 @@ export default function BottoneTema() {
     return () => window.removeEventListener("scroll", controllaScroll);
   }, []);
 
-  // all'avvio: se c'è un tema salvato nel browser, lo riprende
-  // (useEffect gira solo nel browser: sul server localStorage non esiste)
   useEffect(() => {
     let salvato = null;
     try {
@@ -58,13 +53,10 @@ export default function BottoneTema() {
     const nuovo = tema === "notte" ? "giorno" : "notte";
     setTema(nuovo);
 
-    // mette l'etichetta su <html>: <html data-tema="giorno">
     const applica = () => {
       document.documentElement.dataset.tema = nuovo;
     };
 
-    // dissolvenza tra i due temi: senza, tutto lo schermo cambia in un colpo e sembra sfarfallare.
-    // Chi ha chiesto meno animazioni, o ha un browser senza questa funzione, cambia subito
     const menoMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (document.startViewTransition && !menoMovimento) {
       document.startViewTransition(applica);
@@ -72,7 +64,6 @@ export default function BottoneTema() {
       applica();
     }
 
-    // try/catch: in alcune finestre private il localStorage è bloccato
     try {
       localStorage.setItem("tema", nuovo);
     } catch {}
@@ -85,17 +76,14 @@ export default function BottoneTema() {
       type="button"
       className={`tema-bottone ${nascosto ? "tema-nascosto" : ""}`}
       onClick={cambiaTema}
-      // role="switch" dice agli screen reader che è un interruttore acceso/spento
       role="switch"
       aria-checked={giorno}
       aria-label={t(giorno ? "tema.notte" : "tema.giorno")}
     >
       <span className="tema-pallino" aria-hidden="true">
-        {/* la luna */}
         <svg className="icona-luna" viewBox="0 0 24 24" fill="currentColor">
           <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
         </svg>
-        {/* il sole */}
         <svg
           className="icona-sole"
           viewBox="0 0 24 24"

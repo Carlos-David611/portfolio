@@ -21,7 +21,6 @@ export default function Badge({
   useEffect(() => {
     if (!aspettaScroll) return;
 
-    // modalità "aspetta lo scroll"
     function controllaScroll() {
       if (window.scrollY > 30) {
         setVisibile(true);
@@ -34,7 +33,6 @@ export default function Badge({
     return () => window.removeEventListener("scroll", controllaScroll);
   }, [aspettaScroll]);
 
-  // diventa true quando il badge ha finito di oscillare: da lì si muove piano in continuo
   const [respira, setRespira] = useState(false);
 
   // lo sfondo animato dentro la card arriva solo quando il browser ha finito il lavoro importante:
@@ -73,7 +71,6 @@ export default function Badge({
         <div className={styles.giro}>
         <div className={styles.card}>
           <div className={styles.alto}>
-            {/* lo sfondo animato della home anche dentro la card */}
             <div className={`${styles.fondoCard} sfondo-badge`} aria-hidden="true">
               {sfondoPronto && <Sfondo />}
             </div>

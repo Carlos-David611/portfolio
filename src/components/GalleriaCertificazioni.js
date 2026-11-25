@@ -9,7 +9,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import VisorePdf, { caricaLettore, preparaPdf } from "./VisorePdf";
-import { useLingua } from "@/i18n/lingua";
+import { useLingua } from "@/gestione-lingua/lingua";
 import styles from "@/app/[lingua]/certificazioni/GalleriaCertificazioni.module.css";
 
 // ---------- le misure della specifica ----------
@@ -50,7 +50,6 @@ export default function GalleriaCertificazioni({ certificazioni }) {
   const tela = useRef(null);
   const [aperta, setAperta] = useState(null);
   const [senzaWebgl, setSenzaWebgl] = useState(false);
-  // la card di fronte, per chi usa lo screen reader
   const [attuale, setAttuale] = useState(0);
   // sempre la funzione aggiornata, anche dentro il ciclo di Three.js
   const apri = useRef(null);
@@ -101,7 +100,7 @@ export default function GalleriaCertificazioni({ certificazioni }) {
 
       // ---------- renderer, scena, telecamera ----------
       const renderer = new THREE.WebGLRenderer({ canvas: elTela, alpha: true, antialias: true, powerPreference: "low-power" });
-      renderer.setClearColor(0x000000, 0); // trasparente: si vede lo sfondo del sito
+      renderer.setClearColor(0x000000, 0);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, anteprimaGalleria ? 0.75 : 1.5));
 
@@ -115,11 +114,10 @@ export default function GalleriaCertificazioni({ certificazioni }) {
       binario.rotation.set(-0.0215, 2.2884, 0.2884, "XYZ");
       scena.add(binario);
 
-      // la flessione dei fogli: la stessa velocità per tutte le card
       const uniformi = { uVelocita: { value: 0 } };
       const caricatore = new THREE.TextureLoader();
       const maxAniso = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-      const carte = []; // { mesh, geometria, materiale, texture }
+      const carte = [];
 
       certificazioni.forEach((cert, indice) => {
         caricatore.load(urlImmagine(cert.anteprima), (texture) => {
@@ -134,7 +132,6 @@ export default function GalleriaCertificazioni({ certificazioni }) {
           texture.wrapS = THREE.RepeatWrapping;
           texture.repeat.x = -1;
           texture.offset.x = 1;
-          // le proporzioni vere del certificato
           const proporzione = texture.image.width / texture.image.height || 1.4;
           const geometria = new THREE.PlaneGeometry(LARGHEZZA, LARGHEZZA / proporzione, 12, 32);
           const materiale = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
@@ -156,19 +153,18 @@ export default function GalleriaCertificazioni({ certificazioni }) {
       });
 
       // ---------- stato del movimento ----------
-      let fase = 0; // l'indice "con la virgola" della card di fronte
-      let obiettivo = 0; // dove deve arrivare
+      let fase = 0;
+      let obiettivo = 0;
       let fasePrecedente = 0;
       let ultimoInput = 0;
       let timerAggancio = 0;
-      let sporco = true; // qualcosa è cambiato: va ridisegnato
+      let sporco = true;
       let scelta = 0;
-      // il ciclo di animazione
       let fotogramma = 0;
       let tempoPrecedente = 0;
       let visibile = true;
       let sopraIlMouse = false;
-      let puntatore = null; // il dito o il mouse che sta trascinando
+      let puntatore = null;
 
       const relativo = (indice) => {
         const r = fase - indice;
@@ -206,9 +202,7 @@ export default function GalleriaCertificazioni({ certificazioni }) {
         const d = Math.abs(rel);
         carta.mesh.visible = d <= CULL;
         if (!carta.mesh.visible) return;
-        // le vicine si allontanano dalla card scelta
         const spinta = rel + Math.sign(rel) * SPINTA * smoothstep(0.1, 0.9, d);
-        // quanto la card si gira verso chi guarda (1 = di fronte)
         const peso = smoothstep(0, 1, 1 - smoothstep(0, 0.8, d));
         mRx.makeRotationX(-0.06681 * peso);
         mRy.makeRotationY(0.36331 * peso);
@@ -235,14 +229,12 @@ export default function GalleriaCertificazioni({ certificazioni }) {
         // quella striscia si aggiunge sopra, card e misure si calcolano sulla parte sotto
         const sopra = parseFloat(getComputedStyle(elPalco).paddingTop) || 0;
         const utile = a - sopra;
-        // grande quanto possibile, ma la card di fronte resta sempre intera in larghezza
         const altezza = Math.max(ALTEZZA_VISTA, LARGHEZZA_MIN_VISTA / (l / utile));
         const unitaPerPx = altezza / utile;
         const mezzaL = (l / 2) * unitaPerPx;
         const centroY = CENTRO_CARD.y - ALZA_CARD;
         camera.left = CENTRO_CARD.x - mezzaL;
         camera.right = CENTRO_CARD.x + mezzaL;
-        // la vista è centrata un poco sotto la card (ALZA_CARD); la striscia in alto si aggiunge sopra
         camera.top = centroY + altezza / 2 + sopra * unitaPerPx;
         camera.bottom = centroY - altezza / 2;
         camera.updateProjectionMatrix();
@@ -261,12 +253,10 @@ export default function GalleriaCertificazioni({ certificazioni }) {
         const dt = Math.min((ora - (tempoPrecedente || ora)) / 1000, DT_MAX) || 1 / 60;
         tempoPrecedente = ora;
 
-        // la fase insegue l'obiettivo, smorzata (normalizzata a 60 fotogrammi al secondo)
         const k = 1 - Math.pow(1 - SMORZA, dt * 60);
         fase += (obiettivo - fase) * k;
         if (Math.abs(obiettivo - fase) < 1e-4) fase = obiettivo;
 
-        // la velocità vera della fase: piega i fogli, e torna a zero da fermi
         const velocita = menoMovimento.matches ? 0 : (fase - fasePrecedente) / dt / 6;
         const ferma = fase === obiettivo;
         uniformi.uVelocita.value = ferma ? 0 : velocita;
@@ -279,14 +269,12 @@ export default function GalleriaCertificazioni({ certificazioni }) {
           sporco = false;
         }
 
-        // la card di fronte, per lo screen reader
         const s = indiceScelto();
         if (s !== scelta) {
           scelta = s;
           setAttuale(s);
         }
 
-        // si ferma quando è tutto fermo: lo scorrimento automatico lo riavvia col suo timer
         if (!ferma || sporco) fotogramma = requestAnimationFrame(ciclo);
         else tempoPrecedente = 0;
       }
@@ -295,7 +283,6 @@ export default function GalleriaCertificazioni({ certificazioni }) {
         if (!fotogramma && visibile && !document.hidden) fotogramma = requestAnimationFrame(ciclo);
       }
 
-      // fuori dallo schermo o con la scheda nascosta: niente animazione
       const osservaVista = new IntersectionObserver(([voce]) => {
         visibile = voce.isIntersecting;
         if (visibile) {
@@ -345,13 +332,11 @@ export default function GalleriaCertificazioni({ certificazioni }) {
         spingi(delta * 0.0085);
       }
 
-      // trascinamento in verticale (mouse e dito)
       let ultimoY = 0;
       let spostato = 0;
       const raggio = new THREE.Raycaster();
       const punto = new THREE.Vector2();
 
-      // quale card c'è sotto il puntatore (null = nessuna)
       function cartaSotto(evento) {
         const r = elTela.getBoundingClientRect();
         punto.set(((evento.clientX - r.left) / r.width) * 2 - 1, -((evento.clientY - r.top) / r.height) * 2 + 1);
@@ -367,7 +352,6 @@ export default function GalleriaCertificazioni({ certificazioni }) {
         spostato = 0;
         elTela.setPointerCapture(evento.pointerId);
         clearTimeout(timerAggancio);
-        // il certificato di fronte comincia a prepararsi
         preparaPdf(certificazioni[indiceScelto()].pdf);
       }
 
@@ -380,7 +364,6 @@ export default function GalleriaCertificazioni({ certificazioni }) {
           spingi(-dy / (elPalco.clientHeight * 0.22));
           return;
         }
-        // col mouse: la manina sopra la card di fronte, che si può aprire
         if (evento.pointerType === "mouse") {
           const sotto = cartaSotto(evento);
           const apribile = sotto !== null && sotto === indiceScelto() && fase === obiettivo;
@@ -393,7 +376,6 @@ export default function GalleriaCertificazioni({ certificazioni }) {
         if (evento.pointerId !== puntatore) return;
         puntatore = null;
         if (elTela.hasPointerCapture(evento.pointerId)) elTela.releasePointerCapture(evento.pointerId);
-        // un tocco o un clic senza trascinare, sulla card di fronte: si apre il certificato
         if (spostato < 6) {
           const sotto = cartaSotto(evento);
           if (sotto !== null && sotto === indiceScelto()) apri.current(sotto);
@@ -407,7 +389,6 @@ export default function GalleriaCertificazioni({ certificazioni }) {
         aggancia();
       }
 
-      // tastiera: frecce per spostarsi, Home per tornare alla prima, Invio per aprire
       function tasto(evento) {
         const verso = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[evento.key];
         if (verso) {
@@ -478,7 +459,6 @@ export default function GalleriaCertificazioni({ certificazioni }) {
   return (
     <>
       {senzaWebgl ? (
-        // senza WebGL: un elenco semplice, ogni certificato si apre col clic
         <ul className={styles.elenco}>
           {certificazioni.map((c, i) => (
             <li key={c.pdf}>
@@ -513,7 +493,6 @@ export default function GalleriaCertificazioni({ certificazioni }) {
         </section>
       )}
 
-      {/* la galleria è un disegno: questo elenco, invisibile, la racconta a Google e agli screen reader */}
       <ul className={styles.srOnly}>
         {certificazioni.map((c) => (
           <li key={c.pdf}>

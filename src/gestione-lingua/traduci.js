@@ -4,7 +4,6 @@
 export function creaT(testi) {
   return (chiave, valori) => {
     const [sezione, nome] = chiave.split(".");
-    // se manca si vede la chiave: salta all'occhio, e "npm run lingue" la segnala
     const testo = testi[sezione]?.[nome] ?? chiave;
     return valori ? testo.replace(/\{(\w+)\}/g, (tutto, v) => valori[v] ?? tutto) : testo;
   };

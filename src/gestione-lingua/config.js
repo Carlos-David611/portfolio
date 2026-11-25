@@ -1,5 +1,3 @@
-// Le impostazioni delle lingue e del sito: si usano sia sul server sia nel browser.
-
 // la prima è quella principale: il suo indirizzo non ha prefisso (/progetti), le altre sì (/en/progetti)
 export const LINGUE = [
   { codice: "it", nome: "Italiano" },

@@ -1,5 +1,5 @@
-import { leggiLinguaPagina } from "@/i18n/server";
-import { metadati } from "@/i18n/seo";
+import { leggiLinguaPagina } from "@/gestione-lingua/server";
+import { metadati } from "@/gestione-lingua/seo";
 import GalleriaCertificazioni from "@/components/GalleriaCertificazioni";
 import { certificazioni } from "@/data/certificazioni";
 import intestazione from "../progetti/progetti.module.css";

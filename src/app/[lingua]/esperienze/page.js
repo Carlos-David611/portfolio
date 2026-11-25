@@ -1,5 +1,5 @@
-import { leggiLinguaPagina } from "@/i18n/server";
-import { metadati } from "@/i18n/seo";
+import { leggiLinguaPagina } from "@/gestione-lingua/server";
+import { metadati } from "@/gestione-lingua/seo";
 import TimelineEsperienze from "@/components/TimelineEsperienze";
 import { esperienze } from "@/data/esperienze";
 
@@ -18,7 +18,6 @@ export default async function Esperienze() {
         </p>
       </header>
 
-      {/* i dati passano al componente come prop */}
       <TimelineEsperienze esperienze={dati(esperienze)} />
     </>
   );

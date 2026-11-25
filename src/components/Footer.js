@@ -2,8 +2,8 @@
 import Link from "next/link";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
-import { PAGINE, percorso } from "@/i18n/config";
-import { leggiLingua } from "@/i18n/server";
+import { PAGINE, percorso } from "@/gestione-lingua/config";
+import { leggiLingua } from "@/gestione-lingua/server";
 import { contatti } from "@/data/contatti";
 import styles from "./Footer.module.css";
 

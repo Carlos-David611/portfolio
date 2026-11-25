@@ -1,5 +1,3 @@
-
-
 .navbar {
   
   position: sticky;
@@ -7,20 +5,16 @@
   z-index: 10;
   height: var(--altezza-navbar);
 
-  /* più stretta dello schermo e centrata: così "galleggia" */
   width: min(1200px, 100% - 2rem);
   margin: 12px auto 0;
 
-  /* tre colonne: logo a sinistra, link al centro, la terza vuota bilancia la prima */
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   padding: 0 1.75rem;
 
-  /* gli angoli tondi: più è alto il numero, più è tondeggiante */
   border-radius: 24px;
 
-  /* 1. il vetro: un po' più chiaro in alto, come una lastra colpita dalla luce */
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0.09),
@@ -45,7 +39,6 @@
     0 30px 60px rgba(0, 0, 0, 0.35);
 }
 
-/* 4. il riflesso di luce sulla metà alta del vetro */
 .navbar::before {
   content: "";
   position: absolute;
@@ -61,7 +54,6 @@
   );
 }
 
-/* 5. la luce sotto la navbar, con i colori dello sfondo */
 .navbar::after {
   content: "";
   position: absolute;
@@ -80,12 +72,10 @@
     rgba(229, 50, 28, 0.25) 45%,
     transparent 75%
   );
-  /* la sfocatura trasforma la macchia in un alone di luce */
   filter: blur(14px);
   animation: navbar-luce 6s ease-in-out infinite alternate;
 }
 
-/* la luce "respira": si allarga e si accende piano */
 @keyframes navbar-luce {
   from { opacity: 0.6; transform: scaleX(0.9); }
   to   { opacity: 1;   transform: scaleX(1.05); }
@@ -107,7 +97,6 @@
   transition: text-shadow 0.3s, transform 0.3s;
 }
 
-/* il logo si illumina al passaggio: fa capire che si può cliccare */
 .logo:hover {
   text-shadow: 0 0 14px rgba(255, 255, 255, 0.8);
   transform: translateY(-1px);
@@ -119,7 +108,6 @@
   gap: 0.5rem;
 }
 
-
 .links a {
   padding: 0.4rem 1rem;
   border-radius: 999px;
@@ -128,19 +116,15 @@
   text-decoration: none;
 }
 
-/* ogni lettera delle voci è un pezzo a sé: nel menu del telefono girano una per una */
 .lettera {
   display: inline-block;
-  /* gli spazi restano spazi */
   white-space: pre;
 }
 
-/* il pulsante burger: su computer è nascosto, si attiva nel blocco Telefono */
 .burger {
   display: none;
 }
 
-/* i link restano nella colonna centrale anche se nel codice vengono dopo le azioni */
 .links {
   grid-column: 2;
   grid-row: 1;
@@ -165,12 +149,10 @@
     display: flex;
     justify-content: space-between;
     padding: 0 1rem;
-    /* sul telefono più vicina ai bordi, e un po' meno tonda */
     width: calc(100% - 1rem);
     top: 8px;
     margin-top: 8px;
     border-radius: 18px;
-    /* niente riquadro: sul telefono restano solo interruttore e burger */
     background: none;
     border: none;
     box-shadow: none;
@@ -195,7 +177,6 @@
     white-space: nowrap;
   }
 
-  /* il pulsante burger: 44px è la misura comoda da toccare con il dito */
   .burger {
     position: relative;
     display: flex;
@@ -206,14 +187,12 @@
     width: 44px;
     height: 44px;
     padding: 0;
-    /* solo le tre linee, senza riquadro: l'area da toccare resta comunque di 44px */
     border: none;
     border-radius: 12px;
     background: none;
     cursor: pointer;
   }
 
-  /* senza riquadro, chi naviga con la tastiera deve comunque vedere dove si trova */
   .burger:focus-visible {
     outline: 2px solid var(--accento);
     outline-offset: 2px;
@@ -229,7 +208,6 @@
     transition: transform 0.35s ease, opacity 0.2s ease;
   }
 
-  /* a menu aperto le tre linee diventano una X */
   .burger[aria-expanded="true"] span:nth-child(1) {
     transform: translateY(7px) rotate(45deg);
   }
@@ -260,13 +238,11 @@
     isolation: isolate;
     border-radius: 26px;
 
-    /* il vetro: fumé, con la pagina sfocata dietro */
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
       rgba(14, 11, 10, 0.55);
     -webkit-backdrop-filter: blur(18px) saturate(140%);
     backdrop-filter: blur(18px) saturate(140%);
     border: 1px solid rgba(255, 255, 255, 0.14);
-    /* riflessi sui bordi e ombra sulla pagina */
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.35),
       inset 0 -1px 0 rgba(255, 90, 54, 0.25),
@@ -284,7 +260,6 @@
       transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
   }
 
-  /* aperto: scende dall'alto */
   .links.aperto {
     opacity: 1;
     pointer-events: auto;
@@ -294,7 +269,6 @@
       transform 0.55s cubic-bezier(0.32, 0.72, 0, 1);
   }
 
-  /* il riflesso di luce sulla parte alta del vetro, sopra lo sfondo animato */
   .links::after {
     content: "";
     position: absolute;
@@ -323,7 +297,6 @@
     background: none;
   }
 
-  /* la grana e la scritta gigante disturberebbero la lettura delle voci */
   .fondoMenu :global(.grana),
   .fondoMenu :global(.sfondo-scritta) {
     display: none;
@@ -344,20 +317,17 @@
     position: relative;
     z-index: 2;
     display: block;
-    /* larga quanto la scritta: così gira attorno al suo centro, senza spostarsi di lato */
     align-self: flex-start;
     padding: 0.55rem 0.9rem;
     border-radius: 16px;
     font-size: clamp(1.6rem, 7vw, 2.2rem);
     font-weight: 700;
     letter-spacing: -0.02em;
-    /* chiuse: un poco più in alto e invisibili. Spariscono subito, prima che il pannello si chiuda */
     opacity: 0;
     transform: translateY(-14px);
     transition: opacity 0.18s ease, transform 0.25s ease;
   }
 
-  /* aperto: scendono una dopo l'altra. Il ritardo cresce con la posizione */
   .links.aperto a {
     opacity: 1;
     transform: none;
@@ -374,7 +344,6 @@
     animation-delay: calc(var(--i) * 12ms);
   }
 
-  /* perspective dentro il transform: la profondità è quella della lettera stessa */
   @keyframes lettera-gira {
     from {
       transform: perspective(300px) rotateX(0deg);
@@ -394,20 +363,17 @@
     gap: 0.6rem;
   }
 
-  /* .links.links: più forte della regola del telefono, che le allinea a sinistra */
   .links.links a {
     align-self: center;
   }
 }
 
-/* lo sfondo del menu esiste solo nel menu burger */
 @media (min-width: 769px) {
   .fondoMenu {
     display: none;
   }
 }
 
-/* per chi ha chiesto al sistema di ridurre i movimenti: il menu appare senza animazioni */
 @media (max-width: 768px) and (prefers-reduced-motion: reduce) {
   .burger span,
   .links,
@@ -423,7 +389,6 @@
 /* ---------- Tema giorno ----------
    :global serve perché data-tema sta su <html>, fuori da questo modulo */
 :global(:root[data-tema="giorno"]) .navbar {
-  /* vetro #f4f5f6, come i box */
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(244, 245, 246, 0.6));
   /* la sfocatura: più è bassa, più si legge cosa passa sotto (la riga -webkit- deve restare prima) */
   -webkit-backdrop-filter: blur(12px);
@@ -439,7 +404,6 @@
     0 30px 60px rgba(30, 58, 95, 0.08);
 }
 
-/* il riflesso sulla metà alta del vetro: di giorno più leggero, o la navbar torna bianca */
 :global(:root[data-tema="giorno"]) .navbar::before {
   background: linear-gradient(
     180deg,
@@ -460,7 +424,6 @@
 }
 
 @media (max-width: 768px) {
-  /* anche di giorno, sul telefono, nessun riquadro */
   :global(:root[data-tema="giorno"]) .navbar {
     background: none;
     box-shadow: none;
@@ -470,12 +433,9 @@
 
   :global(:root[data-tema="giorno"]) .burger span {
     background: var(--testo);
-    /* di giorno l'alone è chiaro: serve quando le linee passano sopra il badge scuro */
     box-shadow: 0 0 4px rgba(255, 255, 255, 0.95);
   }
 
-  /* il pannello del menu: lo stesso vetro della notte, nei colori del giorno.
-     I numeri (trasparenze e sfocatura) sono quelli del tema scuro */
   :global(:root[data-tema="giorno"]) .links {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1)),
       rgba(244, 245, 246, 0.55);
@@ -487,7 +447,6 @@
       0 24px 50px rgba(30, 58, 95, 0.28);
   }
 
-  /* macchie e linee più presenti, come di notte: si muovono sotto il vetro */
   :global(:root[data-tema="giorno"]) .fondoMenu :global(.blob.blob) {
     opacity: 0.9;
   }
@@ -497,7 +456,6 @@
   }
 }
 
-/* l'alone sotto la navbar */
 :global(:root[data-tema="giorno"]) .navbar::after {
   background: radial-gradient(ellipse at 50% 0%, rgba(30, 58, 95, 0.28) 0%, rgba(30, 58, 95, 0.1) 45%, transparent 75%);
 }

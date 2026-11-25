@@ -1,4 +1,3 @@
-// Tutto quello che serve a Google e alle anteprime dei social.
 import { LINGUA_BASE, LINGUE, PAGINE, SITO, percorso } from "./config";
 import { leggiLingua } from "./server";
 
@@ -6,7 +5,6 @@ import { leggiLingua } from "./server";
 // così Google mostra a ognuno la versione nella sua lingua
 export function alternative(pagina) {
   const voci = LINGUE.map((l) => [l.codice, SITO + percorso(l.codice, pagina)]);
-  // x-default: la versione per chi parla una lingua che il sito non ha
   return Object.fromEntries([...voci, ["x-default", SITO + percorso(LINGUA_BASE, pagina)]]);
 }
 
@@ -16,7 +14,6 @@ const LOCALE = { it: "it_IT", en: "en_US", de: "de_DE", es: "es_ES" };
 // In una pagina: export const generateMetadata = () => metadati("progetti");
 export async function metadati(pagina) {
   const { lingua, valida, t } = await leggiLingua();
-  // un indirizzo che non esiste (es. /qualcosa): non ha versioni da indicare a Google
   if (!valida || !PAGINE.includes(pagina)) return {};
 
   const nome = pagina || "home";

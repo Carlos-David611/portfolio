@@ -8,7 +8,7 @@
 // ERRORI: un testo che manca in una lingua, una chiave scritta male nel codice, un {segnaposto} diverso
 // AVVISI: l'italiano è cambiato ma la traduzione no, un testo che nessuno usa
 //
-// Per accorgersi dei cambi tiene un'impronta di ogni testo in src/i18n/stato.json (si aggiorna da solo).
+// Per accorgersi dei cambi tiene un'impronta di ogni testo in src/gestione-lingua/stato.json (si aggiorna da solo).
 
 import { createHash } from "node:crypto";
 import fs from "node:fs";
@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 
 const radice = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const src = path.join(radice, "src");
-const FILE_STATO = path.join(src, "i18n", "stato.json");
+const FILE_STATO = path.join(src, "gestione-lingua", "stato.json");
 const inBuild = process.argv.includes("--build");
 const conferma = process.argv.includes("--conferma");
 
@@ -31,7 +31,7 @@ const importa = (file) =>
 
 // ---------- 1. i testi dell'interfaccia ----------
 for (const lingua of LINGUE) {
-  const file = path.join(src, "i18n", "testi", `${lingua}.json`);
+  const file = path.join(src, "gestione-lingua", "testi", `${lingua}.json`);
   try {
     const contenuto = JSON.parse(fs.readFileSync(file, "utf8"));
     for (const [sezione, voci] of Object.entries(contenuto))

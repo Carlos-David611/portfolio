@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
   experimental: {
     agentFeedback: true,
   },
@@ -8,7 +7,6 @@ const nextConfig = {
   partialPrefetching: true,
   reactCompiler: true,
   images: {
-    // AVIF pesa meno di WebP; i browser che non lo conoscono ricevono WebP
     formats: ["image/avif", "image/webp"],
     // un'immagine sostituita con lo stesso nome si aggiorna dopo un minuto (invece di 4 ore)
     minimumCacheTTL: 60,

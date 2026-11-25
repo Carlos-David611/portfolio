@@ -30,12 +30,10 @@
   transform-origin: top center;
   /* quanto si muove il badge: 1 = normale, più alto = movimenti più ampi */
   --forza-animazione: 0.8;
-  /* il ritaglio in alto: il badge non spunta mai sopra il punto da cui pende */
   clip-path: inset(0 -100vw -100vw -100vw);
 }
 
 .visibile .pendolo {
-  /* prima l'oscillazione... */
   animation: badge-oscilla 3s ease-out 0.6s;
 }
 
@@ -67,7 +65,6 @@
 .laccio {
   width: 36px;
   height: 120px;
-  /* le sfumature laterali fanno sembrare il laccio tondeggiante */
   background: linear-gradient(90deg, #050505, #2a2a2a 45%, #050505);
   display: flex;
   align-items: flex-end;
@@ -121,7 +118,6 @@
   background: linear-gradient(90deg, #050505, #2a2a2a 45%, #050505);
 }
 
-/* i bordi di colore diverso simulano il riflesso del metallo */
 .moschettone {
   position: relative;
   z-index: 2;
@@ -138,14 +134,12 @@
     0 3px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* il contenitore della card, agganciato sotto il moschettone */
 .giro {
   position: relative;
   width: 290px;
   margin-top: -20px;
 }
 
-/* la card: gli angoli molto arrotondati la rendono meno rettangolare */
 .card {
   position: relative;
   width: 290px;
@@ -155,7 +149,6 @@
   backface-visibility: hidden;
   transform: perspective(1000px);
   transition: transform 0.5s ease-out;
-  /* le prime ombre senza sfocatura creano lo spessore della card */
   box-shadow:
     0 1px 0 #4a4a4a,
     0 2px 0 #3a3a3a,
@@ -166,12 +159,10 @@
     0 30px 45px rgba(0, 0, 0, 0.6);
 }
 
-/* passando il mouse la card si inclina verso chi guarda */
 .card:hover {
   transform: perspective(1000px) rotateX(7deg) rotateY(-14deg) scale(1.03);
 }
 
-/* la fessura dove si aggancia il moschettone */
 .card::before {
   content: "";
   position: absolute;
@@ -188,7 +179,6 @@
     0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
-/* il riflesso di luce sulla superficie */
 .card::after {
   content: "";
   position: absolute;
@@ -208,7 +198,6 @@
 }
 
 /* ---------- Il contenuto della card ---------- */
-/* la parte scura della card: dentro scorre lo sfondo animato della home (.fondoCard) */
 .alto {
   position: relative;
   isolation: isolate;
@@ -228,7 +217,6 @@
   pointer-events: none;
 }
 
-/* lo sfondo nella card arriva dopo che la pagina si è vista (Badge.js): compare sfumando */
 .fondoCard :global(.sfondo) {
   animation: fondo-compare 0.8s ease-out both;
 }
@@ -237,7 +225,6 @@
   from { opacity: 0; }
 }
 
-/* la grana su un pezzo così piccolo non si nota: un effetto in meno da disegnare */
 .fondoCard :global(.grana) {
   display: none;
 }
@@ -251,18 +238,15 @@
 .fondoCard :global(.blob) {
   height: auto;
   aspect-ratio: 1;
-  /* senza sfocatura la luce è più concentrata: un po' più tenue, come prima */
   opacity: 0.6;
 }
 
-/* in alto a sinistra, dietro al logo */
 .fondoCard :global(.blob-1) {
   width: 95%;
   top: -30%;
   left: -35%;
 }
 
-/* in basso a destra, dietro al nome */
 .fondoCard :global(.blob-2) {
   width: 100%;
   top: auto;
@@ -270,7 +254,6 @@
   right: -40%;
 }
 
-/* a metà, sul lato sinistro */
 .fondoCard :global(.blob-3) {
   width: 80%;
   top: 30%;
@@ -338,7 +321,6 @@
   text-transform: uppercase;
 }
 
-/* la parte colorata sale sopra quella nera con un bordo curvo */
 .basso {
   position: relative;
   margin-top: -34px;
@@ -359,7 +341,6 @@
 
 .ruolo {
   margin: 0;
-  /* righe di lunghezza simile: nessuna parola resta sola a capo */
   text-wrap: balance;
   font-size: 20px;
   font-weight: 900;
@@ -373,7 +354,6 @@
   font-weight: 500;
 }
 
-/* per chi ha chiesto al sistema di ridurre i movimenti */
 @media (prefers-reduced-motion: reduce) {
   .visibile,
   .visibile .pendolo,
@@ -399,7 +379,6 @@
 
 /* ---------- Tablet e finestre medie ---------- */
 @media (max-width: 1100px) {
-  /* i margini sono stretti: con l'oscillazione piena il badge uscirebbe di lato */
   .pendolo {
     --forza-animazione: 0.4;
   }
@@ -407,20 +386,16 @@
 
 /* ---------- Telefono ---------- */
 @media (max-width: 768px) {
-  /* qui il badge sta sotto il testo: un laccio lungo lo coprirebbe */
   .laccio {
     height: 60px;
     margin-top: 0;
-    /* il laccio corto sfuma verso l'alto invece di iniziare di colpo */
     mask-image: linear-gradient(to bottom, transparent, #000 70%);
   }
 
-  /* in un laccio così corto la scritta si vedrebbe solo a pezzi */
   .laccio span {
     display: none;
   }
 
-  /* sullo schermo stretto un'oscillazione ampia farebbe uscire il badge */
   .pendolo {
     --forza-animazione: 0.4;
   }
@@ -433,7 +408,6 @@
     height: 18px;
   }
 
-  /* anche il tratto tra la fibbia e il moschettone */
   .laccioCorto {
     height: 18px;
   }
@@ -443,7 +417,6 @@
    più corto di 30px in tutto. "PORTFOLIO" un poco più piccola per restare sotto la navbar.
    Il testo accanto sale degli stessi 30px: .home-testo in globals.css */
 @media (min-width: 769px) and (max-width: 1366px) and (hover: none) {
-  /* 40px dietro la navbar, 64px visibili */
   .laccio {
     height: 104px;
     padding-bottom: 6px;
@@ -469,7 +442,6 @@
   }
 }
 
-/* sui telefoni più stretti: qui anche un'oscillazione piccola farebbe uscire il badge dallo schermo */
 @media (max-width: 360px) {
   .pendolo {
     --forza-animazione: 0.15;

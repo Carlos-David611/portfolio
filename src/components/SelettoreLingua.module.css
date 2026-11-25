@@ -7,7 +7,6 @@
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
 }
 
-/* stessa altezza e stesso vetro dell'interruttore giorno/notte */
 .bottone {
   display: flex;
   align-items: center;
@@ -102,11 +101,9 @@
   width: 24px;
   height: 16px;
   border-radius: 4px;
-  /* il bordino stacca il bianco e il nero delle bandiere dallo sfondo */
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 
-/* la bandiera della lingua scelta, nel pulsante */
 .scelta {
   animation: bandiera 0.4s cubic-bezier(0.3, 1.5, 0.5, 1);
 }
@@ -126,7 +123,6 @@
   color: var(--accento);
 }
 
-/* sul telefono, scorrendo in basso, sparisce insieme all'interruttore giorno/notte */
 @media (max-width: 768px) {
   :global(.tema-nascosto) ~ .selettore {
     visibility: hidden;

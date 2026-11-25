@@ -4,7 +4,6 @@
    qui c'è solo quello che sta dentro
    ========================================================== */
 
-/* la lista: stessa linea in alto delle competenze */
 .lista {
   margin: 0;
   padding: 0;
@@ -12,7 +11,6 @@
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* ogni contatto è una riga cliccabile */
 .contatto {
   position: relative;
   display: flex;
@@ -25,7 +23,6 @@
   transition: background 0.4s;
 }
 
-/* la linea arancione che si allunga, come nelle competenze */
 .contatto::after {
   content: "";
   position: absolute;
@@ -52,7 +49,6 @@
   outline-offset: 2px;
 }
 
-/* il cerchio con l'icona: è la CTA in vetro col neon (.vetro-neon in vetro-neon.css) */
 .icona {
   display: grid;
   place-items: center;
@@ -63,14 +59,12 @@
   font-size: 1.5rem;
 }
 
-/* passando sulla riga il neon del cerchio si accende al massimo (non si riempie) */
 .contatto:focus-visible .icona,
 .contatto:active .icona {
   --sopra: 1;
   transform: scale(1.08);
 }
 
-/* solo col mouse: sul telefono :hover resta attaccato dopo il tocco */
 @media (hover: hover) {
   .contatto:hover .icona {
     --sopra: 1;
@@ -78,7 +72,6 @@
   }
 }
 
-/* i testi: min-width 0 permette all'indirizzo lungo di andare a capo */
 .testi {
   display: flex;
   flex-direction: column;
@@ -96,7 +89,6 @@
 .valore {
   font-size: clamp(1.15rem, 2.5vw, 1.6rem);
   font-weight: 700;
-  /* le email lunghe vanno a capo invece di uscire dal box */
   overflow-wrap: anywhere;
   transition: transform 0.4s;
 }
@@ -106,7 +98,6 @@
   transform: translateX(6px);
 }
 
-/* la freccia che compare, come nelle competenze */
 .freccia {
   margin-left: auto;
   flex-shrink: 0;
@@ -136,7 +127,6 @@
     font-size: 1.25rem;
   }
 
-  /* sul telefono la freccia è sempre visibile: l'hover non esiste */
   .freccia {
     opacity: 0.7;
     transform: none;
@@ -149,7 +139,6 @@
   border-color: rgba(17, 19, 21, 0.12);
 }
 
-/* per chi ha chiesto al sistema di ridurre i movimenti */
 @media (prefers-reduced-motion: reduce) {
   .contatto::after,
   .icona,

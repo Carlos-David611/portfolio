@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
-import { LINGUE, PAGINE, percorso } from "@/i18n/config";
-import { useLingua } from "@/i18n/lingua";
+import { LINGUE, PAGINE, percorso } from "@/gestione-lingua/config";
+import { useLingua } from "@/gestione-lingua/lingua";
 import Bandiera from "./Bandiera";
 import styles from "./SelettoreLingua.module.css";
 
@@ -13,11 +13,9 @@ export default function SelettoreLingua() {
   const [aperto, setAperto] = useState(false);
   const radice = useRef(null);
   const bottone = useRef(null);
-  // la pagina in cui siamo ("progetti"...): le lingue portano alla stessa pagina tradotta
   const [segmento = ""] = useSelectedLayoutSegments();
   const pagina = PAGINE.includes(segmento) ? segmento : "";
 
-  // si chiude toccando fuori o con Esc
   useEffect(() => {
     if (!aperto) return;
     const fuori = (e) => {
@@ -49,7 +47,6 @@ export default function SelettoreLingua() {
       ref={radice}
       className={styles.selettore}
       onBlur={(e) => {
-        // uscendo con Tab dall'ultima lingua il menu si chiude
         if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) setAperto(false);
       }}
     >
@@ -62,7 +59,6 @@ export default function SelettoreLingua() {
         aria-controls="elenco-lingue"
         onClick={() => setAperto(!aperto)}
       >
-        {/* key: cambiando lingua la bandiera nuova entra con la sua animazione */}
         <Bandiera key={lingua} codice={lingua} className={`${styles.bandiera} ${styles.scelta}`} />
         <svg className={styles.freccia} viewBox="0 0 12 12" aria-hidden="true">
           <path d="M2.5 4.5 6 8l3.5-3.5" />
@@ -77,7 +73,6 @@ export default function SelettoreLingua() {
               href={percorso(l.codice, pagina)}
               hrefLang={l.codice}
               lang={l.codice}
-              // si scarica solo se la scegli; e la pagina resta al punto in cui eri
               prefetch={false}
               scroll={false}
               className={styles.voce}
