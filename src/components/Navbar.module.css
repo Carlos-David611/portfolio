@@ -248,7 +248,7 @@
       inset 0 -1px 0 rgba(255, 90, 54, 0.25),
       0 24px 50px rgba(0, 0, 0, 0.55);
 
-    /* chiuso: in alto e invisibile. Si chiude dopo che le voci sono sparite.
+    /* chiuso: in alto e invisibile. Si chiude in fretta, insieme alle voci: sotto la pagina nuova è già pronta.
        Solo transform e opacità, e il pannello resta già disegnato (will-change) anche da chiuso:
        al tocco il telefono deve solo farlo scendere, senza scatti all'inizio */
     opacity: 0;
@@ -256,8 +256,8 @@
     transform: translateY(-28px);
     will-change: transform, opacity;
     transition:
-      opacity 0.3s ease 0.1s,
-      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+      opacity 0.18s ease,
+      transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .links.aperto {
@@ -338,10 +338,10 @@
   }
 
   /* toccata: ogni lettera gira su se stessa in verticale, una dopo l'altra come un'onda.
-     La pagina si apre subito dietro; il menu si chiude alla fine dell'ultima lettera (300ms + 12ms a lettera) */
+     La pagina si apre subito dietro; il menu si chiude alla fine dell'ultima lettera (180ms + 5ms a lettera, come in Navbar.js) */
   .links.aperto a[data-gira] .lettera {
-    animation: lettera-gira 0.3s cubic-bezier(0.45, 0.05, 0.25, 1) both;
-    animation-delay: calc(var(--i) * 12ms);
+    animation: lettera-gira 0.18s cubic-bezier(0.45, 0.05, 0.25, 1) both;
+    animation-delay: calc(var(--i) * 5ms);
   }
 
   @keyframes lettera-gira {

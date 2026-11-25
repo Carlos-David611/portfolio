@@ -73,7 +73,8 @@ export default function SelettoreLingua() {
               href={percorso(l.codice, pagina)}
               hrefLang={l.codice}
               lang={l.codice}
-              prefetch={false}
+              // le altre lingue si scaricano appena apri il menu: al clic sono già pronte
+              prefetch={aperto}
               scroll={false}
               className={styles.voce}
               aria-current={l.codice === lingua || undefined}

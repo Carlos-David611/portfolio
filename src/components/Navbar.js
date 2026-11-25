@@ -11,8 +11,8 @@ import Sfondo from "@/components/Sfondo";
 import styles from "./Navbar.module.css";
 
 const MENU_BURGER = "(max-width: 768px)";
-const DURATA_LETTERA = 300;
-const RITARDO_LETTERA = 12;
+const DURATA_LETTERA = 180;
+const RITARDO_LETTERA = 5;
 
 const preparaGalleria = () => import("./three-galleria").catch(() => {});
 
