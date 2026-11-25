@@ -4,6 +4,7 @@ export const progetti = [
   {
     slug: "primo-progetto",
     titolo: "Rebrand Traipler",
+    simbolo: "/immagini/progetti/traipler.webp",
     descrizione: {
       it: "Modernizzare l'identità visiva del sito, Migliorare la gerarchia delle informazioni, Rendere la navigazione più intuitiva, Creare un'interfaccia reattiva e accessibile, Progettare un'esperienza coerente su desktop e mobile, Trasformare il design in un sito web funzionante",
       en: "Modernize the site's visual identity, Improve the information hierarchy, Make navigation more intuitive, Create a responsive and accessible interface, Design a consistent experience on desktop and mobile, Turn the design into a working website",
@@ -17,6 +18,7 @@ export const progetti = [
   {
     slug: "secondo-progetto",
     titolo: "La Biglietteria",
+    simbolo: "/immagini/progetti/la-biglietteria.webp",
     descrizione: {
       it: "E' una piattaforma web completa per la vendita di biglietti per eventi e concerti. Il sistema permette agli utenti di consultare gli eventi, acquistare i biglietti, gestire il proprio profilo e molto altro. Include anche un'interfaccia di amministrazione per la gestione degli eventi",
       en: "A complete web platform for selling tickets to events and concerts. Users can browse events, buy tickets, manage their profile and much more. It also includes an admin interface for managing events",

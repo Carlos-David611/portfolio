@@ -474,19 +474,26 @@
     box-shadow: 0 0 4px rgba(255, 255, 255, 0.95);
   }
 
-  /* il pannello del menu: vetro chiaro, con lo sfondo di giorno che ci scorre sotto */
+  /* il pannello del menu: lo stesso vetro della notte, nei colori del giorno.
+     I numeri (trasparenze e sfocatura) sono quelli del tema scuro */
   :global(:root[data-tema="giorno"]) .links {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.25)),
-      rgba(244, 245, 246, 0.6);
-    border-color: rgba(17, 19, 21, 0.1);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1)),
+      rgba(244, 245, 246, 0.55);
+    border-color: rgba(255, 255, 255, 0.75);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.95),
-      inset 0 -1px 0 rgba(30, 58, 95, 0.18),
-      0 24px 50px rgba(30, 58, 95, 0.22);
+      inset 0 1px 0 #fff,
+      inset 0 -1px 0 rgba(30, 58, 95, 0.25),
+      0 0 0 1px rgba(17, 19, 21, 0.06),
+      0 24px 50px rgba(30, 58, 95, 0.28);
+  }
+
+  /* macchie e linee più presenti, come di notte: si muovono sotto il vetro */
+  :global(:root[data-tema="giorno"]) .fondoMenu :global(.blob.blob) {
+    opacity: 0.9;
   }
 
   :global(:root[data-tema="giorno"]) .links::after {
-    background: linear-gradient(170deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.08) 30%, transparent 50%);
+    background: linear-gradient(170deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.12) 30%, transparent 50%);
   }
 }
 

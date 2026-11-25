@@ -878,7 +878,7 @@ article a {
 /* --- sfondo ---
    bianco puro; le animazioni sono le stesse della notte, nelle tinte del blu navy.
    .sfondo-badge: lo sfondo dentro il badge, scuro anche di giorno (colori in Badge.module.css) */
-:root[data-tema="giorno"] .sfondo:not(.sfondo-badge *) {
+:root[data-tema="giorno"] .sfondo:not(.sfondo-badge *, #navbar-menu *) {
   background: #ffffff;
 }
 

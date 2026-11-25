@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { leggiLinguaPagina } from "@/i18n/server";
 import { metadati } from "@/i18n/seo";
 import { progetti } from "@/data/progetti";
@@ -28,6 +29,13 @@ export default async function ProgettiPage() {
 
             <div className={styles.cardTesta}>
               <span className={styles.numero}>{String(i + 1).padStart(2, "0")}</span>
+              {/* il simbolo del progetto, in una lente di vetro.
+                  alt vuoto: il nome del progetto è già scritto nel titolo */}
+              {p.simbolo && (
+                <span className={styles.simbolo}>
+                  <Image src={p.simbolo} alt="" width={100} height={100} />
+                </span>
+              )}
               {p.categoria && <span className={styles.categoria}>{p.categoria}</span>}
             </div>
 
