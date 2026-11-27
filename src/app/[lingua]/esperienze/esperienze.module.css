@@ -245,15 +245,16 @@
 }
 
 @media (max-width: 768px) {
+  /* sul telefono l'anno è grande e sta da solo in alto, sotto mesi e numero su una riga */
   .annoGrande {
-    font-size: clamp(2.4rem, 7.5svh, 3.6rem);
+    flex-basis: 100%;
+    font-size: clamp(3.6rem, min(22vw, 12svh), 6rem);
   }
 
   .annoPiccolo {
-    margin: 0;
+    margin: 0.9rem 0 0;
   }
 
-  /* sul telefono anno, mesi e numero stanno su una riga sola: più spazio per il testo */
   .anni {
     display: flex;
     flex-wrap: wrap;
