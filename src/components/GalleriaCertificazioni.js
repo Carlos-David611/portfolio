@@ -42,7 +42,8 @@ const smoothstep = (a, b, x) => {
 };
 
 // l'immagine ottimizzata da Next.js (più leggera dell'originale)
-const urlImmagine = (src) => `/_next/image?url=${encodeURIComponent(src)}&w=1080&q=75`;
+// w = larghezza in pixel: sul telefono basta un'immagine più piccola, che si scarica e si prepara prima
+const urlImmagine = (src, w = 1080) => `/_next/image?url=${encodeURIComponent(src)}&w=${w}&q=75`;
 
 export default function GalleriaCertificazioni({ certificazioni }) {
   const { t } = useLingua();
@@ -115,16 +116,24 @@ export default function GalleriaCertificazioni({ certificazioni }) {
       scena.add(binario);
 
       const uniformi = { uVelocita: { value: 0 } };
-      const caricatore = new THREE.TextureLoader();
+      // ImageBitmapLoader: le immagini si decodificano fuori dal thread principale,
+      // così mentre arrivano la pagina non si blocca (soprattutto sul telefono)
+      const caricatore = new THREE.ImageBitmapLoader();
+      caricatore.setOptions({ imageOrientation: "flipY" });
       const maxAniso = Math.min(4, renderer.capabilities.getMaxAnisotropy());
       const carte = [];
+      // la card di fronte occupa circa la larghezza della galleria: l'immagine non serve più grande di così
+      const pixelCard = elPalco.clientWidth * renderer.getPixelRatio();
+      const larghezzaImmagine = pixelCard > 1100 ? 1080 : pixelCard > 700 ? 828 : 640;
 
       certificazioni.forEach((cert, indice) => {
-        caricatore.load(urlImmagine(cert.anteprima), (texture) => {
+        caricatore.load(urlImmagine(cert.anteprima, larghezzaImmagine), (immagine) => {
           if (annullato) {
-            texture.dispose();
+            immagine.close?.();
             return;
           }
+          const texture = new THREE.Texture(immagine);
+          texture.needsUpdate = true;
           texture.colorSpace = THREE.SRGBColorSpace;
           texture.anisotropy = maxAniso;
           // l'orientamento del binario mostra il retro del piano: si gira la U una volta,
@@ -443,6 +452,7 @@ export default function GalleriaCertificazioni({ certificazioni }) {
           c.geometria.dispose();
           c.materiale.dispose();
           c.texture.dispose();
+          c.texture.image?.close?.();
         }
         renderer.dispose();
       };

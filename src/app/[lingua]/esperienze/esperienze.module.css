@@ -1,441 +1,469 @@
 /* ==========================================================
-   TIMELINE ESPERIENZE
+   TIMELINE ESPERIENZE (TimelineEsperienze.js)
+   La sezione resta ferma e scorrendo le esperienze si danno il cambio, una alla volta.
+   Computer: anno grande | linea del tempo | dettagli
+   Telefono: linea del tempo a sinistra, anno e dettagli a destra
+   Se un'esperienza è più alta dello spazio, il suo testo sale mentre scorri (--scorri, dal JavaScript)
    ========================================================== */
 
 .timeline {
   position: relative;
   margin: 2rem 0 0;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: clamp(2.5rem, 5vw, 4.5rem);
+  /* --avanzamento (da 0 a 1) lo scrive il JavaScript mentre scorri: riempie la linea */
+  --avanzamento: 0;
+  /* le colonne: anno, linea, dettagli. Sul telefono l'anno va sopra i dettagli (--col-anni: 0) */
+  --col-anni: clamp(14rem, 27vw, 22rem);
+  --col-linea: clamp(3.5rem, 6vw, 6rem);
+  /* l'altezza della corsa: la prima esperienza c'è subito, ogni altra chiede 60svh di scroll.
+     Più è alto il numero, più bisogna scorrere per passare alla successiva */
+  height: calc(100svh + (var(--quante) - 1) * 60svh);
 }
 
-/* il blocco è centrato nella pagina: --larghezza-esperienze sta in .contenuto, in globals.css.
-   min-height: la pagina riempie lo schermo (22rem = navbar, intestazione e margini),
-   ma non più di 44rem: sugli schermi alti i pallini si distanzierebbero troppo */
 @media (min-width: 769px) {
   .timeline {
     width: var(--larghezza-esperienze);
     margin-left: calc((100% - var(--larghezza-esperienze)) / 2);
-    min-height: min(calc(100vh - 22rem), 44rem);
   }
 }
 
-/* ---------- Le tre colonne: frecce | anni | dettagli ---------- */
-.corpo {
+@media (max-width: 768px) {
+  .timeline {
+    --col-anni: 0px;
+    --col-linea: 2rem;
+  }
+}
+
+/* la parte che resta ferma: sotto la navbar, alta quanto lo schermo che resta */
+.palco {
+  position: sticky;
+  top: calc(var(--altezza-navbar) + 12px + 1.5rem);
+  height: calc(100svh - var(--altezza-navbar) - 12px - 3rem);
+  max-height: 50rem;
+  display: grid;
+  grid-template-columns: var(--col-anni) var(--col-linea) minmax(0, 1fr);
+  /* la riga resta alta quanto lo spazio fermo, anche se un'esperienza è più alta */
+  grid-template-rows: minmax(0, 1fr);
+}
+
+/* ---------- La linea del tempo ---------- */
+.linea {
   grid-column: 2;
   grid-row: 1;
-  display: grid;
-  
-  grid-template-columns: clamp(13rem, 20vw, 16rem) minmax(0, 1fr);
-  gap: clamp(1.5rem, 3vw, 3rem);
-  min-height: 380px;
-}
-
-/* ---------- Frecce: solo sul telefono ---------- */
-.frecce {
+  z-index: 2;
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-/* questa regola deve restare dopo .frecce, altrimenti non vale */
-@media (min-width: 769px) {
-  .frecce {
-    display: none;
-  }
+/* il binario chiaro, e sopra la parte già percorsa, arancione */
+.linea::before,
+.linea::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  translate: -50% 0;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(255, 255, 255, 0.3) 6%,
+    rgba(255, 255, 255, 0.3) 94%,
+    transparent
+  );
 }
 
-.freccia {
+.linea::after {
+  width: 2px;
+  background: linear-gradient(180deg, transparent, #ffb4a0 4%, var(--accento));
+  box-shadow: 0 0 12px rgba(255, 90, 54, 0.7);
+  transform: scaleY(var(--avanzamento));
+  transform-origin: top;
+}
+
+.linea li {
+  flex: 1;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+}
+
+.punto {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
   padding: 0;
-  border-radius: 12px;
+  border: none;
+  border-radius: 50%;
+  background: none;
   cursor: pointer;
 }
 
-.freccia svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.punto:focus-visible {
+  outline: 2px solid var(--accento);
+  outline-offset: 2px;
 }
 
-.freccia:hover:not(:disabled) {
-  transform: translateY(-2px);
+.pallino {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
 }
 
-.freccia:disabled {
-  opacity: 0.25;
-  cursor: not-allowed;
+.punto:hover .pallino {
+  transform: scale(1.5);
+  background: #fff;
 }
 
-/* ---------- Anni grandi ---------- */
+.passato .pallino {
+  background: var(--accento);
+}
+
+/* il pallino attivo: un anello che respira, come un cursore sulla linea */
+.attivo .pallino {
+  background: var(--accento);
+  transform: scale(1.25);
+  box-shadow:
+    0 0 0 5px rgba(10, 8, 7, 0.9),
+    0 0 0 6px rgba(255, 180, 160, 0.7),
+    0 0 22px 6px rgba(255, 90, 54, 0.55);
+  animation: luce-respira 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes luce-respira {
+  from { filter: brightness(0.85); }
+  to   { filter: brightness(1.25); }
+}
+
+/* ---------- Le esperienze ---------- */
+.schede {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: grid;
+  /* tutto parte dall'alto, come una pagina: anno grande in alto a sinistra, dettagli accanto */
+  align-items: start;
+  min-height: 0;
+}
+
+.scheda {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: var(--col-anni) var(--col-linea) minmax(0, 1fr);
+  align-items: start;
+  /* --scorri lo scrive il JavaScript: fa salire il testo delle esperienze più alte dello schermo */
+  transform: translateY(var(--scorri, 0px));
+}
+
 .anni {
-  text-align: right;
+  grid-column: 1;
   line-height: 1;
+}
+
+.dettagli {
+  grid-column: 3;
+}
+
+/* telefono: anno sopra i dettagli, entrambi a destra della linea */
+@media (max-width: 768px) {
+  .scheda {
+    align-items: start;
+  }
+
+  .anni,
+  .dettagli {
+    grid-column: 3;
+  }
+
+  .anni {
+    grid-row: 1;
+    margin-bottom: 1.1rem;
+  }
+
+  .dettagli {
+    grid-row: 2;
+  }
+}
+
+/* ---------- Anno grande ---------- */
+.annoGrande {
+  /* -0.06em: le cifre grandi così stanno attaccate al bordo sinistro, come il testo sotto */
+  margin: -0.06em 0 0 -0.04em;
+  /* grande e in alto, come un titolo. Segue anche l'altezza dello schermo (svh):
+     sugli schermi bassi si riduce e lascia spazio ai dettagli */
+  font-size: clamp(4.5rem, min(9.5vw, 17svh), 8.5rem);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+  background: linear-gradient(180deg, #ffffff 30%, #ffb4a0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* rilievo: due ombre nette sotto le cifre (effetto spessore) e un alone caldo */
+  filter: drop-shadow(0 2px 0 rgba(255, 190, 170, 0.45)) drop-shadow(0 4px 0 rgba(110, 35, 20, 0.75))
+    drop-shadow(0 18px 32px rgba(229, 50, 28, 0.35));
 }
 
 .annoPiccolo {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin: 0;
-  font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+  gap: 0.8rem;
+  margin: 1.4rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--grigio);
 }
 
 .lineetta {
   display: inline-block;
-  width: clamp(30px, 5vw, 70px);
+  width: clamp(24px, 3vw, 44px);
   height: 1px;
   background: currentColor;
 }
 
-.annoGrande {
-  margin: 0.5rem 0 0;
-  font-size: clamp(3.5rem, 7vw, 6.5rem);
+.contatore {
+  margin: 0.9rem 0 0;
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  background: linear-gradient(180deg, #ffffff 30%, #ffb4a0 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 6px 24px rgba(229, 50, 28, 0.35));
+  font-variant-numeric: tabular-nums;
+  color: var(--accento);
 }
 
-/* ---------- Dettagli ---------- */
-.dettagliPila {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.dettagliPila > * {
-  grid-area: 1 / 1;
-}
-
-/* visibility: hidden occupa spazio ma non si vede, e gli screen reader la saltano */
-.fantasma {
-  visibility: hidden;
-}
-
-.intestazione {
-  display: flex;
-  justify-content: flex-start;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
-}
-
-.azienda {
-  margin: 0;
-  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
-  font-weight: 800;
-}
-
-.luogo {
-  margin: 0.2rem 0 0;
-  font-size: 1.15rem;
+.contatore span {
   color: var(--grigio);
+  font-weight: 500;
 }
 
+@media (max-width: 768px) {
+  .annoGrande {
+    font-size: clamp(2.4rem, 7.5svh, 3.6rem);
+  }
+
+  .annoPiccolo {
+    margin: 0;
+  }
+
+  /* sul telefono anno, mesi e numero stanno su una riga sola: più spazio per il testo */
+  .anni {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 1rem;
+  }
+
+  .contatore {
+    margin: 0;
+  }
+
+  .lineetta {
+    display: none;
+  }
+}
+
+/* ---------- Dettagli ----------
+   Leggibilità: il testo da leggere non scende mai sotto 16px (1rem, 17px sul computer),
+   le righe restano sotto i ~70 caratteri, interlinea ampia e contrasto alto sul fondo scuro.
+   Le misure crescono con lo schermo, ma ci si ferma prima che il blocco non ci stia più */
 .periodo {
   margin: 0;
-  font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   color: var(--accento);
   font-variant-numeric: tabular-nums;
 }
 
 .ruolo {
-  margin: 0.75rem 0 1.25rem;
-  font-weight: 700;
-  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
-  line-height: 1;
+  margin: 0.55rem 0 0.8rem;
+  font-weight: 800;
+  font-size: clamp(2rem, min(4.6vw, 7svh), 3.8rem);
+  line-height: 1.05;
   letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.intestazione {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.6rem;
+}
+
+.azienda {
+  margin: 0;
+  font-size: clamp(1.25rem, min(2.3vw, 3.4svh), 1.7rem);
+  font-weight: 700;
+}
+
+.luogo {
+  margin: 0;
+  font-size: clamp(1rem, 2.4svh, 1.2rem);
+  color: var(--grigio);
+}
+
+.luogo::before {
+  content: "· ";
 }
 
 .descrizione {
-  max-width: 600px;
-  margin: 0 0 1.5rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.3rem;
-  line-height: 1.6;
+  /* ~65 caratteri per riga: la misura che si legge senza perdere il segno */
+  max-width: 65ch;
+  margin: 1.1rem 0 1.4rem;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(1.0625rem, 2.5svh, 1.3rem);
+  line-height: 1.65;
+  text-wrap: pretty;
 }
 
+/* le tecnologie come etichette, abbastanza grandi da leggerle senza sforzo */
 .tecnologie {
-  display: grid;
-  gap: 0.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .tecnologie li {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.tecnologie li::before {
-  content: "";
-  flex-shrink: 0;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accento);
-  box-shadow: 0 0 8px rgba(255, 90, 54, 0.8);
-}
-
-/* ---------- Linea del tempo, in verticale sul lato sinistro ---------- */
-.linea {
-  grid-column: 1;
-  grid-row: 1;
-  /* la direzione della sfumatura della linea: 180deg in verticale, 90deg sul telefono */
-  --direzione-linea: 180deg;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.linea::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 8.5px;
-  width: 1px;
-  background: linear-gradient(
-    var(--direzione-linea),
-    transparent,
-    rgba(255, 255, 255, 0.35) 10%,
-    rgba(255, 255, 255, 0.35) 90%,
-    transparent
-  );
-}
-
-.linea li {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.punto {
-  display: flex;
-  align-items: center;
-  /* la distanza tra il pallino e la data */
-  gap: 0.9rem;
-  padding: 0.75rem 0.75rem 0.75rem 4px;
-  border: none;
-  border-radius: 12px;
-  background: none;
-  color: var(--grigio);
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.punto:focus-visible,
-.freccia:focus-visible {
-  outline: 2px solid var(--accento);
-  outline-offset: 3px;
-}
-
-.pallino {
-  position: relative;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #fff;
-  transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
-}
-
-.etichetta {
-  font-size: 1rem;
-  white-space: nowrap;
-  transition: color 0.3s;
-}
-
-.punto:hover .pallino {
-  transform: scale(1.4);
-}
-
-.punto:hover .etichetta {
+  padding: 0.4rem 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
   color: #fff;
 }
 
-/* ---------- La voce selezionata ---------- */
-.attivo .pallino {
-  background: var(--accento);
-  transform: scale(1.3);
-  box-shadow:
-    0 0 0 4px rgba(255, 90, 54, 0.2),
-    0 0 18px rgba(255, 90, 54, 0.9);
-}
-
-.attivo .etichetta {
-  color: #fff;
-}
-
-.attivo .pallino::before {
-  content: "";
-  position: absolute;
-  bottom: 50%;
-  left: 50%;
-  width: 44px;
-  height: 64px;
-  transform: translateX(-50%);
-  pointer-events: none;
-  border-radius: 50% 50% 40% 40%;
-  background: radial-gradient(
-    ellipse at 50% 100%,
-    rgba(255, 130, 80, 0.75) 0%,
-    rgba(229, 50, 28, 0.3) 45%,
-    transparent 70%
-  );
-  filter: blur(5px);
-  animation: luce-respira 3s ease-in-out infinite alternate;
-}
-
-@keyframes luce-respira {
-  from { opacity: 0.6; }
-  to   { opacity: 1; }
-}
-
-/* ---------- Telefono ---------- */
+/* telefono: il testo resta a 16px, mai più piccolo */
 @media (max-width: 768px) {
-  .corpo {
-    grid-template-columns: 1fr;
-    min-height: 0;
+  .descrizione {
+    font-size: clamp(1rem, 2.3svh, 1.125rem);
+    line-height: 1.6;
   }
 
-  .anni {
-    order: 1;
-    text-align: left;
+  .tecnologie li {
+    font-size: 0.9rem;
   }
+}
 
-  .annoPiccolo {
-    justify-content: flex-start;
-  }
+/* ==========================================================
+   Il cambio: si vede solo l'esperienza attiva
+   ========================================================== */
+.timeline :is(.anni, .dettagli) {
+  transition:
+    opacity 0.45s ease,
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 0.45s ease;
+}
 
-  .dettagliPila {
-    order: 2;
-  }
+/* il testo parte un attimo dopo l'anno: il cambio sembra più morbido */
+.timeline .dettagli {
+  transition-delay: 0.07s;
+}
 
-  .frecce {
-    order: 3;
-    flex-direction: row;
-    justify-content: center;
-    gap: 1rem;
-  }
+.timeline .scheda:not([data-stato="attiva"]) {
+  visibility: hidden;
+  pointer-events: none;
+  /* resta visibile finché l'uscita non è finita */
+  transition: visibility 0s linear 0.45s;
+}
 
-  .freccia svg {
-    transform: rotate(-90deg);
-  }
+.timeline .scheda:not([data-stato="attiva"]) :is(.anni, .dettagli) {
+  opacity: 0;
+  transition-delay: 0s;
+}
 
-  .timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+/* la sfocatura in uscita solo sui computer: sui telefoni sfocare testi grandi pesa e scatta */
+@media (hover: hover) and (pointer: fine) {
+  .timeline .scheda:not([data-stato="attiva"]) :is(.anni, .dettagli) {
+    filter: blur(6px);
   }
+}
 
-  /* se le esperienze sono tante, la linea scorre di lato invece di stringersi */
-  .linea {
-    --direzione-linea: 90deg;
-    flex-direction: row;
-    margin-top: 3rem;
-    overflow-x: auto;
-  }
+/* il browser prepara in anticipo il movimento: il cambio non scatta */
+.timeline :is(.anni, .dettagli) {
+  will-change: transform, opacity;
+}
 
-  .linea::before {
-    top: 21px;
-    bottom: auto;
-    left: 0;
-    right: 0;
-    width: auto;
-    height: 1px;
-  }
+/* quelle già viste sono uscite in alto, quelle che arrivano aspettano in basso */
+.timeline .scheda[data-stato="prima"] :is(.anni, .dettagli) {
+  transform: translateY(-60px);
+}
 
-  .linea li {
-    flex: 1 0 auto;
-    justify-content: center;
-    align-items: stretch;
-  }
-
-  .punto {
-    flex-direction: column;
-    gap: 0.7rem;
-    padding: 1rem 0.75rem;
-  }
+.timeline .scheda[data-stato="dopo"] :is(.anni, .dettagli) {
+  transform: translateY(60px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .attivo .pallino::before {
+  .attivo .pallino {
     animation: none;
   }
 
-  .freccia,
-  .pallino {
-    transition: none;
+  .pallino,
+  .timeline .scheda :is(.anni, .dettagli) {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
   }
 }
 
-/* ---------- Tema giorno ----------
- */
+/* ---------- Tema giorno ---------- */
 
 /* qui background-image e non background: l'altro azzererebbe il ritaglio sulle lettere */
 :global(:root[data-tema="giorno"]) .annoGrande {
   background-image: linear-gradient(180deg, #111315 30%, #1e3a5f 100%);
-  filter: drop-shadow(0 6px 18px rgba(30, 58, 95, 0.2));
+  filter: drop-shadow(0 2px 0 rgba(255, 255, 255, 0.9)) drop-shadow(0 4px 0 rgba(30, 58, 95, 0.25))
+    drop-shadow(0 14px 24px rgba(30, 58, 95, 0.2));
 }
 
 :global(:root[data-tema="giorno"]) .descrizione {
-  color: var(--grigio);
+  color: #3a4047;
 }
 
 :global(:root[data-tema="giorno"]) .tecnologie li {
+  border-color: rgba(17, 19, 21, 0.15);
+  background: rgba(255, 255, 255, 0.6);
   color: var(--testo);
-}
-
-:global(:root[data-tema="giorno"]) .tecnologie li::before {
-  box-shadow: none;
 }
 
 :global(:root[data-tema="giorno"]) .linea::before {
   background: linear-gradient(
-    var(--direzione-linea),
+    180deg,
     transparent,
-    rgba(17, 19, 21, 0.35) 10%,
-    rgba(17, 19, 21, 0.35) 90%,
+    rgba(17, 19, 21, 0.3) 6%,
+    rgba(17, 19, 21, 0.3) 94%,
     transparent
   );
 }
 
+:global(:root[data-tema="giorno"]) .linea::after {
+  background: linear-gradient(180deg, transparent, var(--accento) 4%);
+  box-shadow: none;
+}
+
 :global(:root[data-tema="giorno"]) .pallino {
-  background: var(--grigio);
+  background: rgba(17, 19, 21, 0.35);
+}
+
+:global(:root[data-tema="giorno"]) .passato .pallino {
+  background: var(--accento);
 }
 
 :global(:root[data-tema="giorno"]) .attivo .pallino {
   background: var(--accento);
   box-shadow:
-    0 0 0 4px rgba(30, 58, 95, 0.15),
-    0 0 18px rgba(30, 58, 95, 0.45);
-}
-
-:global(:root[data-tema="giorno"]) .punto:hover .etichetta,
-:global(:root[data-tema="giorno"]) .attivo .etichetta {
-  color: var(--testo);
-}
-
-:global(:root[data-tema="giorno"]) .attivo .pallino::before {
-  background: radial-gradient(ellipse at 50% 100%, rgba(30, 58, 95, 0.4) 0%, rgba(30, 58, 95, 0.15) 45%, transparent 70%);
+    0 0 0 5px rgba(244, 245, 246, 0.95),
+    0 0 0 6px rgba(30, 58, 95, 0.5),
+    0 0 18px 4px rgba(30, 58, 95, 0.3);
 }

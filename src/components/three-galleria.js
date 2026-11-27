@@ -11,7 +11,8 @@ export {
   RepeatWrapping,
   SRGBColorSpace,
   Scene,
-  TextureLoader,
+  ImageBitmapLoader,
+  Texture,
   Vector2,
   WebGLRenderer,
 } from "three";
